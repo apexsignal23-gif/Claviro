@@ -377,17 +377,16 @@
     border-radius: 20px;
     padding: 1rem;
   }
-  /* The 3 cards hold very different content (a 3-row LinkedIn grid, a
-     single row of 9:16 videos, one 16:9 video) and so have different
-     natural heights. Since all 3 lock at the SAME sticky `top`, a
-     shorter card sitting on top of a taller one doesn't fully cover it —
-     the taller card's bottom portion pokes out below the shorter one,
-     visible in what should be empty gap (this is exactly what happened:
-     card 2's single-row video height is shorter than card 1's 3-row
-     LinkedIn grid, so card 1 showed through beneath it). Fix: pin every
-     card to the same fixed height + overflow:hidden once card 1 becomes
-     a true 3-row grid (at `lg:`), and center each card's content inside
-     that box so shorter content (card 2, card 3) isn't glued to the top. */
+  /* The cards hold very different content (a LinkedIn image grid, a
+     single row of 9:16 videos) and so have different natural heights.
+     Since they all lock at the SAME sticky `top`, a shorter card sitting
+     on top of a taller one doesn't fully cover it — the taller card's
+     bottom portion pokes out below the shorter one, visible in what
+     should be empty gap (this is exactly what happened: card 2's
+     single-row video height was shorter than card 1's LinkedIn grid, so
+     card 1 showed through beneath it). Fix: pin every card to the same
+     fixed height + overflow:hidden, and center each card's content
+     inside that box so shorter content isn't glued to the top. */
   @media (min-width: 1024px){
     .iv-card{
       /* NOT a flat 32rem — a sticky element's own height still has to fit
@@ -479,29 +478,6 @@
     font-size: .74rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
     color: rgba(255,255,255,.3);
   }
-  /* Card 3's full-width 16:9 video, instead of the 4-up vertical (9:16)
-     grid card 2 uses. At `lg:` (where .iv-card is capped to a fixed
-     height so the 3 cards can fully occlude each other while stacking —
-     see .iv-card) it's stretched to fill the full card height instead of
-     its native 16:9 shape; the underlying iframe's existing
-     `object-fit:cover` crops rather than distorts. NOTE: this stretch is
-     what causes Gumlet's OWN player (rendered inside its cross-origin
-     iframe — no CSS access from this page, no documented query param for
-     it either) to pillarbox with bars to preserve the source video's
-     real proportions. Those bars are currently WHITE and the user wants
-     them recolored to black/dark instead — since we can't reach into the
-     iframe's own styling, that has to be set on Gumlet's end: their
-     dashboard's Edit Player section
-     (dashboard.gumlet.com/video/manage?tab=edit_player) is where player
-     background/branding colors are configured, per their own docs/site.
-     Don't "fix" this by reverting to aspect-ratio:16/9 again — that was
-     already tried and explicitly rejected by the user; the box staying
-     full-height is the wanted behavior, only the bar color is open. */
-  .iv-video-full{ aspect-ratio: 16 / 9; }
-  @media (min-width: 1024px){
-    .iv-video-full{ aspect-ratio: auto; height: 100%; }
-  }
-
   .btn-ghost{
     display:inline-flex; align-items:center; gap:.4rem;
     color: var(--cream);
@@ -865,9 +841,9 @@
      .podcast-trailers-component / .sticky-wrapper / .podcast_wrapper /
      .portfolio-video-wrapper), re-themed onto Claviro's dark ink tokens.
      See the CSS comment above `.iv-scroll-stack` for how the effect works.
-     3 cards: (1) a LinkedIn post embed, (2) all 4 vertical clips together,
-     (3) one full-width video — cards 1 is still an empty placeholder, 2
-     and 3 are already filled with the Gumlet embeds supplied earlier. -->
+     2 cards: (1) a grid of raw LinkedIn post screenshots, (2) all 4
+     vertical clips together. A 3rd card (one full-width video) was
+     removed per explicit request — don't re-add it without being asked. -->
 <section id="industry-standard" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="iv-scroll-stack">
@@ -943,17 +919,6 @@
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-
-        <!-- CARD 3: one full-width video -->
-        <div class="iv-card">
-          <div class="iv-video iv-video-full" data-video-slot="final">
-            <iframe
-              loading="lazy" title="Gumlet video player"
-              src="https://play.gumlet.io/embed/6a8c294cb6df33640456242c?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
-              referrerpolicy="origin"
-              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
           </div>
         </div>
       </div>
