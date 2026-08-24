@@ -240,6 +240,32 @@
     object-fit: cover; border: 0;
   }
   .iv-placeholder{ color: rgba(255,255,255,.22); font-size: 2.4rem; }
+  .iv-placeholder-post{
+    display: flex; flex-direction: column; align-items: center; gap: .6rem;
+    font-size: 1.7rem;
+  }
+  .iv-placeholder-post span{
+    font-size: .74rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+    color: rgba(255,255,255,.3);
+  }
+
+  /* Video <-> LinkedIn-posts toggle: the arrow (styled as a reused .t-arrow)
+     swaps which .iv-panel is visible. Each .iv-item animates independently
+     (nth-child transition-delay) for a staggered, cascading swap instead of
+     a flat crossfade. JS (bottom of page) drives the class/hidden timing. */
+  .iv-stage{ position: relative; }
+  /* Compound selector (not just .iv-arrow) so this beats .t-arrow's own
+     background/color declarations regardless of source order — .t-arrow
+     is defined later in this stylesheet and would otherwise win. */
+  .t-arrow.iv-arrow{ background: var(--chrome-bg); border: 1px solid var(--ink-border); color: var(--cream); box-shadow: var(--shadow-btn); }
+  .t-arrow.iv-arrow:hover{ box-shadow: var(--shadow-btn-hover); }
+  .iv-item{ transition: opacity .4s var(--ease-spring), transform .4s var(--ease-spring); }
+  .iv-item.iv-anim-out{ opacity: 0; transform: translateY(-16px) scale(.96); }
+  .iv-item.iv-anim-in{ opacity: 0; transform: translateY(16px) scale(.96); }
+  .iv-item:nth-child(2){ transition-delay: 70ms; }
+  .iv-item:nth-child(3){ transition-delay: 140ms; }
+  .iv-item:nth-child(4){ transition-delay: 210ms; }
+  @media (prefers-reduced-motion: reduce){ .iv-item{ transition: none; } }
 
   .btn-ghost{
     display:inline-flex; align-items:center; gap:.4rem;
@@ -582,39 +608,80 @@
       </p>
     </div>
 
-    <div class="iv-grid reveal mt-12">
-      <!-- VIDEO SLOT 1 — replace this placeholder div's contents with a <video> or <iframe> when a clip is supplied -->
-      <div class="iv-item">
-        <div class="iv-frame">
-          <div class="iv-video" data-video-slot="1">
-            <div class="iv-placeholder"><i class="ph-bold ph-play-circle" aria-hidden="true"></i></div>
+    <div class="iv-stage reveal mt-12">
+      <div id="iv-panel-video" class="iv-grid iv-panel">
+        <!-- VIDEO SLOT 1 — replace this placeholder div's contents with a <video> or <iframe> when a clip is supplied -->
+        <div class="iv-item">
+          <div class="iv-frame">
+            <div class="iv-video" data-video-slot="1">
+              <div class="iv-placeholder"><i class="ph-bold ph-play-circle" aria-hidden="true"></i></div>
+            </div>
+          </div>
+        </div>
+        <!-- VIDEO SLOT 2 -->
+        <div class="iv-item">
+          <div class="iv-frame">
+            <div class="iv-video" data-video-slot="2">
+              <div class="iv-placeholder"><i class="ph-bold ph-play-circle" aria-hidden="true"></i></div>
+            </div>
+          </div>
+        </div>
+        <!-- VIDEO SLOT 3 -->
+        <div class="iv-item">
+          <div class="iv-frame">
+            <div class="iv-video" data-video-slot="3">
+              <div class="iv-placeholder"><i class="ph-bold ph-play-circle" aria-hidden="true"></i></div>
+            </div>
+          </div>
+        </div>
+        <!-- VIDEO SLOT 4 -->
+        <div class="iv-item">
+          <div class="iv-frame">
+            <div class="iv-video" data-video-slot="4">
+              <div class="iv-placeholder"><i class="ph-bold ph-play-circle" aria-hidden="true"></i></div>
+            </div>
           </div>
         </div>
       </div>
-      <!-- VIDEO SLOT 2 -->
-      <div class="iv-item">
-        <div class="iv-frame">
-          <div class="iv-video" data-video-slot="2">
-            <div class="iv-placeholder"><i class="ph-bold ph-play-circle" aria-hidden="true"></i></div>
+
+      <div id="iv-panel-linkedin" class="iv-grid iv-panel" hidden>
+        <!-- LINKEDIN POST SLOT 1 — replace this placeholder div's contents with the real post (image/embed) when supplied -->
+        <div class="iv-item">
+          <div class="iv-frame">
+            <div class="iv-video" data-post-slot="1">
+              <div class="iv-placeholder iv-placeholder-post"><i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i><span>LinkedIn Post</span></div>
+            </div>
+          </div>
+        </div>
+        <!-- LINKEDIN POST SLOT 2 -->
+        <div class="iv-item">
+          <div class="iv-frame">
+            <div class="iv-video" data-post-slot="2">
+              <div class="iv-placeholder iv-placeholder-post"><i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i><span>LinkedIn Post</span></div>
+            </div>
+          </div>
+        </div>
+        <!-- LINKEDIN POST SLOT 3 -->
+        <div class="iv-item">
+          <div class="iv-frame">
+            <div class="iv-video" data-post-slot="3">
+              <div class="iv-placeholder iv-placeholder-post"><i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i><span>LinkedIn Post</span></div>
+            </div>
+          </div>
+        </div>
+        <!-- LINKEDIN POST SLOT 4 -->
+        <div class="iv-item">
+          <div class="iv-frame">
+            <div class="iv-video" data-post-slot="4">
+              <div class="iv-placeholder iv-placeholder-post"><i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i><span>LinkedIn Post</span></div>
+            </div>
           </div>
         </div>
       </div>
-      <!-- VIDEO SLOT 3 -->
-      <div class="iv-item">
-        <div class="iv-frame">
-          <div class="iv-video" data-video-slot="3">
-            <div class="iv-placeholder"><i class="ph-bold ph-play-circle" aria-hidden="true"></i></div>
-          </div>
-        </div>
-      </div>
-      <!-- VIDEO SLOT 4 -->
-      <div class="iv-item">
-        <div class="iv-frame">
-          <div class="iv-video" data-video-slot="4">
-            <div class="iv-placeholder"><i class="ph-bold ph-play-circle" aria-hidden="true"></i></div>
-          </div>
-        </div>
-      </div>
+
+      <button id="iv-arrow" type="button" aria-label="Show LinkedIn posts" class="t-arrow iv-arrow static mx-auto mt-8 lg:absolute lg:mt-0 lg:mx-0 lg:-right-3 xl:-right-16 lg:top-1/2 lg:-translate-y-1/2 lg:z-10">
+        <i class="ph-bold ph-arrow-right" id="iv-arrow-icon" aria-hidden="true"></i>
+      </button>
     </div>
   </div>
 </section>
@@ -1019,6 +1086,62 @@
   prev && prev.addEventListener('click', () => show(index - 1));
   next && next.addEventListener('click', () => show(index + 1));
   dots.forEach(d => d.addEventListener('click', () => show(Number(d.dataset.index))));
+})();
+
+/* =====================================================================
+   Industry Standard: video <-> LinkedIn-posts toggle
+   Swaps which .iv-panel is visible on arrow click, animating each
+   .iv-item out (staggered via CSS nth-child transition-delay) then
+   swapping panel visibility via the `hidden` attribute (removes the
+   inactive panel from the accessibility tree, not just hides it
+   visually) then animating the incoming items in.
+   ===================================================================== */
+(function(){
+  const arrow = document.getElementById('iv-arrow');
+  const icon = document.getElementById('iv-arrow-icon');
+  const videoPanel = document.getElementById('iv-panel-video');
+  const linkedinPanel = document.getElementById('iv-panel-linkedin');
+  if(!arrow || !icon || !videoPanel || !linkedinPanel) return;
+
+  const EXIT_MS = 610; // covers the longest nth-child delay (210ms) + transition length (400ms)
+  let showingVideo = true;
+  let animating = false;
+
+  function swapPanel(){
+    if(animating) return;
+    animating = true;
+    arrow.disabled = true;
+
+    const outgoing = showingVideo ? videoPanel : linkedinPanel;
+    const incoming = showingVideo ? linkedinPanel : videoPanel;
+    const outgoingItems = outgoing.querySelectorAll('.iv-item');
+    const incomingItems = incoming.querySelectorAll('.iv-item');
+
+    outgoingItems.forEach(el => el.classList.add('iv-anim-out'));
+
+    window.setTimeout(() => {
+      outgoing.hidden = true;
+      outgoingItems.forEach(el => el.classList.remove('iv-anim-out'));
+
+      incoming.hidden = false;
+      incomingItems.forEach(el => el.classList.add('iv-anim-in'));
+      // Force a reflow so the "in" offset state is committed before we
+      // transition out of it on the next frame (otherwise the browser
+      // coalesces both class changes and no animation plays).
+      void incoming.offsetWidth;
+      window.requestAnimationFrame(() => {
+        incomingItems.forEach(el => el.classList.remove('iv-anim-in'));
+      });
+
+      showingVideo = !showingVideo;
+      icon.className = showingVideo ? 'ph-bold ph-arrow-right' : 'ph-bold ph-arrow-left';
+      arrow.setAttribute('aria-label', showingVideo ? 'Show LinkedIn posts' : 'Show videos');
+      arrow.disabled = false;
+      animating = false;
+    }, EXIT_MS);
+  }
+
+  arrow.addEventListener('click', swapPanel);
 })();
 
 /* =====================================================================
