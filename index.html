@@ -95,7 +95,11 @@
 
   .font-display{ font-family: 'Cabinet Grotesk', 'General Sans', ui-sans-serif, system-ui, sans-serif; }
   /* Hero headline only. Everything else on the site stays on Cabinet Grotesk. */
-  .font-hero{ font-family: 'Cormorant Garamond', 'Source Serif 4', Georgia, serif; }
+  /* font-variant-numeric: lining-nums forces digits to cap-height figures
+     instead of Cormorant Garamond's default old-style figures, where a
+     digit like the "2" in "B2B" renders noticeably smaller/lower than the
+     surrounding capital letters. */
+  .font-hero{ font-family: 'Cormorant Garamond', 'Source Serif 4', Georgia, serif; font-variant-numeric: lining-nums; }
 
   /* Gray-to-white sheen text fill, matching consulting.com's hero
      treatment: a light band sweeping across otherwise muted gray type.
@@ -149,19 +153,41 @@
   .btn-primary:hover{ transform: translateY(-2px); box-shadow: var(--shadow-btn-hover); filter: brightness(1.04); }
   .btn-primary:active{ transform: translateY(0) scale(.98); box-shadow: var(--shadow-btn); }
 
-  /* Rotating-border glow, reverse-engineered from the reference site's own
-     CSS: a conic-gradient bright arc, clipped to a thin ring via the
-     mask-composite "exclude" trick (border-box minus content-box), spinning
-     continuously. A second layer blooms a soft glow beneath the button on
-     hover. Both layers sit on ::before/::after so no extra markup is needed. */
+  /* Rotating-border glow: a conic-gradient bright arc, clipped to a thin
+     ring via the mask-composite "exclude" trick (border-box minus
+     content-box). Two bugs found and fixed here, in order:
+     1) The original version declared the prefixed -webkit-mask shorthand
+        but only the UNPREFIXED mask-composite — with no unprefixed
+        `mask` layers for it to act on, that declaration was dead code,
+        so the two -webkit-mask layers composited with the default
+        union/"add" instead of "exclude", covering the WHOLE box with
+        mask (i.e. no clipping at all) and showing the full unmasked
+        conic-gradient wedge. Fixed by declaring BOTH the prefixed and
+        unprefixed `mask` shorthand together.
+     2) Even after that fix, animating the whole masked element via
+        `transform: rotate()` produced an intermittent version of the
+        same wash-out on some animation frames (a mask+transform
+        recompositing bug — will-change:transform did not resolve it
+        either). Fixed by never rotating the element at all: instead the
+        conic-gradient's own `from` angle animates via a registered
+        `@property` custom value. The mask now sits on a perfectly
+        static (never-transformed) box every frame, so it can't
+        intermittently fail to clip — only the gradient's rendered
+        colors change, not the element's geometry. */
+  @property --glow-angle{
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+  }
   .btn-glow{ position: relative; }
   .btn-glow::before{
     content: ''; position: absolute; inset: -1px; border-radius: inherit;
     padding: 1px;
-    background: conic-gradient(from 0deg, rgba(255,255,255,.55) 0deg, rgba(255,255,255,0) 60deg, rgba(255,255,255,0) 300deg, rgba(255,255,255,.55) 360deg);
+    background: conic-gradient(from var(--glow-angle), rgba(255,255,255,.55) 0deg, rgba(255,255,255,0) 60deg, rgba(255,255,255,0) 300deg, rgba(255,255,255,.55) 360deg);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
-    mask-composite: exclude;
     animation: btn-glow-spin 2.5s linear infinite;
     pointer-events: none;
   }
@@ -172,7 +198,7 @@
     pointer-events: none;
   }
   .btn-glow:hover::after{ opacity: .7; }
-  @keyframes btn-glow-spin{ to{ transform: rotate(360deg); } }
+  @keyframes btn-glow-spin{ to{ --glow-angle: 360deg; } }
   @media (prefers-reduced-motion: reduce){ .btn-glow::before{ animation: none; } }
 
   /* Case studies: dark theme, three-up grid (site-dark card bg kept —
@@ -485,7 +511,7 @@
 
   <div class="relative z-10 flex h-full min-h-[100dvh] items-center justify-center px-6 sm:px-10 lg:px-20 text-center">
     <div class="max-w-[64rem]">
-      <h1 class="text-shine font-hero font-normal text-[1.9rem] leading-[1.2] tracking-[-0.01em] sm:text-[2.75rem] lg:text-[3.4rem]">
+      <h1 class="text-shine font-hero font-medium text-[1.9rem] leading-[1.2] tracking-[-0.01em] sm:text-[2.75rem] lg:text-[3.4rem]">
         Content Production Agency<br />
         Built for B2B Tech Founders
       </h1>
@@ -547,7 +573,7 @@
 <section id="case-studies" class="relative bg-[var(--ink-950)] py-24 sm:py-28">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10 reveal">
     <div class="text-center">
-      <h2 class="text-shine inline-block text-balance font-hero font-normal text-[1.9rem] sm:text-[2.5rem] leading-[1.15] tracking-[-0.02em]">
+      <h2 class="text-shine inline-block text-balance font-hero font-medium text-[1.9rem] sm:text-[2.5rem] leading-[1.15] tracking-[-0.02em]">
         What we&rsquo;ve built for <em class="italic font-medium">B2B SaaS</em> founders
       </h2>
     </div>
@@ -600,7 +626,7 @@
 <section id="industry-standard" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="reveal max-w-[34rem] mx-auto text-center">
-      <h2 class="text-shine inline-block text-balance font-hero font-normal text-[1.9rem] sm:text-[2.5rem] leading-[1.12] tracking-[-0.025em]">
+      <h2 class="text-shine inline-block text-balance font-hero font-medium text-[1.9rem] sm:text-[2.5rem] leading-[1.12] tracking-[-0.025em]">
         Industry Standard
       </h2>
       <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">
