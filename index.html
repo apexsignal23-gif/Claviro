@@ -266,6 +266,10 @@
     object-fit: cover; border: 0;
   }
   .iv-placeholder{ color: rgba(255,255,255,.22); font-size: 2.4rem; }
+  /* Third toggle state: one full-width 16:9 box for a YouTube embed, instead
+     of the 4-up vertical (9:16) grid the other two panels use. */
+  .iv-panel-single .iv-item{ flex: none; width: 100%; }
+  .iv-video-full{ aspect-ratio: 16 / 9; }
   .iv-placeholder-post{
     display: flex; flex-direction: column; align-items: center; gap: .6rem;
     font-size: 1.7rem;
@@ -654,27 +658,39 @@
             </div>
           </div>
         </div>
-        <!-- VIDEO SLOT 2 -->
+        <!-- VIDEO SLOT 2 — filled: Gumlet embed (third-party player) -->
         <div class="iv-item">
           <div class="iv-frame">
             <div class="iv-video" data-video-slot="2">
-              <div class="iv-placeholder"><i class="ph-bold ph-play-circle" aria-hidden="true"></i></div>
+              <iframe
+                loading="lazy" title="Gumlet video player"
+                src="https://play.gumlet.io/embed/6a8c2a06b6df3364045627b8"
+                referrerpolicy="origin"
+                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
             </div>
           </div>
         </div>
-        <!-- VIDEO SLOT 3 -->
+        <!-- VIDEO SLOT 3 — filled: Gumlet embed (third-party player) -->
         <div class="iv-item">
           <div class="iv-frame">
             <div class="iv-video" data-video-slot="3">
-              <div class="iv-placeholder"><i class="ph-bold ph-play-circle" aria-hidden="true"></i></div>
+              <iframe
+                loading="lazy" title="Gumlet video player"
+                src="https://play.gumlet.io/embed/6a8c2d67c427de1345382ae8"
+                referrerpolicy="origin"
+                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
             </div>
           </div>
         </div>
-        <!-- VIDEO SLOT 4 -->
+        <!-- VIDEO SLOT 4 — filled: Gumlet embed (third-party player) -->
         <div class="iv-item">
           <div class="iv-frame">
             <div class="iv-video" data-video-slot="4">
-              <div class="iv-placeholder"><i class="ph-bold ph-play-circle" aria-hidden="true"></i></div>
+              <iframe
+                loading="lazy" title="Gumlet video player"
+                src="https://play.gumlet.io/embed/6a8c2e34c427de134538311b"
+                referrerpolicy="origin"
+                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
             </div>
           </div>
         </div>
@@ -710,6 +726,19 @@
           <div class="iv-frame">
             <div class="iv-video" data-post-slot="4">
               <div class="iv-placeholder iv-placeholder-post"><i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i><span>LinkedIn Post</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="iv-panel-youtube" class="iv-panel iv-panel-single" hidden>
+        <!-- YOUTUBE SLOT — replace this placeholder div's contents with the real
+             YouTube embed (iframe) when supplied; full-width 16:9 box, not the
+             4-up vertical grid used by the other two panels. -->
+        <div class="iv-item">
+          <div class="iv-frame">
+            <div class="iv-video iv-video-full" data-youtube-slot="1">
+              <div class="iv-placeholder"><i class="ph-bold ph-youtube-logo" aria-hidden="true"></i></div>
             </div>
           </div>
         </div>
@@ -1125,22 +1154,27 @@
 })();
 
 /* =====================================================================
-   Industry Standard: video <-> LinkedIn-posts toggle
+   Industry Standard: video -> LinkedIn-posts -> YouTube 3-way cycle
    Swaps which .iv-panel is visible on arrow click, animating each
    .iv-item out (staggered via CSS nth-child transition-delay) then
    swapping panel visibility via the `hidden` attribute (removes the
    inactive panel from the accessibility tree, not just hides it
-   visually) then animating the incoming items in.
+   visually) then animating the incoming items in. The arrow always
+   advances forward through the cycle (video -> LinkedIn -> YouTube ->
+   back to video), rather than toggling back and forth between two.
    ===================================================================== */
 (function(){
   const arrow = document.getElementById('iv-arrow');
   const icon = document.getElementById('iv-arrow-icon');
-  const videoPanel = document.getElementById('iv-panel-video');
-  const linkedinPanel = document.getElementById('iv-panel-linkedin');
-  if(!arrow || !icon || !videoPanel || !linkedinPanel) return;
+  const panels = [
+    { el: document.getElementById('iv-panel-video'), nextLabel: 'Show LinkedIn posts' },
+    { el: document.getElementById('iv-panel-linkedin'), nextLabel: 'Show YouTube video' },
+    { el: document.getElementById('iv-panel-youtube'), nextLabel: 'Show videos' }
+  ];
+  if(!arrow || !icon || panels.some(p => !p.el)) return;
 
   const EXIT_MS = 610; // covers the longest nth-child delay (210ms) + transition length (400ms)
-  let showingVideo = true;
+  let current = 0;
   let animating = false;
 
   function swapPanel(){
@@ -1148,8 +1182,9 @@
     animating = true;
     arrow.disabled = true;
 
-    const outgoing = showingVideo ? videoPanel : linkedinPanel;
-    const incoming = showingVideo ? linkedinPanel : videoPanel;
+    const next = (current + 1) % panels.length;
+    const outgoing = panels[current].el;
+    const incoming = panels[next].el;
     const outgoingItems = outgoing.querySelectorAll('.iv-item');
     const incomingItems = incoming.querySelectorAll('.iv-item');
 
@@ -1169,9 +1204,8 @@
         incomingItems.forEach(el => el.classList.remove('iv-anim-in'));
       });
 
-      showingVideo = !showingVideo;
-      icon.className = showingVideo ? 'ph-bold ph-arrow-right' : 'ph-bold ph-arrow-left';
-      arrow.setAttribute('aria-label', showingVideo ? 'Show LinkedIn posts' : 'Show videos');
+      current = next;
+      arrow.setAttribute('aria-label', panels[current].nextLabel);
       arrow.disabled = false;
       animating = false;
     }, EXIT_MS);
