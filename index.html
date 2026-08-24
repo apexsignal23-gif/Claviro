@@ -390,7 +390,17 @@
      that box so shorter content (card 2, card 3) isn't glued to the top. */
   @media (min-width: 1024px){
     .iv-card{
-      height: 32rem;
+      /* NOT a flat 32rem — a sticky element's own height still has to fit
+         inside whatever's left of the actual browser viewport once it
+         locks at `top:7rem`; a taller-than-available-space sticky card
+         just runs off the bottom of the window with no way to scroll
+         further into view (scrolling the page can't move an
+         already-stuck element up more). Cap it to the smaller of 32rem
+         or the real available viewport height (100vh minus the top
+         offset and a bit of breathing room) so it always fits on short
+         windows too — this is what was clipping row 3 of the 9-image
+         LinkedIn grid on shorter viewports. */
+      height: max(20rem, min(32rem, calc(100svh - 9rem)));
       overflow: hidden;
       display: flex;
       align-items: center;
