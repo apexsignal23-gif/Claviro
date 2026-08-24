@@ -469,18 +469,27 @@
      icon+label shows through instead of a dead flat box, so every cell
      in the grid reads as intentionally designed either way. */
   /* Card 3's full-width 16:9 video, instead of the 4-up vertical (9:16)
-     grid card 2 uses. REVERTED at `lg:` (was briefly stretched to
-     height:100% to fill the fixed-height card — see git history) because
-     that stretch made the box wider-than-16:9, and Gumlet's OWN player
-     (rendered inside its cross-origin iframe, not stylable from this
-     page at all) pillarboxes with WHITE bars to preserve the source
-     video's real proportions whenever the container doesn't match. Kept
-     at the video's native 16:9 so there's no mismatch to letterbox in
-     the first place — no bars, of any color. It now sits centered on the
-     card's own dark background instead of filling the full card height,
-     which reads fine since dark-on-dark blends in (unlike the white
-     bars, which didn't). */
+     grid card 2 uses. At `lg:` (where .iv-card is capped to a fixed
+     height so the 3 cards can fully occlude each other while stacking —
+     see .iv-card) it's stretched to fill the full card height instead of
+     its native 16:9 shape; the underlying iframe's existing
+     `object-fit:cover` crops rather than distorts. NOTE: this stretch is
+     what causes Gumlet's OWN player (rendered inside its cross-origin
+     iframe — no CSS access from this page, no documented query param for
+     it either) to pillarbox with bars to preserve the source video's
+     real proportions. Those bars are currently WHITE and the user wants
+     them recolored to black/dark instead — since we can't reach into the
+     iframe's own styling, that has to be set on Gumlet's end: their
+     dashboard's Edit Player section
+     (dashboard.gumlet.com/video/manage?tab=edit_player) is where player
+     background/branding colors are configured, per their own docs/site.
+     Don't "fix" this by reverting to aspect-ratio:16/9 again — that was
+     already tried and explicitly rejected by the user; the box staying
+     full-height is the wanted behavior, only the bar color is open. */
   .iv-video-full{ aspect-ratio: 16 / 9; }
+  @media (min-width: 1024px){
+    .iv-video-full{ aspect-ratio: auto; height: 100%; }
+  }
   .iv-placeholder-post{
     display: flex; flex-direction: column; align-items: center; gap: .6rem;
     font-size: 1.7rem;
