@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="preconnect" href="https://api.fontshare.com" />
 <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,600,500,400&display=swap" rel="stylesheet" />
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,500;1,600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet" />
 
 <!-- Icons: Phosphor -->
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
@@ -353,50 +353,28 @@
 <!-- ================= HERO ================= -->
 <section id="top" class="relative min-h-[100dvh] w-full overflow-hidden bg-black">
   <span id="top-content" class="sr-only"></span>
-
-  <!-- Static glow orbs bleeding in from the edges, plus a center vignette
-       for text legibility. No animation here by design (unlike the earlier
-       WebGL hero) — this matches a specific reference layout. -->
-  <div class="pointer-events-none absolute inset-0" style="background:
-    radial-gradient(46% 60% at -8% 45%, rgba(59,130,246,.16), transparent 60%),
-    radial-gradient(46% 60% at 108% 55%, rgba(59,130,246,.13), transparent 60%),
-    radial-gradient(70% 55% at 50% 45%, rgba(10,10,10,.4), transparent 70%),
-    #0a0a0a;"></div>
-
-  <!-- Thin outline decorative shapes, scattered and low-opacity. -->
-  <svg class="pointer-events-none absolute left-[7%] top-[14%] h-7 w-7 text-white/25 hidden sm:block" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <path d="M12 2l2.36 6.83H22l-5.82 4.24L18.54 20 12 15.76 5.46 20l2.36-6.93L2 8.83h7.64z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-  </svg>
-  <svg class="pointer-events-none absolute right-[8%] top-[16%] h-6 w-6 text-white/25 hidden sm:block" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <path d="M12 3l9 17H3z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-  </svg>
-  <svg class="pointer-events-none absolute left-[13%] bottom-[28%] h-6 w-6 text-white/20 hidden lg:block" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <path d="M12 2l9.5 6.9-3.6 11.1H6.1L2.5 8.9z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-  </svg>
-  <svg class="pointer-events-none absolute right-[12%] bottom-[30%] h-5 w-5 text-white/20 hidden lg:block" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <rect x="4.5" y="4.5" width="15" height="15" rx="2" stroke="currentColor" stroke-width="1.2" transform="rotate(45 12 12)"/>
-  </svg>
+  <div id="velaris-host" class="absolute inset-0" style="background: #0a0a0a;">
+    <canvas id="velaris-canvas" aria-hidden="true" class="absolute inset-0 h-full w-full"></canvas>
+  </div>
+  <!-- Centered scrim so the copy stays readable wherever the moving gradient drifts. -->
+  <div class="pointer-events-none absolute inset-0" style="background: radial-gradient(58% 55% at 50% 44%, rgba(8,8,10,.82) 0%, rgba(8,8,10,.58) 45%, rgba(8,8,10,.22) 74%, transparent 100%);"></div>
 
   <div class="relative z-10 flex h-full min-h-[100dvh] items-center justify-center px-6 sm:px-10 lg:px-20 text-center">
-    <div class="max-w-[58rem]">
-      <span class="inline-block rounded-full border border-[rgba(59,130,246,.35)] bg-[rgba(59,130,246,.1)] px-4 py-1.5 text-[0.7rem] font-semibold tracking-[0.15em] text-[var(--accent-hot)] uppercase">
-        Founder-Led Growth
-      </span>
-
-      <h1 class="mt-6 font-display font-bold text-[1.85rem] leading-[1.25] tracking-[-0.02em] text-[var(--hero-fg)] sm:text-[2.6rem] lg:text-[3.1rem]">
-        Content Production Agency for<br />
-        <em class="font-hero italic font-medium">B2B Tech Founders</em>
+    <div class="max-w-[64rem]">
+      <h1 class="text-shine font-hero font-normal text-[1.9rem] leading-[1.2] tracking-[-0.01em] sm:text-[2.75rem] lg:text-[3.4rem]">
+        Content Production Agency<br />
+        Built for B2B Tech Founders
       </h1>
 
       <p class="mt-6 max-w-[28rem] mx-auto text-[1rem] leading-[1.6] text-[var(--hero-fg-dim)]">
         In a fast-moving landscape, we don&rsquo;t trade standard for speed.
       </p>
 
-      <div class="mt-9 flex flex-wrap items-center justify-center gap-4">
-        <a href="#what-we-do" class="rounded-full border border-white/15 bg-white/[0.03] px-6 py-3 text-[0.92rem] font-medium text-[var(--hero-fg)] transition-[transform,border-color,background-color] duration-300 hover:border-white/30 hover:bg-white/[0.06] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]">
-          See How It Works
-        </a>
+      <div class="mt-9 flex flex-wrap items-center justify-center gap-5">
         <a href="#cta" class="btn-primary">Book a Call</a>
+        <a href="#what-we-do" class="btn-ghost btn-ghost-invert">
+          See How It Works <i class="ph-bold ph-arrow-down-right" aria-hidden="true"></i>
+        </a>
       </div>
     </div>
   </div>
@@ -906,6 +884,204 @@
   dots.forEach(d => d.addEventListener('click', () => show(Number(d.dataset.index))));
 })();
 
+/* =====================================================================
+   Velaris hero background — vanilla WebGL port
+   (Simplex-noise shader kept verbatim; only the React lifecycle wrapper
+   has been rewritten as plain JS. Recolored to black/white/gray so the
+   moving field reads as a stark, monochrome field rather than the
+   component's default green.)
+   ===================================================================== */
+(function(){
+  const VERT = `
+attribute vec2 position;
+varying vec2 vUv;
+void main() {
+  vUv = position * 0.5 + 0.5;
+  gl_Position = vec4(position, 0.0, 1.0);
+}
+`;
+
+  const FRAG = `
+precision highp float;
+varying vec2 vUv;
+
+uniform vec2  u_resolution;
+uniform float u_time;
+uniform float u_grain;
+uniform vec3  u_colors[4];
+uniform vec3  u_bg;
+
+vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
+
+float snoise(vec2 v){
+  const vec4 C = vec4(0.211324865405187, 0.366025403784439,
+           -0.577350269189626, 0.024390243902439);
+  vec2 i  = floor(v + dot(v, C.yy) );
+  vec2 x0 = v -   i + dot(i, C.xx);
+  vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+  vec4 x12 = x0.xyxy + C.xxzz;
+  x12.xy -= i1;
+  i = mod(i, 289.0);
+  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
+  + i.x + vec3(0.0, i1.x, 1.0 ));
+  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy),
+    dot(x12.zw,x12.zw)), 0.0);
+  m = m*m ;
+  m = m*m ;
+  vec3 x = 2.0 * fract(p * C.www) - 1.0;
+  vec3 h = abs(x) - 0.5;
+  vec3 ox = floor(x + 0.5);
+  vec3 a0 = x - ox;
+  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
+  vec3 g;
+  g.x  = a0.x  * x0.x  + h.x  * x0.y;
+  g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+  return 130.0 * dot(m, g);
+}
+
+void main() {
+  vec2 uv = vUv;
+  float ratio = u_resolution.x / u_resolution.y;
+  vec2 p = uv - 0.5;
+  p.x *= ratio;
+
+  float t = u_time * 0.1;
+
+  float n1 = snoise(p * 0.4 + vec2(t * 0.2, -t * 0.3));
+  float n2 = snoise(p * 0.55 + vec2(-t * 0.15, t * 0.25) + n1 * 0.25);
+  float n3 = snoise(p * 0.75 + vec2(t * 0.1, -t * 0.2) + n2 * 0.2);
+
+  vec3 col = u_bg;
+
+  float dist = length(p) * 1.5;
+  float vignette = 1.0 - smoothstep(0.3, 1.2, dist);
+
+  col = mix(col, u_colors[0], smoothstep(-0.2, 0.5, n1) * 0.85);
+  col = mix(col, u_colors[1], smoothstep(-0.1, 0.6, n2) * 0.7);
+  col = mix(col, u_colors[2], smoothstep(-0.3, 0.4, n3) * 0.6);
+  col = mix(col, u_colors[3], smoothstep(0.0, 0.7, n1 * n2) * 0.5);
+
+  float glow = smoothstep(0.8, 0.0, dist) * 0.3;
+  col += u_colors[1] * glow;
+
+  col = mix(col * 0.2, col, vignette);
+
+  float grain = fract(sin(dot(uv, vec2(12.9898, 78.233))) * 43758.5453 + u_time);
+  col += (grain - 0.5) * u_grain * 0.1;
+
+  gl_FragColor = vec4(col, 1.0);
+}
+`;
+
+  function hexToRgb(hex) {
+    const h = hex.replace('#', '');
+    return [
+      parseInt(h.slice(0, 2), 16) / 255,
+      parseInt(h.slice(2, 4), 16) / 255,
+      parseInt(h.slice(4, 6), 16) / 255,
+    ];
+  }
+
+  function createVelaris(container, canvas, opts) {
+    const { bg, colors, speed, grain } = opts;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const gl = canvas.getContext('webgl');
+    if (!gl) { canvas.style.display = 'none'; return; }
+
+    function createShader(type, src) {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+        console.error('velaris: shader failed —', gl.getShaderInfoLog(s));
+      }
+      return s;
+    }
+
+    const program = gl.createProgram();
+    gl.attachShader(program, createShader(gl.VERTEX_SHADER, VERT));
+    gl.attachShader(program, createShader(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(program);
+    gl.useProgram(program);
+
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+
+    const pos = gl.getAttribLocation(program, 'position');
+    gl.enableVertexAttribArray(pos);
+    gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+
+    const locs = {
+      res: gl.getUniformLocation(program, 'u_resolution'),
+      time: gl.getUniformLocation(program, 'u_time'),
+      grain: gl.getUniformLocation(program, 'u_grain'),
+      colors: gl.getUniformLocation(program, 'u_colors'),
+      bg: gl.getUniformLocation(program, 'u_bg'),
+    };
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.max(2, Math.round(container.clientWidth * dpr));
+      canvas.height = Math.max(2, Math.round(container.clientHeight * dpr));
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+    resize();
+
+    const ro = new ResizeObserver(resize);
+    ro.observe(container);
+
+    let intersecting = true;
+    let pageVisible = !document.hidden;
+    const io = new IntersectionObserver((entries) => {
+      intersecting = entries[0] ? entries[0].isIntersecting : true;
+    }, { threshold: 0 });
+    io.observe(container);
+
+    const bgRgb = hexToRgb(bg);
+    const flat = new Float32Array(colors.slice(0, 4).flatMap(hexToRgb));
+
+    let raf = 0;
+    function draw(t) {
+      gl.uniform2f(locs.res, canvas.width, canvas.height);
+      gl.uniform1f(locs.time, t);
+      gl.uniform1f(locs.grain, grain);
+      gl.uniform3f(locs.bg, bgRgb[0], bgRgb[1], bgRgb[2]);
+      gl.uniform3fv(locs.colors, flat);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+
+    if (reduced) {
+      // One still frame, no loop: honor prefers-reduced-motion.
+      draw(6);
+      return;
+    }
+
+    function render(now) {
+      raf = requestAnimationFrame(render);
+      if (!intersecting || !pageVisible) return;
+      draw(now * 0.001 * speed);
+    }
+    raf = requestAnimationFrame(render);
+
+    document.addEventListener('visibilitychange', () => {
+      pageVisible = !document.hidden;
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const host = document.getElementById('velaris-host');
+    const canvas = document.getElementById('velaris-canvas');
+    if (!host || !canvas) return;
+    createVelaris(host, canvas, {
+      bg: '#0a0a0a',
+      colors: ['#ffffff', '#b8b8b8', '#4a4a4a', '#000000'],
+      speed: 1.1,
+      grain: 0.3,
+    });
+  });
+})();
 
 </script>
 
