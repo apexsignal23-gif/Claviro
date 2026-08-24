@@ -113,7 +113,7 @@
     .text-shine{ background: none; -webkit-text-fill-color: var(--cream); color: var(--cream); }
   }
 
-  section[id]{ scroll-margin-top: 88px; }
+  section[id]{ scroll-margin-top: 108px; }
 
   ::selection{ background: var(--accent); color: var(--ink-950); }
 
@@ -271,7 +271,7 @@
      Sizing this to the viewport instead makes that impossible regardless
      of how much or little content it holds. */
   #mobile-nav{
-    position: fixed; inset: 72px 0 0 0;
+    position: fixed; inset: 92px 0 0 0;
     z-index: 40;
     background: var(--chrome-bg);
     opacity: 0;
@@ -280,6 +280,7 @@
     overflow-y: auto;
     transition: opacity .35s var(--ease-spring), transform .35s var(--ease-spring);
   }
+  @media (min-width: 640px){ #mobile-nav{ inset-block-start: 96px; } }
   #mobile-nav.is-open{ opacity: 1; transform: translateY(0); pointer-events: auto; }
   @media (prefers-reduced-motion: reduce){ #mobile-nav{ transition: opacity .01s linear; transform: none; } }
 
@@ -307,9 +308,9 @@
 </svg>
 
 <!-- ================= NAV ================= -->
-<header class="fixed top-0 inset-x-0 z-50">
-  <div id="nav-chrome" class="backdrop-blur-md bg-[rgba(10,10,10,.72)] border-b border-[var(--chrome-border)] transition-colors duration-300">
-    <nav class="max-w-[1280px] mx-auto h-[72px] px-6 lg:px-10 flex items-center justify-between">
+<header class="fixed top-4 inset-x-4 sm:top-5 sm:inset-x-6 lg:inset-x-10 z-50">
+  <div id="nav-chrome" class="max-w-[1280px] mx-auto rounded-[28px] backdrop-blur-md bg-[rgba(14,14,14,.85)] border border-[var(--chrome-border)] shadow-[0_20px_45px_-20px_rgba(0,0,0,.65)] transition-colors duration-300">
+    <nav class="h-[68px] px-5 sm:px-7 lg:px-8 flex items-center justify-between">
       <a href="#top" class="flex items-center gap-2.5 shrink-0">
         <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
           <circle cx="15" cy="15" r="3.4" fill="#3b82f6"/>
@@ -319,7 +320,7 @@
         <span class="font-display font-bold text-[1.25rem] tracking-[-0.02em] text-[var(--chrome-fg)]">Claviro</span>
       </a>
 
-      <div class="hidden lg:flex items-center gap-9 font-medium text-[0.92rem]">
+      <div class="hidden lg:flex items-center gap-8 font-medium text-[0.92rem]">
         <a href="#what-we-do" class="nav-link">What We Do</a>
         <a href="#process" class="nav-link">Process</a>
         <a href="#team" class="nav-link">Team</a>
