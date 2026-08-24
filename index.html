@@ -642,11 +642,15 @@
 
     <div class="iv-stage reveal mt-12">
       <div id="iv-panel-video" class="iv-grid iv-panel">
-        <!-- VIDEO SLOT 1 — replace this placeholder div's contents with a <video> or <iframe> when a clip is supplied -->
+        <!-- VIDEO SLOT 1 — filled: Gumlet embed (third-party player) -->
         <div class="iv-item">
           <div class="iv-frame">
             <div class="iv-video" data-video-slot="1">
-              <div class="iv-placeholder"><i class="ph-bold ph-play-circle" aria-hidden="true"></i></div>
+              <iframe
+                loading="lazy" title="Gumlet video player"
+                src="https://play.gumlet.io/embed/6a8c22c028f2c759010e7854?background=false&amp;autoplay=false&amp;loop=false&amp;disable_player_controls=false"
+                referrerpolicy="origin"
+                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
             </div>
           </div>
         </div>
