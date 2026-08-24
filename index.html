@@ -289,6 +289,17 @@
      is defined later in this stylesheet and would otherwise win. */
   .t-arrow.iv-arrow{ background: var(--chrome-bg); border: 1px solid var(--ink-border); color: var(--cream); box-shadow: var(--shadow-btn); }
   .t-arrow.iv-arrow:hover{ box-shadow: var(--shadow-btn-hover); }
+  /* At `lg:` the arrow is also centered via Tailwind's -translate-y-1/2
+     (absolute + top:50%). .t-arrow:hover's plain `transform: translateY(-2px)`
+     would silently REPLACE that whole transform instead of adding to it,
+     yanking the arrow away from its centered spot on hover — which moves
+     it out from under the cursor, fires mouseleave, snaps it back, and
+     re-triggers hover in a jitter loop. Re-declaring the full transform
+     here (centering + a small lift) keeps both parts intact. */
+  @media (min-width: 1024px){
+    .t-arrow.iv-arrow:hover{ transform: translateY(calc(-50% - 2px)); }
+    .t-arrow.iv-arrow:active{ transform: translateY(-50%) scale(.94); }
+  }
   .iv-item{ transition: opacity .4s var(--ease-spring), transform .4s var(--ease-spring); }
   .iv-item.iv-anim-out{ opacity: 0; transform: translateY(-16px) scale(.96); }
   .iv-item.iv-anim-in{ opacity: 0; transform: translateY(16px) scale(.96); }
