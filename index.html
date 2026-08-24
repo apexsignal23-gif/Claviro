@@ -149,6 +149,32 @@
   .btn-primary:hover{ transform: translateY(-2px); box-shadow: var(--shadow-btn-hover); filter: brightness(1.04); }
   .btn-primary:active{ transform: translateY(0) scale(.98); box-shadow: var(--shadow-btn); }
 
+  /* Rotating-border glow, reverse-engineered from the reference site's own
+     CSS: a conic-gradient bright arc, clipped to a thin ring via the
+     mask-composite "exclude" trick (border-box minus content-box), spinning
+     continuously. A second layer blooms a soft glow beneath the button on
+     hover. Both layers sit on ::before/::after so no extra markup is needed. */
+  .btn-glow{ position: relative; }
+  .btn-glow::before{
+    content: ''; position: absolute; inset: -1px; border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(from 0deg, rgba(255,255,255,.55) 0deg, rgba(255,255,255,0) 60deg, rgba(255,255,255,0) 300deg, rgba(255,255,255,.55) 360deg);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: btn-glow-spin 2.5s linear infinite;
+    pointer-events: none;
+  }
+  .btn-glow::after{
+    content: ''; position: absolute; inset: -2px; border-radius: inherit;
+    background: radial-gradient(85% 120% at 50% 120%, rgba(255,255,255,.22), transparent 100%);
+    opacity: 0; transition: opacity 1s;
+    pointer-events: none;
+  }
+  .btn-glow:hover::after{ opacity: .7; }
+  @keyframes btn-glow-spin{ to{ transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce){ .btn-glow::before{ animation: none; } }
+
   .btn-ghost{
     display:inline-flex; align-items:center; gap:.4rem;
     color: var(--cream);
@@ -271,7 +297,7 @@
      Sizing this to the viewport instead makes that impossible regardless
      of how much or little content it holds. */
   #mobile-nav{
-    position: fixed; inset: 92px 0 0 0;
+    position: fixed; inset: 84px 0 0 0;
     z-index: 40;
     background: var(--chrome-bg);
     opacity: 0;
@@ -280,7 +306,7 @@
     overflow-y: auto;
     transition: opacity .35s var(--ease-spring), transform .35s var(--ease-spring);
   }
-  @media (min-width: 640px){ #mobile-nav{ inset-block-start: 96px; } }
+  @media (min-width: 640px){ #mobile-nav{ inset-block-start: 88px; } }
   #mobile-nav.is-open{ opacity: 1; transform: translateY(0); pointer-events: auto; }
   @media (prefers-reduced-motion: reduce){ #mobile-nav{ transition: opacity .01s linear; transform: none; } }
 
@@ -307,10 +333,16 @@
   <rect width="100%" height="100%" filter="url(#grain-filter)" />
 </svg>
 
-<!-- ================= NAV ================= -->
-<header class="fixed top-4 inset-x-4 sm:top-5 sm:inset-x-6 lg:inset-x-10 z-50">
-  <div id="nav-chrome" class="max-w-[1280px] mx-auto rounded-[28px] backdrop-blur-md bg-[rgba(14,14,14,.85)] border border-[var(--chrome-border)] shadow-[0_20px_45px_-20px_rgba(0,0,0,.65)] transition-colors duration-300">
-    <nav class="h-[68px] px-5 sm:px-7 lg:px-8 flex items-center justify-between">
+<!-- ================= NAV =================
+     Structure and exact values (radii, padding, colors) pulled from the
+     live reference site's own CSS, not eyeballed from a screenshot: an
+     outer bar (bg #141414, 1px #1a1a1a border, 20px radius, 72px min
+     height), a separate inner pill around just the links (4% white bg, 8%
+     white border, 16px radius), and the CTA as its own element 32px to the
+     right of that pill — not merged into it. -->
+<header class="fixed top-2 inset-x-4 sm:top-3 sm:inset-x-6 lg:inset-x-10 z-50">
+  <div id="nav-chrome" class="max-w-[1280px] mx-auto rounded-[20px] bg-[#141414] border border-[#1a1a1a] shadow-[0_20px_45px_-20px_rgba(0,0,0,.65)]">
+    <nav class="min-h-[72px] px-4 flex items-center justify-between">
       <a href="#top" class="flex items-center gap-2.5 shrink-0">
         <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
           <circle cx="15" cy="15" r="3.4" fill="#3b82f6"/>
@@ -320,14 +352,14 @@
         <span class="font-display font-bold text-[1.25rem] tracking-[-0.02em] text-[var(--chrome-fg)]">Claviro</span>
       </a>
 
-      <!-- Nav links and the CTA all share one pill container, matching the
-           reference — the button sits inset inside it, not beside it. -->
-      <div class="hidden lg:flex items-center gap-7 font-medium text-[0.92rem] rounded-full bg-white/5 border border-[var(--chrome-border)] pl-7 pr-2 py-2">
-        <a href="#what-we-do" class="nav-link">What We Do</a>
-        <a href="#process" class="nav-link">Process</a>
-        <a href="#team" class="nav-link">Team</a>
-        <a href="#testimonials" class="nav-link">Results</a>
-        <a href="#cta" class="btn-primary text-[0.9rem] ml-2">Book a Call</a>
+      <div class="hidden lg:flex items-center">
+        <div class="flex items-center gap-1 rounded-2xl bg-white/[0.04] border border-white/[0.08] px-2 py-1 font-medium text-[0.92rem]">
+          <a href="#what-we-do" class="nav-link px-4 py-2">What We Do</a>
+          <a href="#process" class="nav-link px-4 py-2">Process</a>
+          <a href="#team" class="nav-link px-4 py-2">Team</a>
+          <a href="#testimonials" class="nav-link px-4 py-2">Results</a>
+        </div>
+        <a href="#cta" class="btn-primary text-[0.9rem] ml-8">Book a Call</a>
       </div>
 
       <button id="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-nav" class="lg:hidden text-[var(--chrome-fg)] text-[1.6rem] leading-none p-1">
@@ -371,10 +403,10 @@
       </p>
 
       <div class="mt-9 flex flex-wrap items-center justify-center gap-5">
-        <a href="#cta" class="btn-primary">Book a Call</a>
-        <a href="#what-we-do" class="btn-ghost btn-ghost-invert">
-          See How It Works <i class="ph-bold ph-arrow-down-right" aria-hidden="true"></i>
+        <a href="#what-we-do" class="btn-glow rounded-full border border-white/15 bg-white/[0.03] px-6 py-3 text-[0.92rem] font-medium text-[var(--hero-fg)] transition-[transform,border-color,background-color] duration-300 hover:border-white/30 hover:bg-white/[0.06] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]">
+          See How It Works
         </a>
+        <a href="#cta" class="btn-primary">Book a Call</a>
       </div>
     </div>
   </div>
