@@ -229,6 +229,124 @@
     font-size: .76rem; font-weight: 700;
   }
 
+  /* Mirror: three-up card grid (side-by-side like case studies, per
+     explicit request — same grid mechanics as .cs-grid, kept as its own
+     class so this section stays independently editable). Card content
+     and the animated micro-illustrations (chat bubbles, detected-priority
+     meters, dual wave chart) are reproduced from repixa.io's own
+     "Features"/"Enterprise infrastructure" cards (curled their live
+     HTML/CSS, not guessed from the screenshots) and recolored onto
+     Claviro's dark ink theme + accent blue instead of their light theme. */
+  .mirror-grid{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 768px){
+    .mirror-grid{ grid-template-columns: repeat(3, 1fr); }
+  }
+  .mirror-card{
+    background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 18px;
+    padding: 1.4rem 1.4rem 1.6rem;
+    transition: transform .35s var(--ease-spring), border-color .35s var(--ease-spring);
+  }
+  .mirror-card:hover{ transform: translateY(-5px); border-color: rgba(59,130,246,.4); }
+  .mirror-visual{
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 14px;
+    background: var(--ink-900);
+    border: 1px solid var(--ink-border);
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    padding: .9rem;
+    display: flex; flex-direction: column;
+  }
+
+  /* "Answers questions live" card: buyer/Laura chat bubbles + a live
+     voice-waveform indicator + a loading-skeleton "screen" pinned to the
+     bottom via margin-top:auto on the last element. */
+  .mirror-qa-bubble{
+    position: relative; width: max-content; max-width: 88%;
+    font-size: .72rem; font-weight: 700; line-height: 1.3;
+    border-radius: 12px; padding: .5rem .65rem;
+    animation: mirror-chat-rise 4.6s ease-in-out infinite;
+  }
+  .mirror-qa-buyer{ background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); color: var(--cream); }
+  .mirror-qa-laura{ margin: .5rem 0 0 auto; background: var(--accent); border: 1px solid var(--accent); color: #fff; animation-delay: .42s; }
+  .mirror-qa-wave{ margin-top: .85rem; display: flex; align-items: center; gap: 5px; height: 32px; }
+  .mirror-qa-wave span{ width: 5px; height: 18px; border-radius: 20px; background: #34d399; animation: mirror-wave-bounce 1.3s ease-in-out infinite; }
+  .mirror-qa-wave span:nth-child(2){ height: 28px; animation-delay: .1s; }
+  .mirror-qa-wave span:nth-child(3){ height: 22px; animation-delay: .2s; }
+  .mirror-qa-wave span:nth-child(4){ height: 32px; animation-delay: .3s; }
+  .mirror-qa-screen{
+    margin-top: auto;
+    background: var(--ink-950);
+    border: 1px solid var(--ink-border);
+    border-radius: 12px; padding: .85rem;
+    display: grid; gap: .5rem;
+  }
+  .mirror-qa-screen span{ height: 6px; border-radius: 20px; background: rgba(255,255,255,.1); animation: mirror-qa-load 3.4s ease-in-out infinite; }
+  .mirror-qa-screen span:nth-child(2){ width: 60%; animation-delay: .2s; }
+
+  /* "Instant, natural interactions" card: two overlapping animated wave
+     paths on a soft accent glow, standing in for live voice/cursor motion. */
+  .mirror-wave-visual{ padding: 0; align-items: center; justify-content: center; }
+  .mirror-wave-visual::before{
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(60% 60% at 50% 40%, rgba(59,130,246,.18), transparent 70%);
+  }
+  .mirror-wave-visual svg{ position: relative; width: 118%; height: 100%; transform: translateX(-7%); }
+  .mirror-wave-visual path{ fill: none; stroke-width: 2.3; stroke-linecap: round; stroke-dasharray: 520; animation: mirror-wave-draw 5.2s ease-in-out infinite; }
+  .mirror-wave-a{ stroke: rgba(255,255,255,.35); }
+  .mirror-wave-b{ stroke: var(--accent-hot); animation-delay: -1.7s; }
+
+  /* "Understands buyer intent" card: two chat bubbles + a "Detected
+     priorities" meter panel pinned to the bottom. */
+  .mirror-intent-chat{ display: grid; gap: .5rem; }
+  .mirror-intent-chat span{
+    width: max-content; max-width: 88%;
+    font-size: .72rem; font-weight: 600; line-height: 1.3;
+    color: var(--cream);
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 12px;
+    padding: .5rem .65rem;
+    animation: mirror-chat-rise 4.8s ease-in-out infinite;
+  }
+  .mirror-intent-chat span:nth-child(2){ justify-self: end; animation-delay: .45s; }
+  .mirror-intent-panel{
+    margin-top: auto;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 12px;
+    padding: .75rem .85rem;
+  }
+  .mirror-intent-label{
+    font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--accent-hot);
+    margin-bottom: .5rem;
+  }
+  .mirror-intent-meter{ display: grid; grid-template-columns: 1fr auto; gap: .55rem; align-items: center; margin-top: .45rem; }
+  .mirror-intent-meter span{ height: 6px; border-radius: 20px; background: var(--accent); transform: scaleX(var(--rest)); transform-origin: left; animation: mirror-intent-fill 3.8s ease-in-out infinite; }
+  .mirror-intent-meter strong{ font-size: .62rem; font-weight: 700; color: var(--cream-dim); white-space: nowrap; }
+  .mirror-intent-a span{ --rest: .76; --scale: .92; }
+  .mirror-intent-b span{ --rest: .62; --scale: .78; animation-delay: .18s; }
+  .mirror-intent-c span{ --rest: .46; --scale: .62; animation-delay: .36s; }
+
+  @keyframes mirror-chat-rise{ 0%,100%{ transform: translateY(0); opacity: .82; } 50%{ transform: translateY(-4px); opacity: 1; } }
+  @keyframes mirror-wave-bounce{ 0%,100%{ transform: scaleY(.7); } 50%{ transform: scaleY(1.08); } }
+  @keyframes mirror-qa-load{ 0%,100%{ transform: scaleX(.62); transform-origin: left; opacity: .5; } 50%{ transform: scaleX(1); opacity: 1; } }
+  @keyframes mirror-wave-draw{ 0%{ stroke-dashoffset: 520; opacity: .3; } 42%,78%{ stroke-dashoffset: 0; opacity: .85; } 100%{ stroke-dashoffset: -520; opacity: .3; } }
+  @keyframes mirror-intent-fill{ 0%,100%{ transform: scaleX(var(--rest)); opacity: .75; } 50%{ transform: scaleX(var(--scale)); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce){
+    .mirror-qa-bubble, .mirror-qa-wave span, .mirror-qa-screen span, .mirror-wave-visual path, .mirror-intent-chat span, .mirror-intent-meter span{
+      animation: none;
+    }
+  }
+
   /* Industry Standard: vertical (9:16) video showcase row. Structure and
      breakpoint widths pulled from metromediahouse.co's own CSS (their
      .portfolio_component / .portfolio-item / .video-wrapper) — a
@@ -793,38 +911,54 @@
   </div>
 </section>
 
-<!-- ================= OUR EDGE ================= -->
-<section class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)] overflow-hidden">
-  <div class="max-w-[1280px] mx-auto px-6 lg:px-10 grid lg:grid-cols-2 gap-14 items-center">
-    <div class="reveal">
+<!-- ================= MIRROR ================= -->
+<section id="mirror" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+  <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
+    <div class="reveal max-w-[32rem]">
       <h2 class="text-balance font-display font-bold text-[1.9rem] sm:text-[2.5rem] leading-[1.12] tracking-[-0.025em] text-[var(--cream)]">
-        Gravity, Not Guesswork.
+        Mirror
       </h2>
-      <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)] max-w-[30rem]">
-        Consistency compounds. Every post either adds to your founder&rsquo;s pull on the market, or gets forgotten in a feed. We build the system that keeps compounding after we leave the room.
-      </p>
-      <a href="#process" class="btn-ghost mt-8 inline-flex">See The Process <i class="ph-bold ph-arrow-down-right" aria-hidden="true"></i></a>
     </div>
 
-    <div class="reveal flex items-center justify-center py-6">
-      <svg width="320" height="320" viewBox="0 0 320 320" class="w-full max-w-[320px] h-auto" aria-hidden="true">
-        <circle cx="160" cy="160" r="6" fill="var(--accent)"/>
-        <circle cx="160" cy="160" r="6" fill="var(--accent)" opacity=".5">
-          <animate attributeName="r" values="6;10;6" dur="3s" repeatCount="indefinite" />
-        </circle>
-        <g class="orbit-spin">
-          <ellipse cx="160" cy="160" rx="150" ry="60" fill="none" stroke="var(--accent)" stroke-width="1" opacity=".35"/>
-          <circle cx="310" cy="160" r="4" fill="var(--accent-hot)"/>
-        </g>
-        <g class="orbit-spin-rev">
-          <ellipse cx="160" cy="160" rx="100" ry="100" fill="none" stroke="var(--cream)" stroke-width="1" opacity=".14"/>
-          <circle cx="260" cy="160" r="3" fill="var(--cream)" opacity=".7"/>
-        </g>
-        <g class="orbit-spin">
-          <ellipse cx="160" cy="160" rx="60" ry="150" fill="none" stroke="var(--accent-deep)" stroke-width="1" opacity=".28"/>
-          <circle cx="160" cy="10" r="3" fill="var(--accent)"/>
-        </g>
-      </svg>
+    <div class="mirror-grid reveal mt-12">
+      <div class="mirror-card">
+        <div class="mirror-visual" aria-hidden="true">
+          <div class="mirror-qa-bubble mirror-qa-buyer">Can it handle our CRM?</div>
+          <div class="mirror-qa-bubble mirror-qa-laura">Yes, here you can&hellip;</div>
+          <div class="mirror-qa-wave"><span></span><span></span><span></span><span></span></div>
+          <div class="mirror-qa-screen"><span></span><span></span></div>
+        </div>
+        <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Answers questions live</h3>
+        <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Prospects ask anything mid-demo. Laura answers in context using your product knowledge and approved paths.</p>
+      </div>
+
+      <div class="mirror-card">
+        <div class="mirror-visual mirror-wave-visual" aria-hidden="true">
+          <svg viewBox="0 0 420 160" preserveAspectRatio="none">
+            <path class="mirror-wave-a" d="M0 84 C24 24 44 132 68 78 S112 52 140 83 S190 112 218 70 S262 18 284 90 S322 146 350 66 S386 38 420 88" />
+            <path class="mirror-wave-b" d="M0 104 C28 150 46 34 76 82 S122 112 150 74 S192 30 222 88 S270 114 302 42 S334 22 360 98 S394 140 420 72" />
+          </svg>
+        </div>
+        <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Instant, natural interactions</h3>
+        <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Keep voice, cursor motion, screen control, and answers responsive enough to feel live in the room.</p>
+      </div>
+
+      <div class="mirror-card">
+        <div class="mirror-visual" aria-hidden="true">
+          <div class="mirror-intent-chat">
+            <span>We need SOC 2 and Salesforce.</span>
+            <span>Show procurement controls?</span>
+          </div>
+          <div class="mirror-intent-panel">
+            <div class="mirror-intent-label">Detected priorities</div>
+            <div class="mirror-intent-meter mirror-intent-a"><span></span><strong>Security</strong></div>
+            <div class="mirror-intent-meter mirror-intent-b"><span></span><strong>CRM fit</strong></div>
+            <div class="mirror-intent-meter mirror-intent-c"><span></span><strong>Speed</strong></div>
+          </div>
+        </div>
+        <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Understands buyer intent</h3>
+        <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Laura listens, analyzes questions, and detects what the prospect actually cares about in real time.</p>
+      </div>
     </div>
   </div>
 </section>
