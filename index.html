@@ -347,6 +347,12 @@
     transition: transform .35s var(--ease-spring);
   }
   .nav-link:hover::after{ transform: scaleX(1); }
+  /* Desktop pill nav links (Case Studies/Process/Team/Results) — full
+     white, not the dimmed .nav-link default (that stays as-is for the
+     mobile takeover panel and footer). Scoped by #nav-chrome id so
+     specificity beats the plain .nav-link rule regardless of source
+     order, without touching .nav-link itself. */
+  #nav-chrome .nav-link, #nav-chrome .nav-link:hover{ color: #fff; }
 
   /* scroll reveal */
   .reveal{ opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease-spring), transform .8s var(--ease-spring); }
@@ -511,7 +517,7 @@
 
   <div class="relative z-10 flex h-full min-h-[100dvh] items-center justify-center px-6 sm:px-10 lg:px-20 text-center">
     <div class="max-w-[64rem]">
-      <h1 class="text-shine font-hero font-medium text-[1.9rem] leading-[1.2] tracking-[-0.01em] sm:text-[2.75rem] lg:text-[3.4rem]">
+      <h1 class="text-white font-hero font-medium text-[1.9rem] leading-[1.2] tracking-[-0.01em] sm:text-[2.75rem] lg:text-[3.4rem]">
         Content Production Agency<br />
         Built for B2B Tech Founders
       </h1>
