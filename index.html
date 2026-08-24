@@ -7,12 +7,12 @@
 <meta name="description" content="Claviro turns your LinkedIn presence into a B2B SaaS growth channel, built on a system, not guesswork." />
 <meta name="theme-color" content="#0a0a0a" />
 
-<!-- Fonts: Cabinet Grotesk (display) + Inter Tight (body) + Lora (hero headline serif) -->
+<!-- Fonts: Cabinet Grotesk (display) + Inter Tight (body) + Fraunces (hero headline serif) -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="preconnect" href="https://api.fontshare.com" />
 <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,600,500,400&display=swap" rel="stylesheet" />
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Lora:ital,wght@0,500;0,600;0,700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Fraunces:opsz,wght,SOFT,WONK@9..144,400,100,0&display=swap" rel="stylesheet" />
 
 <!-- Icons: Phosphor -->
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
@@ -95,8 +95,16 @@
 
   .font-display{ font-family: 'Cabinet Grotesk', 'General Sans', ui-sans-serif, system-ui, sans-serif; }
   /* Hero headline only, matching the reference screenshot's serif treatment.
+     Blacker Pro Display (the font actually named) is a paid MyFonts license
+     we don't have — Fraunces is the closest free stand-in: same family of
+     high-contrast display serif with soft, bulbous ball terminals. Its SOFT
+     variable axis is pushed to maximum to lean into that resemblance.
      Everything else on the site stays on Cabinet Grotesk. */
-  .font-hero{ font-family: 'Lora', 'Source Serif 4', Georgia, serif; }
+  .font-hero{
+    font-family: 'Fraunces', 'Source Serif 4', Georgia, serif;
+    font-optical-sizing: auto;
+    font-variation-settings: 'SOFT' 100, 'WONK' 0;
+  }
 
   /* Gray-to-white sheen text fill, matching consulting.com's hero
      treatment: a light band sweeping across otherwise muted gray type.
@@ -362,7 +370,7 @@
 
   <div class="relative z-10 flex h-full min-h-[100dvh] items-center justify-center px-6 sm:px-10 lg:px-20 text-center">
     <div class="max-w-[64rem]">
-      <h1 class="text-shine font-hero font-semibold text-[1.9rem] leading-[1.2] tracking-[-0.01em] sm:text-[2.75rem] lg:text-[3.4rem]">
+      <h1 class="text-shine font-hero font-normal text-[1.9rem] leading-[1.2] tracking-[-0.01em] sm:text-[2.75rem] lg:text-[3.4rem]">
         Content Production Agency<br />
         Built for B2B Tech Founders
       </h1>
