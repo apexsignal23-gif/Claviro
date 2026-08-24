@@ -502,12 +502,13 @@
      in the reference). Desktop only (`hidden lg:grid`); `.pricing-mobile`
      below is a separate stacked-card rebuild of the same data for small
      screens, since interleaving 3 plans' rows into one mobile column would
-     read as nonsense. The teal feature-row color is lifted directly from
-     the reference screenshot, not the site's own --accent blue — a
-     deliberate exact-match per the reference-image rule, scoped only to
-     this table via --pricing-teal. */
+     read as nonsense. Feature-row text was originally the reference
+     screenshot's teal, but the user asked to make it all white instead —
+     --pricing-teal (still named that for min-diff) is now just an alias
+     for var(--cream), scoped to this table in case a per-table override
+     is wanted again later. */
   .pricing-grid{
-    --pricing-teal: #38d0d6;
+    --pricing-teal: var(--cream);
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     border: 1px solid var(--ink-border);
@@ -533,7 +534,7 @@
 
   .pricing-mobile{ display: grid; gap: 1.5rem; }
   .pricing-mobile-card{
-    --pricing-teal: #38d0d6;
+    --pricing-teal: var(--cream);
     background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
     border: 1px solid rgba(255,255,255,.12);
     border-radius: 18px;
