@@ -379,6 +379,27 @@
     border-radius: 20px;
     padding: 1rem;
   }
+  /* The 3 cards hold very different content (a 3-row LinkedIn grid, a
+     single row of 9:16 videos, one 16:9 video) and so have different
+     natural heights. Since all 3 lock at the SAME sticky `top`, a
+     shorter card sitting on top of a taller one doesn't fully cover it —
+     the taller card's bottom portion pokes out below the shorter one,
+     visible in what should be empty gap (this is exactly what happened:
+     card 2's single-row video height is shorter than card 1's 3-row
+     LinkedIn grid, so card 1 showed through beneath it). Fix: pin every
+     card to the same fixed height + overflow:hidden once card 1 becomes
+     a true 3-row grid (at `lg:`), and center each card's content inside
+     that box so shorter content (card 2, card 3) isn't glued to the top. */
+  @media (min-width: 1024px){
+    .iv-card{
+      height: 32rem;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .iv-card > *{ width: 100%; }
+  }
 
   /* Vertical (9:16) video grid used inside card 2 — all 4 clips together
      in one card. Structure and breakpoint widths pulled from
