@@ -457,9 +457,29 @@
      paints above the iframe and catches the click itself. */
   .iv-video-post-link{ position: absolute; inset: 0; z-index: 1; }
   .iv-item:hover .iv-frame{ border-color: rgba(59,130,246,.35); }
+  /* Every filled LinkedIn slot ALSO carries the same .iv-placeholder-post
+     icon+label markup as the empty slots, as a permanent fallback layer.
+     The iframe and its click-through <a> are both `position:absolute`
+     (see the shared `.iv-video iframe` rule + .iv-video-post-link above),
+     so per normal CSS paint order an in-flow, non-positioned sibling like
+     this placeholder ALWAYS paints underneath them regardless of DOM
+     order — no z-index juggling needed. Net effect: if the embed
+     actually renders, its content visually covers the icon+label; if it
+     stays blank (the still-unresolved LinkedIn embed issue), the
+     icon+label shows through instead of a dead flat box, so every cell
+     in the grid reads as intentionally designed either way. */
   /* Card 3's full-width 16:9 video, instead of the 4-up vertical (9:16)
-     grid card 2 uses. */
+     grid card 2 uses. At `lg:` (where .iv-card is capped to a fixed
+     height so the 3 cards can fully occlude each other while stacking —
+     see .iv-card) the aspect-ratio-driven height left it visibly
+     shorter than the card, floating with empty space above/below. Fill
+     the full card height there instead; the underlying iframe already
+     stretches to 100%/`object-fit:cover` (see the shared `.iv-video
+     iframe` rule) so it crops to fill rather than distorting. */
   .iv-video-full{ aspect-ratio: 16 / 9; }
+  @media (min-width: 1024px){
+    .iv-video-full{ aspect-ratio: auto; height: 100%; }
+  }
   .iv-placeholder-post{
     display: flex; flex-direction: column; align-items: center; gap: .6rem;
     font-size: 1.7rem;
@@ -866,6 +886,7 @@
             <div class="iv-item">
               <div class="iv-frame">
                 <div class="iv-video iv-video-post" data-linkedin-slot="1">
+                  <div class="iv-placeholder iv-placeholder-post"><i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i><span>LinkedIn Post</span></div>
                   <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:share:7492603785668820992?collapsed=1" title="Embedded post"></iframe>
                   <a class="iv-video-post-link" href="https://www.linkedin.com/posts/harrystebbings_openrouter-is-one-of-the-most-insane-stories-activity-7492603787031891969-0IQV" target="_blank" rel="noopener noreferrer" aria-label="View Harry Stebbings' LinkedIn post about OpenRouter"></a>
                 </div>
@@ -874,6 +895,7 @@
             <div class="iv-item">
               <div class="iv-frame">
                 <div class="iv-video iv-video-post" data-linkedin-slot="2">
+                  <div class="iv-placeholder iv-placeholder-post"><i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i><span>LinkedIn Post</span></div>
                   <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:share:7494789847673405440?collapsed=1" title="Embedded post"></iframe>
                   <a class="iv-video-post-link" href="https://www.linkedin.com/posts/dharmesh_one-of-the-biggest-shifts-that-will-happen-activity-7494789848797499392-fRbd" target="_blank" rel="noopener noreferrer" aria-label="View Dharmesh Shah's LinkedIn post about organizational legibility"></a>
                 </div>
@@ -882,6 +904,7 @@
             <div class="iv-item">
               <div class="iv-frame">
                 <div class="iv-video iv-video-post" data-linkedin-slot="3">
+                  <div class="iv-placeholder iv-placeholder-post"><i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i><span>LinkedIn Post</span></div>
                   <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:share:7467152070626807808?collapsed=1" title="Embedded post"></iframe>
                   <a class="iv-video-post-link" href="https://www.linkedin.com/feed/update/urn:li:share:7467152070626807808/" target="_blank" rel="noopener noreferrer" aria-label="View David Heinemeier Hansson's LinkedIn post about work ethic"></a>
                 </div>
@@ -891,6 +914,7 @@
             <div class="iv-item">
               <div class="iv-frame">
                 <div class="iv-video iv-video-post" data-linkedin-slot="4">
+                  <div class="iv-placeholder iv-placeholder-post"><i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i><span>LinkedIn Post</span></div>
                   <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:share:7495628757240532993?collapsed=1" title="Embedded post"></iframe>
                   <a class="iv-video-post-link" href="https://www.linkedin.com/feed/update/urn:li:share:7495628757240532993/" target="_blank" rel="noopener noreferrer" aria-label="View Jason M. Lemkin's LinkedIn post about AI agents"></a>
                 </div>
@@ -900,6 +924,7 @@
             <div class="iv-item">
               <div class="iv-frame">
                 <div class="iv-video iv-video-post" data-linkedin-slot="5">
+                  <div class="iv-placeholder iv-placeholder-post"><i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i><span>LinkedIn Post</span></div>
                   <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:share:7486432556553302017?collapsed=1" title="Embedded post"></iframe>
                   <a class="iv-video-post-link" href="https://www.linkedin.com/feed/update/urn:li:share:7486432556553302017/" target="_blank" rel="noopener noreferrer" aria-label="View Tyler Denk's LinkedIn post about AI and engineering productivity"></a>
                 </div>
