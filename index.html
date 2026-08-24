@@ -175,33 +175,32 @@
   @keyframes btn-glow-spin{ to{ transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce){ .btn-glow::before{ animation: none; } }
 
-  /* Case studies: horizontally scrollable row (matches the reference's own
-     card width of 70% — deliberately wider than the viewport so the row
-     invites a scroll/swipe instead of fitting all three at once). */
-  .cs-scroll{
-    display: flex; gap: 1.5rem; overflow-x: auto;
-    scroll-snap-type: x mandatory; scroll-padding-left: 1.5rem;
-    -ms-overflow-style: none; scrollbar-width: none;
+  /* Case studies: dark theme, three-up grid (site-dark card bg kept —
+     only the section wrapper was ever white, matching contentfloww's own
+     light color-block, and that's now gone in favor of unified dark). */
+  .cs-grid{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
-  .cs-scroll::-webkit-scrollbar{ display: none; }
+  @media (min-width: 768px){
+    .cs-grid{ grid-template-columns: repeat(3, 1fr); }
+  }
   .cs-card{
-    scroll-snap-align: start;
-    flex: 0 0 85%;
     background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
     border: 1px solid rgba(255,255,255,.12);
     border-radius: 16px;
-    padding: 2rem 1.5rem;
+    padding: 1.5rem 1.25rem;
     display: flex; flex-direction: column; justify-content: space-between;
-    gap: 2rem;
+    gap: 1.5rem;
     color: #aaa;
   }
-  @media (min-width: 640px){ .cs-card{ flex-basis: 70%; } }
   .cs-highlight{
     display: inline; color: #f1ca6d;
     background: rgba(241,202,109,.3);
     letter-spacing: 1px; text-transform: uppercase;
     border-radius: 6px; padding: .2rem .4rem;
-    font-size: .8rem; font-weight: 700;
+    font-size: .76rem; font-weight: 700;
   }
 
   .btn-ghost{
@@ -383,7 +382,7 @@
 
       <div class="hidden lg:flex items-center">
         <div class="flex items-center gap-1 rounded-2xl bg-white/[0.04] border border-white/[0.08] px-2 py-1 font-medium text-[0.92rem]">
-          <a href="#what-we-do" class="nav-link px-4 py-2">What We Do</a>
+          <a href="#case-studies" class="nav-link px-4 py-2">Case Studies</a>
           <a href="#process" class="nav-link px-4 py-2">Process</a>
           <a href="#team" class="nav-link px-4 py-2">Team</a>
           <a href="#testimonials" class="nav-link px-4 py-2">Results</a>
@@ -403,7 +402,7 @@
      descendants, which would collapse this panel's height to zero. -->
 <div id="mobile-nav" class="lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
   <div class="px-6 py-8 flex flex-col gap-6 font-medium text-[1.15rem]">
-    <a href="#what-we-do" class="nav-link w-fit">What We Do</a>
+    <a href="#case-studies" class="nav-link w-fit">Case Studies</a>
     <a href="#process" class="nav-link w-fit">Process</a>
     <a href="#team" class="nav-link w-fit">Team</a>
     <a href="#testimonials" class="nav-link w-fit">Results</a>
@@ -436,53 +435,6 @@
           See How It Works
         </a>
         <a href="#cta" class="btn-primary">Book a Call</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= CASE STUDIES ("second page" on scroll, matching
-     contentfloww.com's own placement right after the hero) =================
-     Light cream color-block, same device as the light testimonials section
-     further down: a deliberate one-off inversion, not random alternation. -->
-<section class="relative py-24 sm:py-28" style="background: #fff8e7;">
-  <div class="max-w-[1280px] mx-auto reveal">
-    <h2 class="text-balance text-center font-display font-bold text-[1.9rem] sm:text-[2.5rem] leading-[1.15] tracking-[-0.02em] px-6" style="color:#000;">
-      What we&rsquo;ve built for <em class="font-hero italic font-medium">B2B SaaS</em> founders
-    </h2>
-
-    <div class="cs-scroll mt-12 px-6 lg:px-10">
-      <div class="cs-card">
-        <p class="text-[0.98rem] leading-[1.7]">
-          <span class="cs-highlight">3M+ impressions in one quarter</span>
-          A Series A fintech infra company with zero founder presence. We turned engineering deep-dives into a LinkedIn content engine that filled a full sales calendar in one quarter.
-        </p>
-        <div class="flex items-center gap-4">
-          <img src="https://i.pravatar.cc/120?img=15" alt="" width="48" height="48" class="w-12 h-12 rounded-full object-cover" />
-          <p class="font-semibold text-[0.95rem] text-white">Danielle Okafor<span class="font-normal text-[#aaa]">, Founder, Ledgerly</span></p>
-        </div>
-      </div>
-
-      <div class="cs-card">
-        <p class="text-[0.98rem] leading-[1.7]">
-          <span class="cs-highlight">0 to 9,400 followers</span>
-          A technical co-founder who had never posted publicly. We built his voice from recorded standups alone, and he started getting inbound demo requests within 60 days.
-        </p>
-        <div class="flex items-center gap-4">
-          <img src="https://i.pravatar.cc/120?img=33" alt="" width="48" height="48" class="w-12 h-12 rounded-full object-cover" />
-          <p class="font-semibold text-[0.95rem] text-white">Tomasz Wieczorek<span class="font-normal text-[#aaa]">, Founder, Pactly</span></p>
-        </div>
-      </div>
-
-      <div class="cs-card">
-        <p class="text-[0.98rem] leading-[1.7]">
-          <span class="cs-highlight">40+ inbound demos a month</span>
-          A B2B analytics platform relying entirely on outbound. We replaced cold email with a founder content engine that now brings in 40+ inbound demos every month.
-        </p>
-        <div class="flex items-center gap-4">
-          <img src="https://i.pravatar.cc/120?img=60" alt="" width="48" height="48" class="w-12 h-12 rounded-full object-cover" />
-          <p class="font-semibold text-[0.95rem] text-white">Renata Kowalczyk<span class="font-normal text-[#aaa]">, Founder, Metrik</span></p>
-        </div>
       </div>
     </div>
   </div>
@@ -523,30 +475,49 @@
   </div>
 </section>
 
-<!-- ================= THE PROBLEM ================= -->
-<section class="relative bg-[var(--ink-950)] py-24 sm:py-28">
-  <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
-    <div class="max-w-[38rem] reveal">
-      <h2 class="text-balance font-display font-bold text-[1.9rem] sm:text-[2.5rem] leading-[1.12] tracking-[-0.025em] text-[var(--cream)]">
-        Most Founders Are Invisible Where Deals Actually Start.
-      </h2>
-      <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)] max-w-[34rem]">
-        Buyers check LinkedIn before they check your pricing page. Most B2B founders have nothing there worth finding.
-      </p>
-    </div>
+<!-- ================= CASE STUDIES =================
+     Replaces the former "Problem" section per user request. Dark theme
+     throughout (site-unified, no light color-block here anymore), three
+     smaller cards side by side on desktop — matching contentfloww.com's
+     card layout — stacking to one column on mobile. -->
+<section id="case-studies" class="relative bg-[var(--ink-950)] py-24 sm:py-28">
+  <div class="max-w-[1280px] mx-auto px-6 lg:px-10 reveal">
+    <h2 class="text-balance text-center font-display font-bold text-[1.9rem] sm:text-[2.5rem] leading-[1.15] tracking-[-0.02em] text-[var(--cream)]">
+      What we&rsquo;ve built for <em class="font-hero italic font-medium">B2B SaaS</em> founders
+    </h2>
 
-    <div class="mt-14 divide-y divide-[var(--ink-border)] border-t border-[var(--ink-border)]">
-      <div class="reveal grid md:grid-cols-[1.1fr_2fr] gap-4 md:gap-10 py-8">
-        <h3 class="font-display font-semibold text-[1.2rem] text-[var(--cream)]">The Founder&rsquo;s Profile Goes Quiet</h3>
-        <p class="text-[var(--cream-dim)] leading-[1.65] max-w-[38rem]">Exactly when the market starts paying attention, the one voice buyers actually want to hear from stops posting.</p>
+    <div class="cs-grid mt-12">
+      <div class="cs-card">
+        <p class="text-[0.88rem] leading-[1.6]">
+          <span class="cs-highlight">3M+ impressions in one quarter</span>
+          A Series A fintech infra company with zero founder presence. We turned engineering deep-dives into a LinkedIn content engine that filled a full sales calendar in one quarter.
+        </p>
+        <div class="flex items-center gap-3">
+          <img src="https://i.pravatar.cc/120?img=15" alt="" width="40" height="40" class="w-10 h-10 rounded-full object-cover" />
+          <p class="font-semibold text-[0.88rem] text-white">Danielle Okafor<span class="font-normal text-[#aaa]">, Founder, Ledgerly</span></p>
+        </div>
       </div>
-      <div class="reveal grid md:grid-cols-[1.1fr_2fr] gap-4 md:gap-10 py-8">
-        <h3 class="font-display font-semibold text-[1.2rem] text-[var(--cream)]">Content with no system</h3>
-        <p class="text-[var(--cream-dim)] leading-[1.65] max-w-[38rem]">A marketing team posts on the company page while the person buyers actually trust says nothing at all.</p>
+
+      <div class="cs-card">
+        <p class="text-[0.88rem] leading-[1.6]">
+          <span class="cs-highlight">0 to 9,400 followers</span>
+          A technical co-founder who had never posted publicly. We built his voice from recorded standups alone, and he started getting inbound demo requests within 60 days.
+        </p>
+        <div class="flex items-center gap-3">
+          <img src="https://i.pravatar.cc/120?img=33" alt="" width="40" height="40" class="w-10 h-10 rounded-full object-cover" />
+          <p class="font-semibold text-[0.88rem] text-white">Tomasz Wieczorek<span class="font-normal text-[#aaa]">, Founder, Pactly</span></p>
+        </div>
       </div>
-      <div class="reveal grid md:grid-cols-[1.1fr_2fr] gap-4 md:gap-10 py-8">
-        <h3 class="font-display font-semibold text-[1.2rem] text-[var(--cream)]">Growth rented from ad platforms</h3>
-        <p class="text-[var(--cream-dim)] leading-[1.65] max-w-[38rem]">The pipeline slows the moment the ad budget does, because nothing was built to outlast it.</p>
+
+      <div class="cs-card">
+        <p class="text-[0.88rem] leading-[1.6]">
+          <span class="cs-highlight">40+ inbound demos a month</span>
+          A B2B analytics platform relying entirely on outbound. We replaced cold email with a founder content engine that now brings in 40+ inbound demos every month.
+        </p>
+        <div class="flex items-center gap-3">
+          <img src="https://i.pravatar.cc/120?img=60" alt="" width="40" height="40" class="w-10 h-10 rounded-full object-cover" />
+          <p class="font-semibold text-[0.88rem] text-white">Renata Kowalczyk<span class="font-normal text-[#aaa]">, Founder, Metrik</span></p>
+        </div>
       </div>
     </div>
   </div>
