@@ -358,6 +358,33 @@
      order, without touching .nav-link itself. */
   #nav-chrome .nav-link, #nav-chrome .nav-link:hover{ color: #fff; }
 
+  /* Liquid-glass header: translucent frosted panel over blurred page
+     content instead of the old solid #141414 fill — a soft corner sheen
+     (radial-gradient, standing in for a specular highlight) layered over
+     a vertical glass-tint gradient, backdrop blur/saturate for the
+     "frost", and a bright inset top edge + dim inset bottom edge to read
+     as a curved glass rim. All layered directly in the `background`
+     shorthand (not a ::before) — a pseudo-element here would paint OVER
+     the in-flow <nav> content per CSS stacking order (positioned,
+     z-index:auto descendants paint after non-positioned in-flow ones),
+     dulling the nav; folding it into the background avoids that entirely.
+     Needs backdrop-filter support (all modern evergreen browsers); falls
+     back to the semi-opaque base background on older ones, which still
+     reads fine, just without blur. */
+  #nav-chrome{
+    background:
+      radial-gradient(120% 160% at 12% -40%, rgba(255,255,255,.16), transparent 55%),
+      linear-gradient(180deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.02) 45%, rgba(8,8,8,.4) 100%),
+      rgba(16,16,16,.52);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    backdrop-filter: blur(22px) saturate(180%);
+    border: 1px solid rgba(255,255,255,.14);
+    box-shadow:
+      0 20px 45px -20px rgba(0,0,0,.65),
+      inset 0 1px 0 rgba(255,255,255,.18),
+      inset 0 -1px 0 rgba(255,255,255,.04);
+  }
+
   /* scroll reveal */
   .reveal{ opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease-spring), transform .8s var(--ease-spring); }
   .reveal.is-visible{ opacity: 1; transform: translateY(0); }
@@ -469,7 +496,7 @@
      white border, 16px radius), and the CTA as its own element 32px to the
      right of that pill — not merged into it. -->
 <header class="fixed top-2 inset-x-4 sm:top-3 sm:inset-x-6 lg:inset-x-10 z-50">
-  <div id="nav-chrome" class="max-w-[1280px] mx-auto rounded-[20px] bg-[#141414] border border-[#1a1a1a] shadow-[0_20px_45px_-20px_rgba(0,0,0,.65)]">
+  <div id="nav-chrome" class="max-w-[1280px] mx-auto rounded-[20px]">
     <nav class="min-h-[72px] px-4 flex items-center justify-between">
       <a href="#top" class="flex items-center gap-2.5 shrink-0">
         <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
