@@ -466,8 +466,14 @@
      rendered inconsistently across browsers and is the suspected cause
      of these embeds showing blank for some visitors. The overlay sits
      absolutely positioned over the same box and, being later in the DOM,
-     paints above the iframe and catches the click itself. */
+     paints above the iframe and catches the click itself.
+     For slots using a static image thumbnail instead of a live iframe
+     (see slot 1), .iv-video-post-link is reused as the <a>'s OWN class —
+     an <img> is not "interactive content" so it's valid to nest it right
+     inside the <a> (no overlay-sibling trick needed there); the rule
+     below just makes that <img> fill the anchor's box. */
   .iv-video-post-link{ position: absolute; inset: 0; z-index: 1; }
+  .iv-video-post-link img{ display: block; width: 100%; height: 100%; object-fit: cover; }
   .iv-item:hover .iv-frame{ border-color: rgba(59,130,246,.35); }
   /* Every filled LinkedIn slot ALSO carries the same .iv-placeholder-post
      icon+label markup as the empty slots, as a permanent fallback layer.
@@ -908,9 +914,9 @@
             <div class="iv-item">
               <div class="iv-frame">
                 <div class="iv-video iv-video-post" data-linkedin-slot="1">
-                  <div class="iv-placeholder iv-placeholder-post"><i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i><span>LinkedIn Post</span></div>
-                  <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:share:7492603785668820992?collapsed=1" title="Embedded post"></iframe>
-                  <a class="iv-video-post-link" href="https://www.linkedin.com/posts/harrystebbings_openrouter-is-one-of-the-most-insane-stories-activity-7492603787031891969-0IQV" target="_blank" rel="noopener noreferrer" aria-label="View Harry Stebbings' LinkedIn post about OpenRouter"></a>
+                  <a class="iv-video-post-link" href="https://www.linkedin.com/posts/harrystebbings_openrouter-is-one-of-the-most-insane-stories-activity-7492603787031891969-0IQV" target="_blank" rel="noopener noreferrer" aria-label="View Harry Stebbings' LinkedIn post about OpenRouter">
+                    <img src="thumbnail/harry.jpeg" alt="Harry Stebbings' LinkedIn post about OpenRouter" loading="lazy" />
+                  </a>
                 </div>
               </div>
             </div>
