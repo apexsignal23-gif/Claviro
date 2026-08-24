@@ -452,7 +452,8 @@
   }
   .iv-raw-img{
     display: block; width: 100%; height: 100%;
-    aspect-ratio: 4 / 3; object-fit: cover; border-radius: .5rem;
+    aspect-ratio: 4 / 3; object-fit: contain; border-radius: .5rem;
+    background: var(--ink-900);
   }
   @media (min-width: 1024px){ .iv-raw-img{ aspect-ratio: auto; } }
   .iv-raw-placeholder{
