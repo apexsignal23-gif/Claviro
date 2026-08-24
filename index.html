@@ -320,16 +320,14 @@
         <span class="font-display font-bold text-[1.25rem] tracking-[-0.02em] text-[var(--chrome-fg)]">Claviro</span>
       </a>
 
-      <!-- Nav links and the CTA are one right-aligned cluster (not spread
-           across the bar with justify-between), matching the reference. -->
-      <div class="hidden lg:flex items-center gap-5">
-        <div class="flex items-center gap-7 font-medium text-[0.92rem] rounded-full bg-white/5 border border-[var(--chrome-border)] px-6 py-2.5">
-          <a href="#what-we-do" class="nav-link">What We Do</a>
-          <a href="#process" class="nav-link">Process</a>
-          <a href="#team" class="nav-link">Team</a>
-          <a href="#testimonials" class="nav-link">Results</a>
-        </div>
-        <a href="#cta" class="btn-primary text-[0.9rem]">Book a Call</a>
+      <!-- Nav links and the CTA all share one pill container, matching the
+           reference — the button sits inset inside it, not beside it. -->
+      <div class="hidden lg:flex items-center gap-7 font-medium text-[0.92rem] rounded-full bg-white/5 border border-[var(--chrome-border)] pl-7 pr-2 py-2">
+        <a href="#what-we-do" class="nav-link">What We Do</a>
+        <a href="#process" class="nav-link">Process</a>
+        <a href="#team" class="nav-link">Team</a>
+        <a href="#testimonials" class="nav-link">Results</a>
+        <a href="#cta" class="btn-primary text-[0.9rem] ml-2">Book a Call</a>
       </div>
 
       <button id="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-nav" class="lg:hidden text-[var(--chrome-fg)] text-[1.6rem] leading-none p-1">
