@@ -494,6 +494,57 @@
     .en-panel-chart::before, .en-panel-line path{ animation: none; }
   }
 
+  /* Pricing table (placed after the restored Gravity section) — matches a
+     user-supplied reference screenshot exactly: a 3-column comparison grid
+     (Launch / Core / Studio) with shared horizontal row lines even though
+     each plan has a different number of feature rows (shorter columns get
+     blank filler cells so the grid lines still line up, exactly as shown
+     in the reference). Desktop only (`hidden lg:grid`); `.pricing-mobile`
+     below is a separate stacked-card rebuild of the same data for small
+     screens, since interleaving 3 plans' rows into one mobile column would
+     read as nonsense. The teal feature-row color is lifted directly from
+     the reference screenshot, not the site's own --accent blue — a
+     deliberate exact-match per the reference-image rule, scoped only to
+     this table via --pricing-teal. */
+  .pricing-grid{
+    --pricing-teal: #38d0d6;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--ink-border);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--ink-950);
+  }
+  .pricing-cell{
+    padding: 1.1rem 1.35rem;
+    border-right: 1px solid var(--ink-border);
+    border-bottom: 1px solid var(--ink-border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 3.1rem;
+  }
+  .pricing-grid > .pricing-cell:nth-child(3n){ border-right: 0; }
+  .pricing-grid > .pricing-cell:nth-last-child(-n+3){ border-bottom: 0; }
+  .pricing-head strong{ color: var(--cream); font-size: 1.05rem; font-weight: 700; letter-spacing: -.01em; }
+  .pricing-head span{ margin-top: .3rem; font-size: .82rem; color: var(--cream-dim); }
+  .pricing-price{ font-weight: 700; color: var(--cream); font-size: .98rem; }
+  .pricing-feature{ color: var(--pricing-teal); font-size: .9rem; line-height: 1.5; }
+
+  .pricing-mobile{ display: grid; gap: 1.5rem; }
+  .pricing-mobile-card{
+    --pricing-teal: #38d0d6;
+    background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 18px;
+    padding: 1.5rem 1.5rem 1.75rem;
+  }
+  .pricing-mobile-card h3{ font-size: 1.15rem; font-weight: 700; color: var(--cream); }
+  .pricing-mobile-card .pm-duration{ margin-top: .2rem; font-size: .85rem; color: var(--cream-dim); }
+  .pricing-mobile-card .pm-price{ margin-top: .9rem; font-weight: 700; color: var(--cream); font-size: 1.1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--ink-border); }
+  .pricing-mobile-card ul{ margin-top: 1rem; display: grid; gap: .65rem; }
+  .pricing-mobile-card li{ color: var(--pricing-teal); font-size: .9rem; line-height: 1.5; }
+
   /* Industry Standard: sticky-stack scroll reveal, reverse-engineered from
      contentfloww.com's own "Podcast trailers" section (curled their live
      HTML/CSS, not guessed from a screenshot). Originally a sticky heading
@@ -1327,6 +1378,129 @@
         </g>
       </svg>
     </div>
+  </div>
+</section>
+
+<!-- ================= PRICING (added after the restored Gravity section)
+     — matches a user-supplied reference screenshot exactly: layout,
+     spacing, and the teal feature-row color are all lifted from that
+     screenshot rather than the site's own design tokens. Desktop shows
+     the literal 3-column comparison grid; below `lg:` each plan renders
+     as its own stacked card instead (see the CSS comment above
+     .pricing-grid for why). ================= -->
+<section class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+  <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
+
+    <div class="pricing-grid reveal hidden lg:grid">
+      <div class="pricing-cell pricing-head"><strong class="font-display">Launch</strong><span>1 month</span></div>
+      <div class="pricing-cell pricing-head"><strong class="font-display">Core</strong><span>3 months</span></div>
+      <div class="pricing-cell pricing-head"><strong class="font-display">Studio</strong><span>6 months+</span></div>
+
+      <div class="pricing-cell pricing-price">$3500</div>
+      <div class="pricing-cell pricing-price">$2500/mo</div>
+      <div class="pricing-cell pricing-price">Let&rsquo;s talk</div>
+
+      <div class="pricing-cell pricing-feature">Pre-Launch Content Planning</div>
+      <div class="pricing-cell pricing-feature">Tailored roadmap</div>
+      <div class="pricing-cell pricing-feature">Everything in Core</div>
+
+      <div class="pricing-cell pricing-feature">20 Produced Content</div>
+      <div class="pricing-cell pricing-feature">60 Produced Content</div>
+      <div class="pricing-cell pricing-feature">120+ Produced Content</div>
+
+      <div class="pricing-cell pricing-feature">Flagship Launch Video</div>
+      <div class="pricing-cell pricing-feature">Repeatable Pre-Production System</div>
+      <div class="pricing-cell pricing-feature">Dedicated Creative Team</div>
+
+      <div class="pricing-cell pricing-feature">Filming Assistance</div>
+      <div class="pricing-cell pricing-feature">Repurposing Existing Materials</div>
+      <div class="pricing-cell pricing-feature">Podcast Production</div>
+
+      <div class="pricing-cell pricing-feature">Made for Pre-Launch Founders</div>
+      <div class="pricing-cell pricing-feature">Built around LinkedIn</div>
+      <div class="pricing-cell pricing-feature">Shooting Direction</div>
+
+      <div class="pricing-cell"></div>
+      <div class="pricing-cell pricing-feature">Scheduling</div>
+      <div class="pricing-cell pricing-feature">Custom Analytics Dashboard</div>
+
+      <div class="pricing-cell"></div>
+      <div class="pricing-cell pricing-feature">Video Content</div>
+      <div class="pricing-cell pricing-feature">Multi-platform expansion (6 core channels)</div>
+
+      <div class="pricing-cell"></div>
+      <div class="pricing-cell pricing-feature">Bi-weekly checkins</div>
+      <div class="pricing-cell pricing-feature">Long-form content</div>
+
+      <div class="pricing-cell"></div>
+      <div class="pricing-cell pricing-feature">Monthly Performance Report</div>
+      <div class="pricing-cell pricing-feature">Mass Distribution (clipping)</div>
+
+      <div class="pricing-cell"></div>
+      <div class="pricing-cell pricing-feature">Upcoming Month Optimization</div>
+      <div class="pricing-cell pricing-feature">Repeatable Post-Production System</div>
+
+      <div class="pricing-cell"></div>
+      <div class="pricing-cell pricing-feature">Made for Startup &amp; Scaleup Founders</div>
+      <div class="pricing-cell pricing-feature">Access to Limited Community</div>
+
+      <div class="pricing-cell"></div>
+      <div class="pricing-cell"></div>
+      <div class="pricing-cell pricing-feature">Made for Enterprise Founders</div>
+    </div>
+
+    <div class="pricing-mobile reveal lg:hidden">
+      <div class="pricing-mobile-card">
+        <h3 class="font-display">Launch</h3>
+        <p class="pm-duration">1 month</p>
+        <p class="pm-price">$3500</p>
+        <ul>
+          <li>Pre-Launch Content Planning</li>
+          <li>20 Produced Content</li>
+          <li>Flagship Launch Video</li>
+          <li>Filming Assistance</li>
+          <li>Made for Pre-Launch Founders</li>
+        </ul>
+      </div>
+      <div class="pricing-mobile-card">
+        <h3 class="font-display">Core</h3>
+        <p class="pm-duration">3 months</p>
+        <p class="pm-price">$2500/mo</p>
+        <ul>
+          <li>Tailored roadmap</li>
+          <li>60 Produced Content</li>
+          <li>Repeatable Pre-Production System</li>
+          <li>Repurposing Existing Materials</li>
+          <li>Built around LinkedIn</li>
+          <li>Scheduling</li>
+          <li>Video Content</li>
+          <li>Bi-weekly checkins</li>
+          <li>Monthly Performance Report</li>
+          <li>Upcoming Month Optimization</li>
+          <li>Made for Startup &amp; Scaleup Founders</li>
+        </ul>
+      </div>
+      <div class="pricing-mobile-card">
+        <h3 class="font-display">Studio</h3>
+        <p class="pm-duration">6 months+</p>
+        <p class="pm-price">Let&rsquo;s talk</p>
+        <ul>
+          <li>Everything in Core</li>
+          <li>120+ Produced Content</li>
+          <li>Dedicated Creative Team</li>
+          <li>Podcast Production</li>
+          <li>Shooting Direction</li>
+          <li>Custom Analytics Dashboard</li>
+          <li>Multi-platform expansion (6 core channels)</li>
+          <li>Long-form content</li>
+          <li>Mass Distribution (clipping)</li>
+          <li>Repeatable Post-Production System</li>
+          <li>Access to Limited Community</li>
+          <li>Made for Enterprise Founders</li>
+        </ul>
+      </div>
+    </div>
+
   </div>
 </section>
 
