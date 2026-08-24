@@ -349,25 +349,23 @@
 
   /* Industry Standard: sticky-stack scroll reveal, reverse-engineered from
      contentfloww.com's own "Podcast trailers" section (curled their live
-     HTML/CSS, not guessed from a screenshot) — a sticky heading column
-     (.iv-scroll-head) beside a column of cards (.iv-card) that are ALSO
-     each `position:sticky`. As the page scrolls, each card rides up from
-     below the viewport, locks at the same `top` offset as the one before
-     it, and — because later DOM siblings paint over earlier ones by
-     default — visually slides up to cover the previous card. That's the
-     whole "content gradually appears as you scroll" effect the user
-     wanted; no JS/IntersectionObserver needed, pure CSS. IMPORTANT: no
-     ancestor of `.iv-card` may have `overflow:hidden/auto/scroll` — that
-     silently breaks `position:sticky` for everything inside it. */
-  .iv-scroll-stack{ display: flex; flex-direction: column; gap: 2.5rem; }
-  @media (min-width: 768px){
-    .iv-scroll-stack{ flex-direction: row; align-items: flex-start; gap: 4rem; }
-  }
-  .iv-scroll-head{ flex: none; }
-  @media (min-width: 768px){
-    .iv-scroll-head{ flex: 0 0 30%; position: sticky; top: 7rem; }
-  }
-  .iv-scroll-cards{ flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2.5rem; }
+     HTML/CSS, not guessed from a screenshot). Originally a sticky heading
+     column beside the cards (contentfloww's own layout); the user later
+     asked for the heading centered at the top instead, with the cards
+     centered below it — so `.iv-scroll-head` is now just a centered block
+     up top (no longer sticky/side-by-side) and `.iv-scroll-stack` stays a
+     single centered column at every breakpoint. The stacking effect
+     itself is unchanged: each `.iv-card` is `position:sticky`, so as the
+     page scrolls, a card rides up from below the viewport, locks at the
+     same `top` offset as the one before it, and — because later DOM
+     siblings paint over earlier ones by default — visually slides up to
+     cover the previous card. That's the whole "content gradually appears
+     as you scroll" effect, pure CSS, no JS/IntersectionObserver needed.
+     IMPORTANT: no ancestor of `.iv-card` may have
+     `overflow:hidden/auto/scroll` — that silently breaks
+     `position:sticky` for everything inside it. */
+  .iv-scroll-stack{ display: flex; flex-direction: column; align-items: center; gap: 3rem; }
+  .iv-scroll-cards{ width: 100%; display: flex; flex-direction: column; gap: 2.5rem; }
   @media (min-width: 768px){
     .iv-scroll-cards{ gap: 7rem; }
   }
@@ -840,11 +838,11 @@
 <section id="industry-standard" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="iv-scroll-stack">
-      <div class="iv-scroll-head reveal text-center md:text-left">
+      <div class="iv-scroll-head reveal max-w-[34rem] mx-auto text-center">
         <h2 class="text-shine inline-block text-balance font-hero font-medium text-[1.9rem] sm:text-[2.5rem] leading-[1.12] tracking-[-0.025em]">
           Industry Standard
         </h2>
-        <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)] max-w-[26rem] mx-auto md:mx-0">
+        <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">
           The production quality behind every post we publish, built to stop the scroll before your founder&rsquo;s name ever shows up.
         </p>
       </div>
