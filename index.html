@@ -440,13 +440,25 @@
   .iv-placeholder{ color: rgba(255,255,255,.22); font-size: 2.4rem; }
   /* Card 1's 3x3 LinkedIn post grid: same .iv-grid/.iv-item/.iv-frame
      shell as card 2's videos, but 3-up instead of 4-up (9 posts total,
-     repeat(3,1fr) auto-wraps them into 3 rows at lg), and a wider aspect
-     ratio matching LinkedIn's own "collapsed" embed preview shape
-     (~504:263) instead of the 9:16 used for video. */
-  @media (min-width: 1024px){
-    .iv-grid.iv-grid-linkedin{ grid-template-columns: repeat(3, 1fr); }
-  }
+     repeat(3,1fr) auto-wraps them into 3 rows). Below `lg:` it just uses
+     an aspect-ratio (matching LinkedIn's own "collapsed" preview shape,
+     ~504:263) since .iv-card isn't height-capped there. At `lg:`,
+     .iv-card IS capped to a fixed height (see .iv-card) — so instead of
+     an aspect-ratio (which could over/undershoot that fixed height and
+     either get clipped by the card's overflow:hidden or leave dead
+     space), the grid is told its own explicit height:100% with 3 equal
+     `1fr` rows, and each cell fills its row via height:100% instead of a
+     fixed ratio — guaranteeing all 9 boxes divide the card's height
+     exactly, no clipping, no gaps, regardless of container width. */
   .iv-video-post{ aspect-ratio: 504 / 263; }
+  @media (min-width: 1024px){
+    .iv-grid.iv-grid-linkedin{
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      height: 100%;
+    }
+    .iv-grid.iv-grid-linkedin .iv-video-post{ aspect-ratio: auto; height: 100%; }
+  }
   /* Make a filled slot's whole box clickable through to the real post
      via a sibling <a> overlay, NOT by nesting the <iframe> inside the
      <a> — an <iframe> is "interactive content" and HTML5 forbids
