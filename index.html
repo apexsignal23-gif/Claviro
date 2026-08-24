@@ -175,6 +175,35 @@
   @keyframes btn-glow-spin{ to{ transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce){ .btn-glow::before{ animation: none; } }
 
+  /* Case studies: horizontally scrollable row (matches the reference's own
+     card width of 70% — deliberately wider than the viewport so the row
+     invites a scroll/swipe instead of fitting all three at once). */
+  .cs-scroll{
+    display: flex; gap: 1.5rem; overflow-x: auto;
+    scroll-snap-type: x mandatory; scroll-padding-left: 1.5rem;
+    -ms-overflow-style: none; scrollbar-width: none;
+  }
+  .cs-scroll::-webkit-scrollbar{ display: none; }
+  .cs-card{
+    scroll-snap-align: start;
+    flex: 0 0 85%;
+    background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    display: flex; flex-direction: column; justify-content: space-between;
+    gap: 2rem;
+    color: #aaa;
+  }
+  @media (min-width: 640px){ .cs-card{ flex-basis: 70%; } }
+  .cs-highlight{
+    display: inline; color: #f1ca6d;
+    background: rgba(241,202,109,.3);
+    letter-spacing: 1px; text-transform: uppercase;
+    border-radius: 6px; padding: .2rem .4rem;
+    font-size: .8rem; font-weight: 700;
+  }
+
   .btn-ghost{
     display:inline-flex; align-items:center; gap:.4rem;
     color: var(--cream);
@@ -412,7 +441,54 @@
   </div>
 </section>
 
-<!-- ================= PRESS BAR (reveals on scroll, "second page") ================= -->
+<!-- ================= CASE STUDIES ("second page" on scroll, matching
+     contentfloww.com's own placement right after the hero) =================
+     Light cream color-block, same device as the light testimonials section
+     further down: a deliberate one-off inversion, not random alternation. -->
+<section class="relative py-24 sm:py-28" style="background: #fff8e7;">
+  <div class="max-w-[1280px] mx-auto reveal">
+    <h2 class="text-balance text-center font-display font-bold text-[1.9rem] sm:text-[2.5rem] leading-[1.15] tracking-[-0.02em] px-6" style="color:#000;">
+      What we&rsquo;ve built for <em class="font-hero italic font-medium">B2B SaaS</em> founders
+    </h2>
+
+    <div class="cs-scroll mt-12 px-6 lg:px-10">
+      <div class="cs-card">
+        <p class="text-[0.98rem] leading-[1.7]">
+          <span class="cs-highlight">3M+ impressions in one quarter</span>
+          A Series A fintech infra company with zero founder presence. We turned engineering deep-dives into a LinkedIn content engine that filled a full sales calendar in one quarter.
+        </p>
+        <div class="flex items-center gap-4">
+          <img src="https://i.pravatar.cc/120?img=15" alt="" width="48" height="48" class="w-12 h-12 rounded-full object-cover" />
+          <p class="font-semibold text-[0.95rem] text-white">Danielle Okafor<span class="font-normal text-[#aaa]">, Founder, Ledgerly</span></p>
+        </div>
+      </div>
+
+      <div class="cs-card">
+        <p class="text-[0.98rem] leading-[1.7]">
+          <span class="cs-highlight">0 to 9,400 followers</span>
+          A technical co-founder who had never posted publicly. We built his voice from recorded standups alone, and he started getting inbound demo requests within 60 days.
+        </p>
+        <div class="flex items-center gap-4">
+          <img src="https://i.pravatar.cc/120?img=33" alt="" width="48" height="48" class="w-12 h-12 rounded-full object-cover" />
+          <p class="font-semibold text-[0.95rem] text-white">Tomasz Wieczorek<span class="font-normal text-[#aaa]">, Founder, Pactly</span></p>
+        </div>
+      </div>
+
+      <div class="cs-card">
+        <p class="text-[0.98rem] leading-[1.7]">
+          <span class="cs-highlight">40+ inbound demos a month</span>
+          A B2B analytics platform relying entirely on outbound. We replaced cold email with a founder content engine that now brings in 40+ inbound demos every month.
+        </p>
+        <div class="flex items-center gap-4">
+          <img src="https://i.pravatar.cc/120?img=60" alt="" width="48" height="48" class="w-12 h-12 rounded-full object-cover" />
+          <p class="font-semibold text-[0.95rem] text-white">Renata Kowalczyk<span class="font-normal text-[#aaa]">, Founder, Metrik</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRESS BAR (reveals on scroll) ================= -->
 <section class="relative bg-[var(--ink-950)] border-t border-[var(--ink-border)] py-14 sm:py-16">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10 reveal">
     <div class="flex items-center justify-between gap-4">
