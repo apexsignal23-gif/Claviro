@@ -347,11 +347,45 @@
     }
   }
 
-  /* Industry Standard: vertical (9:16) video showcase row. Structure and
-     breakpoint widths pulled from metromediahouse.co's own CSS (their
-     .portfolio_component / .portfolio-item / .video-wrapper) — a
-     horizontal-scroll peek row on mobile/tablet, settling into a static
-     4-up grid at the lg breakpoint. Re-themed onto Claviro's ink tokens. */
+  /* Industry Standard: sticky-stack scroll reveal, reverse-engineered from
+     contentfloww.com's own "Podcast trailers" section (curled their live
+     HTML/CSS, not guessed from a screenshot) — a sticky heading column
+     (.iv-scroll-head) beside a column of cards (.iv-card) that are ALSO
+     each `position:sticky`. As the page scrolls, each card rides up from
+     below the viewport, locks at the same `top` offset as the one before
+     it, and — because later DOM siblings paint over earlier ones by
+     default — visually slides up to cover the previous card. That's the
+     whole "content gradually appears as you scroll" effect the user
+     wanted; no JS/IntersectionObserver needed, pure CSS. IMPORTANT: no
+     ancestor of `.iv-card` may have `overflow:hidden/auto/scroll` — that
+     silently breaks `position:sticky` for everything inside it. */
+  .iv-scroll-stack{ display: flex; flex-direction: column; gap: 2.5rem; }
+  @media (min-width: 768px){
+    .iv-scroll-stack{ flex-direction: row; align-items: flex-start; gap: 4rem; }
+  }
+  .iv-scroll-head{ flex: none; }
+  @media (min-width: 768px){
+    .iv-scroll-head{ flex: 0 0 30%; position: sticky; top: 7rem; }
+  }
+  .iv-scroll-cards{ flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2.5rem; }
+  @media (min-width: 768px){
+    .iv-scroll-cards{ gap: 7rem; }
+  }
+  .iv-card{
+    position: sticky;
+    top: 7rem;
+    background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 20px;
+    padding: 1rem;
+  }
+
+  /* Vertical (9:16) video grid used inside card 2 — all 4 clips together
+     in one card. Structure and breakpoint widths pulled from
+     metromediahouse.co's own CSS (their .portfolio_component /
+     .portfolio-item / .video-wrapper) — a horizontal-scroll peek row on
+     mobile/tablet, settling into a static 4-up grid at the lg breakpoint.
+     Re-themed onto Claviro's ink tokens. */
   .iv-grid{
     display: flex; gap: 1.25rem; overflow-x: auto;
     scroll-snap-type: x mandatory; scroll-padding-left: 1.5rem;
@@ -384,9 +418,8 @@
     object-fit: cover; border: 0;
   }
   .iv-placeholder{ color: rgba(255,255,255,.22); font-size: 2.4rem; }
-  /* Third toggle state: one full-width 16:9 box for a YouTube embed, instead
-     of the 4-up vertical (9:16) grid the other two panels use. */
-  .iv-panel-single .iv-item{ flex: none; width: 100%; }
+  /* Card 3's full-width 16:9 video, instead of the 4-up vertical (9:16)
+     grid card 2 uses. */
   .iv-video-full{ aspect-ratio: 16 / 9; }
   .iv-placeholder-post{
     display: flex; flex-direction: column; align-items: center; gap: .6rem;
@@ -396,35 +429,6 @@
     font-size: .74rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
     color: rgba(255,255,255,.3);
   }
-
-  /* Video <-> LinkedIn-posts toggle: the arrow (styled as a reused .t-arrow)
-     swaps which .iv-panel is visible. Each .iv-item animates independently
-     (nth-child transition-delay) for a staggered, cascading swap instead of
-     a flat crossfade. JS (bottom of page) drives the class/hidden timing. */
-  .iv-stage{ position: relative; }
-  /* Compound selector (not just .iv-arrow) so this beats .t-arrow's own
-     background/color declarations regardless of source order — .t-arrow
-     is defined later in this stylesheet and would otherwise win. */
-  .t-arrow.iv-arrow{ background: var(--chrome-bg); border: 1px solid var(--ink-border); color: var(--cream); box-shadow: var(--shadow-btn); }
-  .t-arrow.iv-arrow:hover{ box-shadow: var(--shadow-btn-hover); }
-  /* At `lg:` the arrow is also centered via Tailwind's -translate-y-1/2
-     (absolute + top:50%). .t-arrow:hover's plain `transform: translateY(-2px)`
-     would silently REPLACE that whole transform instead of adding to it,
-     yanking the arrow away from its centered spot on hover — which moves
-     it out from under the cursor, fires mouseleave, snaps it back, and
-     re-triggers hover in a jitter loop. Re-declaring the full transform
-     here (centering + a small lift) keeps both parts intact. */
-  @media (min-width: 1024px){
-    .t-arrow.iv-arrow:hover{ transform: translateY(calc(-50% - 2px)); }
-    .t-arrow.iv-arrow:active{ transform: translateY(-50%) scale(.94); }
-  }
-  .iv-item{ transition: opacity .4s var(--ease-spring), transform .4s var(--ease-spring); }
-  .iv-item.iv-anim-out{ opacity: 0; transform: translateY(-16px) scale(.96); }
-  .iv-item.iv-anim-in{ opacity: 0; transform: translateY(16px) scale(.96); }
-  .iv-item:nth-child(2){ transition-delay: 70ms; }
-  .iv-item:nth-child(3){ transition-delay: 140ms; }
-  .iv-item:nth-child(4){ transition-delay: 210ms; }
-  @media (prefers-reduced-motion: reduce){ .iv-item{ transition: none; } }
 
   .btn-ghost{
     display:inline-flex; align-items:center; gap:.4rem;
@@ -782,131 +786,98 @@
 </section>
 
 <!-- ================= INDUSTRY STANDARD =================
-     Replaces the former "What We Do" bento section. Vertical (9:16) video
-     showcase row, structure/values pulled from metromediahouse.co's own
-     CSS via curl (their .portfolio_component / .portfolio-item /
-     .video-wrapper), re-themed onto Claviro's dark ink tokens. Every slot
-     is an empty placeholder — no video files exist yet. Each is clearly
-     marked so a real <video>/<iframe> can be dropped in later without
-     guessing which div to touch. -->
+     Replaces the former "What We Do" bento section, and the arrow-toggle
+     video/LinkedIn/YouTube panel swap this section used to have. Now a
+     sticky-stack scroll reveal instead — structure/technique curled from
+     contentfloww.com's own live "Podcast trailers" section (their
+     .podcast-trailers-component / .sticky-wrapper / .podcast_wrapper /
+     .portfolio-video-wrapper), re-themed onto Claviro's dark ink tokens.
+     See the CSS comment above `.iv-scroll-stack` for how the effect works.
+     3 cards: (1) a LinkedIn post embed, (2) all 4 vertical clips together,
+     (3) one full-width video — cards 1 is still an empty placeholder, 2
+     and 3 are already filled with the Gumlet embeds supplied earlier. -->
 <section id="industry-standard" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
-    <div class="reveal max-w-[34rem] mx-auto text-center">
-      <h2 class="text-shine inline-block text-balance font-hero font-medium text-[1.9rem] sm:text-[2.5rem] leading-[1.12] tracking-[-0.025em]">
-        Industry Standard
-      </h2>
-      <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">
-        The production quality behind every post we publish, built to stop the scroll before your founder&rsquo;s name ever shows up.
-      </p>
-    </div>
+    <div class="iv-scroll-stack">
+      <div class="iv-scroll-head reveal text-center md:text-left">
+        <h2 class="text-shine inline-block text-balance font-hero font-medium text-[1.9rem] sm:text-[2.5rem] leading-[1.12] tracking-[-0.025em]">
+          Industry Standard
+        </h2>
+        <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)] max-w-[26rem] mx-auto md:mx-0">
+          The production quality behind every post we publish, built to stop the scroll before your founder&rsquo;s name ever shows up.
+        </p>
+      </div>
 
-    <div class="iv-stage reveal mt-12">
-      <div id="iv-panel-video" class="iv-grid iv-panel">
-        <!-- VIDEO SLOT 1 — filled: Gumlet embed (third-party player) -->
-        <div class="iv-item">
-          <div class="iv-frame">
-            <div class="iv-video" data-video-slot="1">
-              <iframe
-                loading="lazy" title="Gumlet video player"
-                src="https://play.gumlet.io/embed/6a8c22c028f2c759010e7854?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
-                referrerpolicy="origin"
-                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
+      <div class="iv-scroll-cards">
+        <!-- CARD 1: LinkedIn post — empty placeholder, drop the real
+             embed into this .iv-video div when supplied. -->
+        <div class="iv-card">
+          <div class="iv-video" data-linkedin-slot="1">
+            <div class="iv-placeholder iv-placeholder-post"><i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i><span>LinkedIn Post</span></div>
+          </div>
+        </div>
+
+        <!-- CARD 2: all 4 vertical clips together in one card -->
+        <div class="iv-card">
+          <div class="iv-grid">
+            <div class="iv-item">
+              <div class="iv-frame">
+                <div class="iv-video" data-video-slot="1">
+                  <iframe
+                    loading="lazy" title="Gumlet video player"
+                    src="https://play.gumlet.io/embed/6a8c22c028f2c759010e7854?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
+                    referrerpolicy="origin"
+                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
+                </div>
+              </div>
+            </div>
+            <div class="iv-item">
+              <div class="iv-frame">
+                <div class="iv-video" data-video-slot="2">
+                  <iframe
+                    loading="lazy" title="Gumlet video player"
+                    src="https://play.gumlet.io/embed/6a8c2a06b6df3364045627b8?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
+                    referrerpolicy="origin"
+                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
+                </div>
+              </div>
+            </div>
+            <div class="iv-item">
+              <div class="iv-frame">
+                <div class="iv-video" data-video-slot="3">
+                  <iframe
+                    loading="lazy" title="Gumlet video player"
+                    src="https://play.gumlet.io/embed/6a8c2d67c427de1345382ae8?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
+                    referrerpolicy="origin"
+                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
+                </div>
+              </div>
+            </div>
+            <div class="iv-item">
+              <div class="iv-frame">
+                <div class="iv-video" data-video-slot="4">
+                  <iframe
+                    loading="lazy" title="Gumlet video player"
+                    src="https://play.gumlet.io/embed/6a8c2e34c427de134538311b?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
+                    referrerpolicy="origin"
+                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <!-- VIDEO SLOT 2 — filled: Gumlet embed (third-party player) -->
-        <div class="iv-item">
-          <div class="iv-frame">
-            <div class="iv-video" data-video-slot="2">
-              <iframe
-                loading="lazy" title="Gumlet video player"
-                src="https://play.gumlet.io/embed/6a8c2a06b6df3364045627b8?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
-                referrerpolicy="origin"
-                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
-            </div>
-          </div>
-        </div>
-        <!-- VIDEO SLOT 3 — filled: Gumlet embed (third-party player) -->
-        <div class="iv-item">
-          <div class="iv-frame">
-            <div class="iv-video" data-video-slot="3">
-              <iframe
-                loading="lazy" title="Gumlet video player"
-                src="https://play.gumlet.io/embed/6a8c2d67c427de1345382ae8?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
-                referrerpolicy="origin"
-                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
-            </div>
-          </div>
-        </div>
-        <!-- VIDEO SLOT 4 — filled: Gumlet embed (third-party player) -->
-        <div class="iv-item">
-          <div class="iv-frame">
-            <div class="iv-video" data-video-slot="4">
-              <iframe
-                loading="lazy" title="Gumlet video player"
-                src="https://play.gumlet.io/embed/6a8c2e34c427de134538311b?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
-                referrerpolicy="origin"
-                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
-            </div>
+
+        <!-- CARD 3: one full-width video -->
+        <div class="iv-card">
+          <div class="iv-video iv-video-full" data-video-slot="final">
+            <iframe
+              loading="lazy" title="Gumlet video player"
+              src="https://play.gumlet.io/embed/6a8c294cb6df33640456242c?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
+              referrerpolicy="origin"
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
           </div>
         </div>
       </div>
-
-      <div id="iv-panel-linkedin" class="iv-grid iv-panel" hidden>
-        <!-- LINKEDIN POST SLOT 1 — replace this placeholder div's contents with the real post (image/embed) when supplied -->
-        <div class="iv-item">
-          <div class="iv-frame">
-            <div class="iv-video" data-post-slot="1">
-              <div class="iv-placeholder iv-placeholder-post"><i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i><span>LinkedIn Post</span></div>
-            </div>
-          </div>
-        </div>
-        <!-- LINKEDIN POST SLOT 2 -->
-        <div class="iv-item">
-          <div class="iv-frame">
-            <div class="iv-video" data-post-slot="2">
-              <div class="iv-placeholder iv-placeholder-post"><i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i><span>LinkedIn Post</span></div>
-            </div>
-          </div>
-        </div>
-        <!-- LINKEDIN POST SLOT 3 -->
-        <div class="iv-item">
-          <div class="iv-frame">
-            <div class="iv-video" data-post-slot="3">
-              <div class="iv-placeholder iv-placeholder-post"><i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i><span>LinkedIn Post</span></div>
-            </div>
-          </div>
-        </div>
-        <!-- LINKEDIN POST SLOT 4 -->
-        <div class="iv-item">
-          <div class="iv-frame">
-            <div class="iv-video" data-post-slot="4">
-              <div class="iv-placeholder iv-placeholder-post"><i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i><span>LinkedIn Post</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="iv-panel-youtube" class="iv-panel iv-panel-single" hidden>
-        <!-- YOUTUBE SLOT — replace this placeholder div's contents with the real
-             YouTube embed (iframe) when supplied; full-width 16:9 box, not the
-             4-up vertical grid used by the other two panels. -->
-        <div class="iv-item">
-          <div class="iv-frame">
-            <div class="iv-video iv-video-full" data-youtube-slot="1">
-              <iframe
-                loading="lazy" title="Gumlet video player"
-                src="https://play.gumlet.io/embed/6a8c294cb6df33640456242c?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
-                referrerpolicy="origin"
-                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <button id="iv-arrow" type="button" aria-label="Show LinkedIn posts" class="t-arrow iv-arrow static mx-auto mt-8 lg:absolute lg:mt-0 lg:mx-0 lg:-right-3 xl:-right-16 lg:top-1/2 lg:-translate-y-1/2 lg:z-10">
-        <i class="ph-bold ph-arrow-right" id="iv-arrow-icon" aria-hidden="true"></i>
-      </button>
     </div>
   </div>
 </section>
@@ -1327,67 +1298,6 @@
   prev && prev.addEventListener('click', () => show(index - 1));
   next && next.addEventListener('click', () => show(index + 1));
   dots.forEach(d => d.addEventListener('click', () => show(Number(d.dataset.index))));
-})();
-
-/* =====================================================================
-   Industry Standard: video -> LinkedIn-posts -> YouTube 3-way cycle
-   Swaps which .iv-panel is visible on arrow click, animating each
-   .iv-item out (staggered via CSS nth-child transition-delay) then
-   swapping panel visibility via the `hidden` attribute (removes the
-   inactive panel from the accessibility tree, not just hides it
-   visually) then animating the incoming items in. The arrow always
-   advances forward through the cycle (video -> LinkedIn -> YouTube ->
-   back to video), rather than toggling back and forth between two.
-   ===================================================================== */
-(function(){
-  const arrow = document.getElementById('iv-arrow');
-  const icon = document.getElementById('iv-arrow-icon');
-  const panels = [
-    { el: document.getElementById('iv-panel-video'), nextLabel: 'Show LinkedIn posts' },
-    { el: document.getElementById('iv-panel-linkedin'), nextLabel: 'Show YouTube video' },
-    { el: document.getElementById('iv-panel-youtube'), nextLabel: 'Show videos' }
-  ];
-  if(!arrow || !icon || panels.some(p => !p.el)) return;
-
-  const EXIT_MS = 610; // covers the longest nth-child delay (210ms) + transition length (400ms)
-  let current = 0;
-  let animating = false;
-
-  function swapPanel(){
-    if(animating) return;
-    animating = true;
-    arrow.disabled = true;
-
-    const next = (current + 1) % panels.length;
-    const outgoing = panels[current].el;
-    const incoming = panels[next].el;
-    const outgoingItems = outgoing.querySelectorAll('.iv-item');
-    const incomingItems = incoming.querySelectorAll('.iv-item');
-
-    outgoingItems.forEach(el => el.classList.add('iv-anim-out'));
-
-    window.setTimeout(() => {
-      outgoing.hidden = true;
-      outgoingItems.forEach(el => el.classList.remove('iv-anim-out'));
-
-      incoming.hidden = false;
-      incomingItems.forEach(el => el.classList.add('iv-anim-in'));
-      // Force a reflow so the "in" offset state is committed before we
-      // transition out of it on the next frame (otherwise the browser
-      // coalesces both class changes and no animation plays).
-      void incoming.offsetWidth;
-      window.requestAnimationFrame(() => {
-        incomingItems.forEach(el => el.classList.remove('iv-anim-in'));
-      });
-
-      current = next;
-      arrow.setAttribute('aria-label', panels[current].nextLabel);
-      arrow.disabled = false;
-      animating = false;
-    }, EXIT_MS);
-  }
-
-  arrow.addEventListener('click', swapPanel);
 })();
 
 /* =====================================================================
