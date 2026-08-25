@@ -155,9 +155,19 @@
      Falls back to a flat, fully-opaque foreground color first (in case
      background-clip: text isn't supported), then layers the gradient fill
      on top where it is. */
+  /* Blue gradient (was a gray-to-white sheen) — colors picked to match a
+     user-supplied screenshot of kortex.co's own gradient heading text
+     ("Interconnected"), since the underlying CSS wasn't recoverable from
+     their site (the heading isn't present in kortex.co's static HTML/CSS
+     — likely baked into a product screenshot image rather than live text
+     — so this is a visual color match to the reference image, not a
+     curled value). Applies to every heading using .text-shine: Case
+     Studies, Industry Standard, Mirror, Repurpose, What Changes By Day
+     90, Enablement, Retention, Gravity Not Guesswork, Built For Founders
+     Who. */
   .text-shine{
-    color: var(--cream);
-    background: linear-gradient(100deg, #7a7a7a 0%, #b8b8b8 22%, #ffffff 48%, #cfcfcf 68%, #8a8a8a 100%);
+    color: var(--accent);
+    background: linear-gradient(90deg, #5468d4 0%, #7c93ff 50%, #aab9ff 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
