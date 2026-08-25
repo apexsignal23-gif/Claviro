@@ -154,24 +154,22 @@
      purely a font swap, color treatment stays as it was per heading. */
   .hero-h1{ font-family: 'Manrope', 'Inter Tight', ui-sans-serif, system-ui, sans-serif; font-weight: 600; }
 
-  /* Gray-to-white sheen text fill, matching consulting.com's hero
-     treatment: a light band sweeping across otherwise muted gray type.
-     Falls back to a flat, fully-opaque foreground color first (in case
-     background-clip: text isn't supported), then layers the gradient fill
-     on top where it is. */
-  /* Blue gradient (was a gray-to-white sheen) — colors picked to match a
-     user-supplied screenshot of kortex.co's own gradient heading text
-     ("Interconnected"), since the underlying CSS wasn't recoverable from
-     their site (the heading isn't present in kortex.co's static HTML/CSS
-     — likely baked into a product screenshot image rather than live text
-     — so this is a visual color match to the reference image, not a
-     curled value). Applies to every heading using .text-shine: Case
-     Studies, Industry Standard, Mirror, Repurpose, What Changes By Day
-     90, Enablement, Retention, Gravity Not Guesswork, Built For Founders
-     Who. */
+  /* Blue gradient (originally a gray-to-white sheen matching
+     consulting.com's hero treatment, replaced 2026-08-25) — colors picked
+     to match user-supplied screenshots of kortex.co's own gradient
+     heading text ("Interconnected", "With AI"), since the underlying CSS
+     wasn't recoverable from their site (this heading isn't present in
+     kortex.co's static HTML/CSS — likely baked into a product-screenshot
+     image rather than live text — so this is a visual color match to the
+     reference images, not a curled value). Lightened once already (was
+     #5468d4/#7c93ff/#aab9ff — too deep per explicit feedback) to the
+     current, lighter stops below. Applies to every heading using
+     .text-shine: Case Studies, Industry Standard, Mirror, Repurpose, What
+     Changes By Day 90, Enablement, Retention, Gravity Not Guesswork,
+     Built For Founders Who. */
   .text-shine{
-    color: var(--accent);
-    background: linear-gradient(90deg, #5468d4 0%, #7c93ff 50%, #aab9ff 100%);
+    color: var(--accent-hot);
+    background: linear-gradient(90deg, #8ba0f5 0%, #b3c4ff 50%, #dee6ff 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
