@@ -186,11 +186,13 @@
   /* buttons */
   .btn-primary{
     display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
-    /* Both gradient stops (--accent-deep/-deepest) are dark, saturated
-       blues chosen to individually clear 4.5:1 with white text so the
-       label stays AA-compliant across the whole gradient, not just on
-       average — re-check this if either value ever changes. */
-    background: linear-gradient(180deg, var(--accent-deep) 0%, var(--accent-deepest) 100%);
+    /* Solid --accent per explicit request (was a --accent-deep/-deepest
+       gradient) — the exact same blue tone used everywhere else on the
+       page, not a darker button-specific shade. Contrast note: white text
+       on plain --accent measures ~4.3:1, just under the 4.5:1 AA
+       threshold for normal-size text — flagged, not fixed, since matching
+       the exact tone was the explicit ask. */
+    background: var(--accent);
     color: #ffffff;
     font-weight: 600;
     padding: .85rem 1.6rem;
