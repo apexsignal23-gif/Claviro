@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="preconnect" href="https://api.fontshare.com" />
 <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,600,500,400&display=swap" rel="stylesheet" />
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@600&display=swap" rel="stylesheet" />
 
 <!-- Icons: Phosphor -->
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
@@ -101,7 +101,10 @@
      surrounding capital letters. */
   .font-hero{ font-family: 'Cormorant Garamond', 'Source Serif 4', Georgia, serif; font-variant-numeric: lining-nums; }
 
-  /* Manrope 800 — originally added for the hero <h1> only (kept separate
+  /* Manrope 600 (reduced from 800 per explicit request, matching a
+     reference screenshot of Manrope SemiBold weight — this is also
+     literally repixa.io's own h1 font-weight, per their live CSS) —
+     originally added for the hero <h1> only (kept separate
      from .font-hero on purpose, since .font-hero/Cormorant Garamond was
      shared by every section-top heading at the time). The user then asked
      for every page's main heading to share one font, so .hero-h1 now sits
@@ -112,7 +115,7 @@
      them (still defined below in case a serif heading is wanted again
      somewhere). .text-shine's gradient fill is untouched by this — it's
      purely a font swap, color treatment stays as it was per heading. */
-  .hero-h1{ font-family: 'Manrope', 'Inter Tight', ui-sans-serif, system-ui, sans-serif; font-weight: 800; }
+  .hero-h1{ font-family: 'Manrope', 'Inter Tight', ui-sans-serif, system-ui, sans-serif; font-weight: 600; }
 
   /* Gray-to-white sheen text fill, matching consulting.com's hero
      treatment: a light band sweeping across otherwise muted gray type.
