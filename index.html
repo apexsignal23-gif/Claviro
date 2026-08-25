@@ -103,8 +103,12 @@
     --hero-fg-dim:var(--cream-dim);
     --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
     --shadow-card: 0 1px 0 rgba(255,255,255,.05) inset, 0 30px 60px -28px rgba(0,0,0,.7), 0 10px 28px -12px rgba(76,110,245,.16);
-    --shadow-btn: 0 14px 30px -10px rgba(37,99,235,.5), 0 2px 10px rgba(0,0,0,.35);
-    --shadow-btn-hover: 0 18px 38px -10px rgba(37,99,235,.62), 0 3px 12px rgba(0,0,0,.4);
+    /* Glow color kept in sync with --accent-hot (the button's own
+       background) — this was still hardcoded to a much older accent-deep
+       value (rgb 37,99,235) from before any of the recent accent swaps
+       and never got updated with them; fixed as part of this change. */
+    --shadow-btn: 0 14px 30px -10px rgba(143,168,255,.5), 0 2px 10px rgba(0,0,0,.35);
+    --shadow-btn-hover: 0 18px 38px -10px rgba(143,168,255,.62), 0 3px 12px rgba(0,0,0,.4);
   }
 
   html { scroll-behavior: smooth; color-scheme: dark; }
@@ -196,14 +200,14 @@
   /* buttons */
   .btn-primary{
     display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
-    /* Solid --accent per explicit request (was a --accent-deep/-deepest
-       gradient) — the exact same blue tone used everywhere else on the
-       page, not a darker button-specific shade. Contrast note: white text
-       on plain --accent measures ~4.3:1, just under the 4.5:1 AA
-       threshold for normal-size text — flagged, not fixed, since matching
-       the exact tone was the explicit ask. */
-    background: var(--accent);
-    color: #ffffff;
+    /* Lighter periwinkle blue (--accent-hot) per explicit request, matched
+       against a reference screenshot — was solid --accent, before that a
+       --accent-deep/-deepest gradient. This lighter tone doesn't hold up
+       under WHITE text (only ~2.3:1, unreadable), so the label switched to
+       dark ink text instead to stay legible — flag this if the button
+       color changes again, white text needs a darker background tone. */
+    background: var(--accent-hot);
+    color: var(--ink-950);
     font-weight: 600;
     padding: .85rem 1.6rem;
     border-radius: 999px;
