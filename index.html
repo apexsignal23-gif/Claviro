@@ -376,15 +376,22 @@
   }
   .ml-chip{
     position: absolute; z-index: 1;
-    width: 30px; height: 30px; border-radius: 999px;
+    width: 40px; height: 40px; border-radius: 999px;
     background: var(--ink-950); border: 1px solid var(--ink-border);
     display: flex; align-items: center; justify-content: center;
     animation: ml-drift 3.6s ease-in infinite;
   }
-  .ml-chip i{ font-size: .85rem; color: var(--accent-hot); }
-  .ml-chip-1{ top: 18%; left: 20%; }
-  .ml-chip-2{ top: 14%; right: 18%; animation-delay: 1.2s; }
-  .ml-chip-3{ bottom: 20%; left: 50%; margin-left: -15px; animation-delay: 2.4s; }
+  .ml-chip i{ font-size: 1.2rem; color: var(--accent-hot); }
+  /* Six chips in a hexagon around the avatar (was 3), each one's --dx/--dy
+     (set inline per instance above) pointing back toward center — delays
+     spaced evenly across the 3.6s loop so bubbles stream in one after
+     another instead of all three original ones bunching up. */
+  .ml-chip-1{ top: 42%; left: 8%; margin-top: -20px; }
+  .ml-chip-2{ top: 66%; left: 20%; animation-delay: .6s; }
+  .ml-chip-3{ top: 66%; right: 20%; animation-delay: 1.2s; }
+  .ml-chip-4{ top: 42%; right: 8%; margin-top: -20px; animation-delay: 1.8s; }
+  .ml-chip-5{ top: 12%; right: 20%; animation-delay: 2.4s; }
+  .ml-chip-6{ top: 12%; left: 20%; animation-delay: 3s; }
 
   /* "Instant, natural interactions" card: two overlapping animated wave
      paths on a soft accent glow, standing in for live voice/cursor motion. */
@@ -436,8 +443,8 @@
   @keyframes mirror-intent-fill{ 0%,100%{ transform: scaleX(var(--rest)); opacity: .75; } 50%{ transform: scaleX(var(--scale)); opacity: 1; } }
   @keyframes ml-drift{
     0%{ transform: translate(0,0) scale(1); opacity: 0; }
-    12%{ opacity: 1; }
-    70%{ transform: translate(var(--dx,0), var(--dy,0)) scale(.4); opacity: .9; }
+    10%{ opacity: 1; }
+    65%{ transform: translate(var(--dx,0), var(--dy,0)) scale(.45); opacity: 1; }
     85%, 100%{ transform: translate(var(--dx,0), var(--dy,0)) scale(.2); opacity: 0; }
   }
   @keyframes ml-pulse{ 0%{ transform: scale(.85); opacity: .5; } 100%{ transform: scale(1.35); opacity: 0; } }
@@ -1285,9 +1292,12 @@
       <div class="mirror-card">
         <div class="mirror-visual mirror-learn-visual" aria-hidden="true">
           <div class="ml-avatar"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
-          <span class="ml-chip ml-chip-1" style="--dx:34px;--dy:26px;"><i class="ph-bold ph-book-open" aria-hidden="true"></i></span>
-          <span class="ml-chip ml-chip-2" style="--dx:-30px;--dy:30px;"><i class="ph-bold ph-lightbulb" aria-hidden="true"></i></span>
-          <span class="ml-chip ml-chip-3" style="--dx:0px;--dy:-46px;"><i class="ph-bold ph-brain" aria-hidden="true"></i></span>
+          <span class="ml-chip ml-chip-1" style="--dx:-40px;--dy:0px;"><i class="ph-bold ph-book-open" aria-hidden="true"></i></span>
+          <span class="ml-chip ml-chip-2" style="--dx:-28px;--dy:38px;"><i class="ph-bold ph-lightbulb" aria-hidden="true"></i></span>
+          <span class="ml-chip ml-chip-3" style="--dx:28px;--dy:38px;"><i class="ph-bold ph-brain" aria-hidden="true"></i></span>
+          <span class="ml-chip ml-chip-4" style="--dx:40px;--dy:0px;"><i class="ph-bold ph-graduation-cap" aria-hidden="true"></i></span>
+          <span class="ml-chip ml-chip-5" style="--dx:28px;--dy:-38px;"><i class="ph-bold ph-chats-circle" aria-hidden="true"></i></span>
+          <span class="ml-chip ml-chip-6" style="--dx:-28px;--dy:-38px;"><i class="ph-bold ph-puzzle-piece" aria-hidden="true"></i></span>
         </div>
         <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Answers questions live</h3>
         <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Prospects ask anything mid-demo. Laura answers in context using your product knowledge and approved paths.</p>
