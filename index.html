@@ -791,24 +791,66 @@
     position: absolute; inset: 0; width: 100%; height: 100%;
     object-fit: cover; border: 0;
   }
-  /* Card 1's LinkedIn post grid — simplified per explicit request: no
-     per-item box/frame/border/hover, no click-through link, just the raw
-     screenshots in a plain grid. 2 columns on mobile, 3 at `sm:`+. At
+  /* Card 1's LinkedIn post grid. 2 columns on mobile, 3 at `sm:`+. At
      `lg:` (where .iv-card is capped to a fixed height — see .iv-card) the
      grid fills that height exactly via height:100% + 3 equal `1fr` rows,
-     same reasoning as before: guarantees the images divide the card's
+     same reasoning as before: guarantees the cells divide the card's
      height with no clipping and no dead space. */
   .iv-raw-grid{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
   @media (min-width: 640px){ .iv-raw-grid{ grid-template-columns: repeat(3, 1fr); } }
   @media (min-width: 1024px){
     .iv-raw-grid{ grid-template-rows: repeat(2, 1fr); height: 100%; }
   }
-  .iv-raw-img{
-    display: block; width: 100%; height: 100%;
-    aspect-ratio: 4 / 3; object-fit: contain; border-radius: .5rem;
+  /* `.li-post` — REPLACED the 6 raw white-background LinkedIn screenshots
+     2026-08-26 (each was a real screenshot of an actual LinkedIn post; a
+     white LinkedIn UI screenshot clashed hard against this all-dark page,
+     and there's no way to force a real photo dark via CSS filter without
+     visibly distorting people's faces — confirmed with the user before
+     rebuilding rather than guessing). This is a coded dark card
+     reproducing each post's real, visible text (name/title/timestamp/
+     excerpt/reaction+comment counts — exactly what was legible in the
+     original screenshots, not invented), styled to the site's own dark
+     ink system instead of trying to reskin LinkedIn's actual UI.
+     `.li-avatar` is a plain initial-letter badge, NOT a photo — there's
+     no clean way to extract a real profile photo from the old
+     screenshots, and pairing a real named person with a random stock
+     photo would misrepresent them, so a neutral initial is the honest
+     choice. `.li-text` is 3-line-clamped so all 6 cards stay a
+     predictable height regardless of how long each excerpt is (matters
+     at `lg:` where `.iv-card` clips overflow — see the height gotcha
+     above this section). */
+  .li-post{
+    height: 100%; overflow: hidden;
     background: var(--ink-900);
+    border: 1px solid var(--ink-border);
+    border-radius: .5rem;
+    padding: .85rem .9rem;
+    display: flex; flex-direction: column; gap: .55rem;
   }
-  @media (min-width: 1024px){ .iv-raw-img{ aspect-ratio: auto; } }
+  .li-post-top{ display: flex; align-items: flex-start; gap: .55rem; }
+  .li-avatar{
+    flex: none; width: 34px; height: 34px; border-radius: 50%;
+    background: var(--accent);
+    color: #fff; font-weight: 700; font-size: .82rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .li-who{ flex: 1; min-width: 0; }
+  .li-name{ font-size: .82rem; font-weight: 700; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .li-name .li-degree{ font-weight: 500; color: var(--cream-dimmer); }
+  .li-title{ margin-top: 1px; font-size: .72rem; color: var(--cream-dimmer); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .li-time{ margin-top: 1px; font-size: .68rem; color: var(--cream-dimmer); }
+  .li-brand{ flex: none; font-size: 1.15rem; color: #0a66c2; margin-top: 2px; }
+  .li-text{
+    font-size: .78rem; line-height: 1.5; color: var(--cream-dim);
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .li-stats{
+    margin-top: auto; padding-top: .5rem; border-top: 1px solid var(--ink-border);
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: .72rem; color: var(--cream-dimmer);
+  }
+  .li-reacts{ display: inline-flex; align-items: center; gap: .35rem; }
+  .li-reacts i{ color: var(--accent-hot); font-size: .85rem; }
   .iv-raw-placeholder{
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .6rem;
     aspect-ratio: 4 / 3;
@@ -1200,18 +1242,108 @@
       </div>
 
       <div class="iv-scroll-cards">
-        <!-- CARD 1: raw LinkedIn post screenshots, no per-item box/frame,
-             no click-through link — just the images, laid out in a plain
-             grid so multiple can sit side by side. 5 filled, 4 more empty
-             placeholder slots below for the ones still to come. -->
+        <!-- CARD 1: coded dark LinkedIn-post cards (.li-post, see CSS
+             comment above .li-post for why these replaced real
+             screenshots), laid out in a plain grid so multiple sit side
+             by side. -->
         <div class="iv-card">
           <div class="iv-raw-grid">
-            <img class="iv-raw-img" src="thumbnail/harry.jpeg" alt="Harry Stebbings' LinkedIn post about OpenRouter" loading="lazy" />
-            <img class="iv-raw-img" src="thumbnail/adam.jpeg" alt="Adam Robinson's LinkedIn post about autonomous business" loading="lazy" />
-            <img class="iv-raw-img" src="thumbnail/guillaume.jpeg" alt="Guillaume Moubeche's LinkedIn post about investing in startups" loading="lazy" />
-            <img class="iv-raw-img" src="thumbnail/rand.jpeg" alt="Rand Fishkin's LinkedIn post about tech's intention problem" loading="lazy" />
-            <img class="iv-raw-img" src="thumbnail/tyler.jpeg" alt="Tyler Denk's LinkedIn post about AI and engineering productivity" loading="lazy" />
-            <img class="iv-raw-img" src="thumbnail/des.jpeg" alt="Des Traynor's LinkedIn post about AI development" loading="lazy" />
+            <article class="li-post">
+              <div class="li-post-top">
+                <div class="li-avatar" aria-hidden="true">H</div>
+                <div class="li-who">
+                  <p class="li-name">Harry Stebbings <span class="li-degree">&middot; 2nd</span></p>
+                  <p class="li-title">Founder @ 20VC</p>
+                  <p class="li-time">1w</p>
+                </div>
+                <i class="ph-fill ph-linkedin-logo li-brand" aria-hidden="true"></i>
+              </div>
+              <p class="li-text">OpenRouter is one of the most insane stories in tech. Co-founded by OpenSea founder, Alex Atallah. It has become o&hellip;more</p>
+              <div class="li-stats">
+                <span class="li-reacts"><i class="ph-fill ph-thumbs-up" aria-hidden="true"></i>341</span>
+                <span>54 Comments</span>
+              </div>
+            </article>
+            <article class="li-post">
+              <div class="li-post-top">
+                <div class="li-avatar" aria-hidden="true">A</div>
+                <div class="li-who">
+                  <p class="li-name">Adam Robinson <span class="li-degree">&middot; 2nd</span></p>
+                  <p class="li-title">CEO @ RB2B &amp; Retention.com | Unli&hellip;</p>
+                  <p class="li-time">2mo</p>
+                </div>
+                <i class="ph-fill ph-linkedin-logo li-brand" aria-hidden="true"></i>
+              </div>
+              <p class="li-text">What actually IS an autonomous business? I started noticing the term &ldquo;autonomous business&rdquo; when Amos E&hellip;more</p>
+              <div class="li-stats">
+                <span class="li-reacts"><i class="ph-fill ph-thumbs-up" aria-hidden="true"></i>116</span>
+                <span>49 Comments</span>
+              </div>
+            </article>
+            <article class="li-post">
+              <div class="li-post-top">
+                <div class="li-avatar" aria-hidden="true">G</div>
+                <div class="li-who">
+                  <p class="li-name">Guillaume Moubeche <span class="li-degree">&middot; 2nd</span></p>
+                  <p class="li-title">Founder @ lemlist (0 to $150m valuation in 4 ye&hellip;)</p>
+                  <p class="li-time">1mo</p>
+                </div>
+                <i class="ph-fill ph-linkedin-logo li-brand" aria-hidden="true"></i>
+              </div>
+              <p class="li-text">I&rsquo;ve invested millions of dollars in 30+ startups. I&rsquo;ve also grown a bootstrapped business to $50M+ in ARR and $&hellip;more</p>
+              <div class="li-stats">
+                <span class="li-reacts"><i class="ph-fill ph-thumbs-up" aria-hidden="true"></i>332</span>
+                <span>88 Comments</span>
+              </div>
+            </article>
+            <article class="li-post">
+              <div class="li-post-top">
+                <div class="li-avatar" aria-hidden="true">R</div>
+                <div class="li-who">
+                  <p class="li-name">Rand Fishkin <span class="li-degree">&middot; 2nd</span></p>
+                  <p class="li-title">Co-author of Zero Click Marketing (preorder no&hellip;)</p>
+                  <p class="li-time">2mo</p>
+                </div>
+                <i class="ph-fill ph-linkedin-logo li-brand" aria-hidden="true"></i>
+              </div>
+              <p class="li-text">&ldquo;The truth is, tech doesn&rsquo;t have an image problem. It doesn&rsquo;t have a message problem. It has an intention problem.&rdquo;&hellip;more</p>
+              <div class="li-stats">
+                <span class="li-reacts"><i class="ph-fill ph-thumbs-up" aria-hidden="true"></i>828</span>
+                <span>113 Comments</span>
+              </div>
+            </article>
+            <article class="li-post">
+              <div class="li-post-top">
+                <div class="li-avatar" aria-hidden="true">T</div>
+                <div class="li-who">
+                  <p class="li-name">Tyler Denk <span class="li-degree">&middot; 2nd</span></p>
+                  <p class="li-title">cofounder/ceo @ beehiiv</p>
+                  <p class="li-time">1mo</p>
+                </div>
+                <i class="ph-fill ph-linkedin-logo li-brand" aria-hidden="true"></i>
+              </div>
+              <p class="li-text">The people confidently saying &ldquo;AI will replace engineers&rdquo; have clearly never shipped software to real users.</p>
+              <div class="li-stats">
+                <span class="li-reacts"><i class="ph-fill ph-thumbs-up" aria-hidden="true"></i>318</span>
+                <span>94 Comments</span>
+              </div>
+            </article>
+            <article class="li-post">
+              <div class="li-post-top">
+                <div class="li-avatar" aria-hidden="true">D</div>
+                <div class="li-who">
+                  <p class="li-name">Des Traynor <span class="li-degree">&middot; 2nd</span></p>
+                  <p class="li-title">Co-Founder of Fin, helping internet businesses&hellip;</p>
+                  <p class="li-time">1mo</p>
+                </div>
+                <i class="ph-fill ph-linkedin-logo li-brand" aria-hidden="true"></i>
+              </div>
+              <p class="li-text">2 things happened in the past 3 days that are worth reflecting on, especially if you&rsquo;re someone who thinks AI is over-hyped or have constructed a worldview where you feel safe ignoring AI develop&hellip;more</p>
+              <div class="li-stats">
+                <span class="li-reacts"><i class="ph-fill ph-thumbs-up" aria-hidden="true"></i>584</span>
+                <span>76 Comments</span>
+              </div>
+            </article>
           </div>
         </div>
 
