@@ -345,31 +345,46 @@
     display: flex; flex-direction: column;
   }
 
-  /* "Answers questions live" card: buyer/Laura chat bubbles + a live
-     voice-waveform indicator + a loading-skeleton "screen" pinned to the
-     bottom via margin-top:auto on the last element. */
-  .mirror-qa-bubble{
-    position: relative; width: max-content; max-width: 88%;
-    font-size: .72rem; font-weight: 700; line-height: 1.3;
-    border-radius: 12px; padding: .5rem .65rem;
-    animation: mirror-chat-rise 4.6s ease-in-out infinite;
+  /* "Answers questions live" card, REBUILT 2026-08-26 — the old
+     buyer/Laura chat-bubble + voice-waveform illustration is GONE,
+     replaced per explicit request with a simpler "gaining knowledge"
+     metaphor: a person avatar sits centered in a soft accent glow while
+     three knowledge icons (book/lightbulb/brain) drift in from around it
+     and shrink/fade into the head on a loop, plus a pulsing ring behind
+     the head reinforcing the "absorbing" idea. Each `.ml-chip`'s travel
+     distance is set per-instance via inline `--dx`/`--dy` (its own
+     starting offset from the avatar, negated) rather than three separate
+     keyframes — same parameterized-keyframe pattern as
+     `.mirror-intent-meter`'s `--rest`/`--scale` below. */
+  .mirror-learn-visual{ align-items: center; justify-content: center; }
+  .mirror-learn-visual::before{
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(55% 55% at 50% 42%, rgba(76,110,245,.16), transparent 70%);
   }
-  .mirror-qa-buyer{ background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); color: var(--cream); }
-  .mirror-qa-laura{ margin: .5rem 0 0 auto; background: var(--accent); border: 1px solid var(--accent); color: #fff; animation-delay: .42s; }
-  .mirror-qa-wave{ margin-top: .85rem; display: flex; align-items: center; gap: 5px; height: 32px; }
-  .mirror-qa-wave span{ width: 5px; height: 18px; border-radius: 20px; background: #34d399; animation: mirror-wave-bounce 1.3s ease-in-out infinite; }
-  .mirror-qa-wave span:nth-child(2){ height: 28px; animation-delay: .1s; }
-  .mirror-qa-wave span:nth-child(3){ height: 22px; animation-delay: .2s; }
-  .mirror-qa-wave span:nth-child(4){ height: 32px; animation-delay: .3s; }
-  .mirror-qa-screen{
-    margin-top: auto;
-    background: var(--ink-950);
-    border: 1px solid var(--ink-border);
-    border-radius: 12px; padding: .85rem;
-    display: grid; gap: .5rem;
+  .ml-avatar{
+    position: relative; z-index: 2;
+    width: 64px; height: 64px; border-radius: 999px;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 0 6px rgba(76,110,245,.12);
   }
-  .mirror-qa-screen span{ height: 6px; border-radius: 20px; background: rgba(255,255,255,.1); animation: mirror-qa-load 3.4s ease-in-out infinite; }
-  .mirror-qa-screen span:nth-child(2){ width: 60%; animation-delay: .2s; }
+  .ml-avatar i{ font-size: 2rem; color: #fff; }
+  .ml-avatar::after{
+    content: ''; position: absolute; inset: -6px; border-radius: inherit;
+    border: 1.5px solid var(--accent-hot);
+    opacity: 0; animation: ml-pulse 2.6s ease-out infinite;
+  }
+  .ml-chip{
+    position: absolute; z-index: 1;
+    width: 30px; height: 30px; border-radius: 999px;
+    background: var(--ink-950); border: 1px solid var(--ink-border);
+    display: flex; align-items: center; justify-content: center;
+    animation: ml-drift 3.6s ease-in infinite;
+  }
+  .ml-chip i{ font-size: .85rem; color: var(--accent-hot); }
+  .ml-chip-1{ top: 18%; left: 20%; }
+  .ml-chip-2{ top: 14%; right: 18%; animation-delay: 1.2s; }
+  .ml-chip-3{ bottom: 20%; left: 50%; margin-left: -15px; animation-delay: 2.4s; }
 
   /* "Instant, natural interactions" card: two overlapping animated wave
      paths on a soft accent glow, standing in for live voice/cursor motion. */
@@ -417,12 +432,17 @@
   .mirror-intent-c span{ --rest: .46; --scale: .62; animation-delay: .36s; }
 
   @keyframes mirror-chat-rise{ 0%,100%{ transform: translateY(0); opacity: .82; } 50%{ transform: translateY(-4px); opacity: 1; } }
-  @keyframes mirror-wave-bounce{ 0%,100%{ transform: scaleY(.7); } 50%{ transform: scaleY(1.08); } }
-  @keyframes mirror-qa-load{ 0%,100%{ transform: scaleX(.62); transform-origin: left; opacity: .5; } 50%{ transform: scaleX(1); opacity: 1; } }
   @keyframes mirror-wave-draw{ 0%{ stroke-dashoffset: 520; opacity: .3; } 42%,78%{ stroke-dashoffset: 0; opacity: .85; } 100%{ stroke-dashoffset: -520; opacity: .3; } }
   @keyframes mirror-intent-fill{ 0%,100%{ transform: scaleX(var(--rest)); opacity: .75; } 50%{ transform: scaleX(var(--scale)); opacity: 1; } }
+  @keyframes ml-drift{
+    0%{ transform: translate(0,0) scale(1); opacity: 0; }
+    12%{ opacity: 1; }
+    70%{ transform: translate(var(--dx,0), var(--dy,0)) scale(.4); opacity: .9; }
+    85%, 100%{ transform: translate(var(--dx,0), var(--dy,0)) scale(.2); opacity: 0; }
+  }
+  @keyframes ml-pulse{ 0%{ transform: scale(.85); opacity: .5; } 100%{ transform: scale(1.35); opacity: 0; } }
   @media (prefers-reduced-motion: reduce){
-    .mirror-qa-bubble, .mirror-qa-wave span, .mirror-qa-screen span, .mirror-wave-visual path, .mirror-intent-chat span, .mirror-intent-meter span{
+    .mirror-wave-visual path, .mirror-intent-chat span, .mirror-intent-meter span, .ml-chip, .ml-avatar::after{
       animation: none;
     }
   }
@@ -1263,11 +1283,11 @@
       </div>
 
       <div class="mirror-card">
-        <div class="mirror-visual" aria-hidden="true">
-          <div class="mirror-qa-bubble mirror-qa-buyer">Can it handle our CRM?</div>
-          <div class="mirror-qa-bubble mirror-qa-laura">Yes, here you can&hellip;</div>
-          <div class="mirror-qa-wave"><span></span><span></span><span></span><span></span></div>
-          <div class="mirror-qa-screen"><span></span><span></span></div>
+        <div class="mirror-visual mirror-learn-visual" aria-hidden="true">
+          <div class="ml-avatar"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
+          <span class="ml-chip ml-chip-1" style="--dx:34px;--dy:26px;"><i class="ph-bold ph-book-open" aria-hidden="true"></i></span>
+          <span class="ml-chip ml-chip-2" style="--dx:-30px;--dy:30px;"><i class="ph-bold ph-lightbulb" aria-hidden="true"></i></span>
+          <span class="ml-chip ml-chip-3" style="--dx:0px;--dy:-46px;"><i class="ph-bold ph-brain" aria-hidden="true"></i></span>
         </div>
         <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Answers questions live</h3>
         <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Prospects ask anything mid-demo. Laura answers in context using your product knowledge and approved paths.</p>
