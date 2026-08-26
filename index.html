@@ -811,11 +811,18 @@
      excerpt/reaction+comment counts — exactly what was legible in the
      original screenshots, not invented), styled to the site's own dark
      ink system instead of trying to reskin LinkedIn's actual UI.
-     `.li-avatar` is a plain initial-letter badge, NOT a photo — there's
-     no clean way to extract a real profile photo from the old
-     screenshots, and pairing a real named person with a random stock
-     photo would misrepresent them, so a neutral initial is the honest
-     choice. `.li-text` is 3-line-clamped so all 6 cards stay a
+     `.li-avatar` was first a plain initial-letter badge (no way to
+     source a real photo without misrepresenting a real named person
+     with a stock one) — the user then asked for real profile pictures,
+     so each avatar is now a small PNG CROPPED from that person's own
+     original screenshot (the circular photo LinkedIn itself renders
+     top-left of every post) via PowerShell/System.Drawing, not fetched
+     from anywhere else — same rect `(10,6,90,90)` off each 800×418-ish
+     source worked for all 6 since they share LinkedIn's own template
+     layout. Source screenshots live in `thumbnail/` (some already
+     pruned from the scratch copy per the user's habit — WEBSITES copy
+     always keeps them); cropped output lives in a new sibling
+     `avatars/` folder. `.li-text` is 3-line-clamped so all 6 cards stay a
      predictable height regardless of how long each excerpt is (matters
      at `lg:` where `.iv-card` clips overflow — see the height gotcha
      above this section). */
@@ -830,9 +837,7 @@
   .li-post-top{ display: flex; align-items: flex-start; gap: .55rem; }
   .li-avatar{
     flex: none; width: 34px; height: 34px; border-radius: 50%;
-    background: var(--accent);
-    color: #fff; font-weight: 700; font-size: .82rem;
-    display: flex; align-items: center; justify-content: center;
+    object-fit: cover; display: block;
   }
   .li-who{ flex: 1; min-width: 0; }
   .li-name{ font-size: .82rem; font-weight: 700; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -1250,7 +1255,7 @@
           <div class="iv-raw-grid">
             <article class="li-post">
               <div class="li-post-top">
-                <div class="li-avatar" aria-hidden="true">H</div>
+                <img class="li-avatar" src="avatars/harry.png" alt="" width="34" height="34" loading="lazy">
                 <div class="li-who">
                   <p class="li-name">Harry Stebbings <span class="li-degree">&middot; 2nd</span></p>
                   <p class="li-title">Founder @ 20VC</p>
@@ -1266,7 +1271,7 @@
             </article>
             <article class="li-post">
               <div class="li-post-top">
-                <div class="li-avatar" aria-hidden="true">A</div>
+                <img class="li-avatar" src="avatars/adam.png" alt="" width="34" height="34" loading="lazy">
                 <div class="li-who">
                   <p class="li-name">Adam Robinson <span class="li-degree">&middot; 2nd</span></p>
                   <p class="li-title">CEO @ RB2B &amp; Retention.com | Unli&hellip;</p>
@@ -1282,7 +1287,7 @@
             </article>
             <article class="li-post">
               <div class="li-post-top">
-                <div class="li-avatar" aria-hidden="true">G</div>
+                <img class="li-avatar" src="avatars/guillaume.png" alt="" width="34" height="34" loading="lazy">
                 <div class="li-who">
                   <p class="li-name">Guillaume Moubeche <span class="li-degree">&middot; 2nd</span></p>
                   <p class="li-title">Founder @ lemlist (0 to $150m valuation in 4 ye&hellip;)</p>
@@ -1298,7 +1303,7 @@
             </article>
             <article class="li-post">
               <div class="li-post-top">
-                <div class="li-avatar" aria-hidden="true">R</div>
+                <img class="li-avatar" src="avatars/rand.png" alt="" width="34" height="34" loading="lazy">
                 <div class="li-who">
                   <p class="li-name">Rand Fishkin <span class="li-degree">&middot; 2nd</span></p>
                   <p class="li-title">Co-author of Zero Click Marketing (preorder no&hellip;)</p>
@@ -1314,7 +1319,7 @@
             </article>
             <article class="li-post">
               <div class="li-post-top">
-                <div class="li-avatar" aria-hidden="true">T</div>
+                <img class="li-avatar" src="avatars/tyler.png" alt="" width="34" height="34" loading="lazy">
                 <div class="li-who">
                   <p class="li-name">Tyler Denk <span class="li-degree">&middot; 2nd</span></p>
                   <p class="li-title">cofounder/ceo @ beehiiv</p>
@@ -1330,7 +1335,7 @@
             </article>
             <article class="li-post">
               <div class="li-post-top">
-                <div class="li-avatar" aria-hidden="true">D</div>
+                <img class="li-avatar" src="avatars/des.png" alt="" width="34" height="34" loading="lazy">
                 <div class="li-who">
                   <p class="li-name">Des Traynor <span class="li-degree">&middot; 2nd</span></p>
                   <p class="li-title">Co-Founder of Fin, helping internet businesses&hellip;</p>
