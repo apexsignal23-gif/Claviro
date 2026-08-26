@@ -292,6 +292,22 @@
     border-radius: 6px; padding: .2rem .4rem;
     font-size: .76rem; font-weight: 700;
   }
+  /* Case-study brand row (real logos, curled from each company's own live
+     site — see claviro-website.md memory for exact source URLs). Each
+     logo is capped by height, not width, since the three source assets
+     have very different native shapes (square icon / wide wordmark
+     lockup); `object-fit:contain` plus explicit width/height attributes
+     (set per-image to its real aspect ratio) keeps them from stretching
+     while still reserving layout space up front. BoostedChat's real mark
+     is a near-black glyph on transparent, invisible against this card's
+     near-black gradient bg — `.cs-brand-logo--mono` forces it flat white
+     via brightness/invert rather than trying to recolor the PNG itself.
+     Crestio's own brand tan and ProfitPath's own white/gray lockup both
+     already read fine on dark, so neither gets that filter. */
+  .cs-brand{ display: flex; align-items: center; gap: .6rem; }
+  .cs-brand-logo{ display: block; height: 28px; width: auto; object-fit: contain; flex-shrink: 0; }
+  .cs-brand-logo--mono{ filter: brightness(0) invert(1); opacity: .92; }
+  .cs-brand-logo--wide{ height: 20px; }
 
   /* Mirror: three-up card grid (side-by-side like case studies, per
      explicit request — same grid mechanics as .cs-grid, kept as its own
@@ -1101,7 +1117,8 @@
           <span class="cs-highlight">Landed a Response From ClickUp</span>
           With just a single LinkedIn post, they were able to get a response from the decision team. We documented the process.
         </p>
-        <div>
+        <div class="cs-brand">
+          <img src="logos/boostedchat.png" alt="" width="28" height="28" loading="lazy" class="cs-brand-logo cs-brand-logo--mono">
           <p class="font-semibold text-[0.88rem] text-white">BoostedChat</p>
         </div>
       </div>
@@ -1111,8 +1128,8 @@
           <span class="cs-highlight">20K+ Impressions From Pilot</span>
           Turned founder insights and domain expertise into high-volume content across multiple platforms.
         </p>
-        <div>
-          <p class="font-semibold text-[0.88rem] text-white">ProfitPath</p>
+        <div class="cs-brand">
+          <img src="logos/profitpath.png" alt="ProfitPath" width="99" height="20" loading="lazy" class="cs-brand-logo cs-brand-logo--wide">
         </div>
       </div>
 
@@ -1121,7 +1138,8 @@
           <span class="cs-highlight">5 Inbound Calls Booked</span>
           Within 60 days, consistent distribution resulted in a steady stream of qualified inbound interest.
         </p>
-        <div>
+        <div class="cs-brand">
+          <img src="logos/crestio.png" alt="" width="33" height="28" loading="lazy" class="cs-brand-logo">
           <p class="font-semibold text-[0.88rem] text-white">Crestio</p>
         </div>
       </div>
