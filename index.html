@@ -382,16 +382,18 @@
     animation: ml-drift 3.6s ease-in infinite;
   }
   .ml-chip i{ font-size: 1.2rem; color: var(--accent-hot); }
-  /* Six chips in a hexagon around the avatar (was 3), each one's --dx/--dy
-     (set inline per instance above) pointing back toward center — delays
+  /* Four chips at the corners around the avatar (was 6 — trimmed back,
+     the middle-side pair sat too close to the avatar and read as
+     overcrowded). --dx/--dy (set inline per instance above) is the
+     vector FROM each chip's own resting position TOWARD the avatar's
+     center — get the sign backwards here and they drift outward instead
+     of in, which is exactly the bug the 6-chip version had. Delays
      spaced evenly across the 3.6s loop so bubbles stream in one after
-     another instead of all three original ones bunching up. */
-  .ml-chip-1{ top: 42%; left: 8%; margin-top: -20px; }
-  .ml-chip-2{ top: 66%; left: 20%; animation-delay: .6s; }
-  .ml-chip-3{ top: 66%; right: 20%; animation-delay: 1.2s; }
-  .ml-chip-4{ top: 42%; right: 8%; margin-top: -20px; animation-delay: 1.8s; }
-  .ml-chip-5{ top: 12%; right: 20%; animation-delay: 2.4s; }
-  .ml-chip-6{ top: 12%; left: 20%; animation-delay: 3s; }
+     another instead of bunching up. */
+  .ml-chip-1{ top: 12%; left: 20%; }
+  .ml-chip-2{ top: 12%; right: 20%; animation-delay: .9s; }
+  .ml-chip-3{ top: 66%; left: 20%; animation-delay: 1.8s; }
+  .ml-chip-4{ top: 66%; right: 20%; animation-delay: 2.7s; }
 
   /* "Instant, natural interactions" card: two overlapping animated wave
      paths on a soft accent glow, standing in for live voice/cursor motion. */
@@ -1292,12 +1294,10 @@
       <div class="mirror-card">
         <div class="mirror-visual mirror-learn-visual" aria-hidden="true">
           <div class="ml-avatar"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
-          <span class="ml-chip ml-chip-1" style="--dx:-40px;--dy:0px;"><i class="ph-bold ph-book-open" aria-hidden="true"></i></span>
+          <span class="ml-chip ml-chip-1" style="--dx:28px;--dy:38px;"><i class="ph-bold ph-book-open" aria-hidden="true"></i></span>
           <span class="ml-chip ml-chip-2" style="--dx:-28px;--dy:38px;"><i class="ph-bold ph-lightbulb" aria-hidden="true"></i></span>
-          <span class="ml-chip ml-chip-3" style="--dx:28px;--dy:38px;"><i class="ph-bold ph-brain" aria-hidden="true"></i></span>
-          <span class="ml-chip ml-chip-4" style="--dx:40px;--dy:0px;"><i class="ph-bold ph-graduation-cap" aria-hidden="true"></i></span>
-          <span class="ml-chip ml-chip-5" style="--dx:28px;--dy:-38px;"><i class="ph-bold ph-chats-circle" aria-hidden="true"></i></span>
-          <span class="ml-chip ml-chip-6" style="--dx:-28px;--dy:-38px;"><i class="ph-bold ph-puzzle-piece" aria-hidden="true"></i></span>
+          <span class="ml-chip ml-chip-3" style="--dx:28px;--dy:-38px;"><i class="ph-bold ph-brain" aria-hidden="true"></i></span>
+          <span class="ml-chip ml-chip-4" style="--dx:-28px;--dy:-38px;"><i class="ph-bold ph-graduation-cap" aria-hidden="true"></i></span>
         </div>
         <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Answers questions live</h3>
         <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Prospects ask anything mid-demo. Laura answers in context using your product knowledge and approved paths.</p>
