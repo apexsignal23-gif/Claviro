@@ -696,9 +696,10 @@
      HTML/CSS, not guessed from a screenshot). Originally a sticky heading
      column beside the cards (contentfloww's own layout); the user later
      asked for the heading centered at the top instead, with the cards
-     centered below it — so `.iv-scroll-head` is now just a centered block
-     up top (no longer sticky/side-by-side) and `.iv-scroll-stack` stays a
-     single centered column at every breakpoint. The stacking effect
+     centered below it — so `.iv-scroll-head` became just a block up top
+     (no longer sticky/side-by-side), later left-aligned per a further
+     request (see below) — and `.iv-scroll-stack` stays a single centered
+     column at every breakpoint regardless. The stacking effect
      itself is unchanged: each `.iv-card` is `position:sticky`, so as the
      page scrolls, a card rides up from below the viewport, locks at the
      same `top` offset as the one before it, and — because later DOM
@@ -1237,7 +1238,7 @@
 <section id="industry-standard" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="iv-scroll-stack">
-      <div class="iv-scroll-head reveal max-w-[34rem] mx-auto text-center">
+      <div class="iv-scroll-head reveal max-w-[34rem]">
         <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
           Everything We Produce is <span class="text-shine inline-block">Industry Standard</span>
         </h2>
