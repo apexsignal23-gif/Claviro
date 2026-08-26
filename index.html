@@ -699,7 +699,13 @@
      centered below it — so `.iv-scroll-head` became just a block up top
      (no longer sticky/side-by-side), later left-aligned per a further
      request (see below) — and `.iv-scroll-stack` stays a single centered
-     column at every breakpoint regardless. The stacking effect
+     column at every breakpoint regardless. NOTE: `.iv-scroll-stack` is a
+     flex column with `align-items:center`, so a child left needs its own
+     `self-start` (Tailwind) to escape that centering — just dropping
+     `mx-auto text-center` from `.iv-scroll-head` alone isn't enough, the
+     flex parent still centers the whole block regardless of its own text
+     alignment (hit this exact bug once, see the left-align entry below).
+     The stacking effect
      itself is unchanged: each `.iv-card` is `position:sticky`, so as the
      page scrolls, a card rides up from below the viewport, locks at the
      same `top` offset as the one before it, and — because later DOM
@@ -1238,7 +1244,7 @@
 <section id="industry-standard" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="iv-scroll-stack">
-      <div class="iv-scroll-head reveal max-w-[34rem]">
+      <div class="iv-scroll-head reveal max-w-[34rem] self-start">
         <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
           Everything We Produce is <span class="text-shine inline-block">Industry Standard</span>
         </h2>
