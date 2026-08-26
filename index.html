@@ -558,57 +558,93 @@
     .en-panel-chart::before, .en-panel-line path{ animation: none; }
   }
 
-  /* Pricing table (placed after the restored Gravity section) — matches a
-     user-supplied reference screenshot exactly: a 3-column comparison grid
-     (Launch / Core / Studio) with shared horizontal row lines even though
-     each plan has a different number of feature rows (shorter columns get
-     blank filler cells so the grid lines still line up, exactly as shown
-     in the reference). Desktop only (`hidden lg:grid`); `.pricing-mobile`
-     below is a separate stacked-card rebuild of the same data for small
-     screens, since interleaving 3 plans' rows into one mobile column would
-     read as nonsense. Feature-row text was originally the reference
-     screenshot's teal, but the user asked to make it all white instead —
-     --pricing-teal (still named that for min-diff) is now just an alias
-     for var(--cream), scoped to this table in case a per-table override
-     is wanted again later. */
-  .pricing-grid{
-    --pricing-teal: var(--cream);
+  /* Pricing cards (placed after the restored Gravity section) — rebuilt
+     from the original 3-column comparison-grid layout into individual
+     plan cards, per a shadcn "pricing-card" component reference: a soft
+     outer shell (matches the site's own `.card` tokens), an inset
+     glass-highlighted header holding plan name/badge/price/CTA, and a
+     feature list below. Same plan data and copy as the old grid/mobile
+     pair (Launch/Core/Studio), just reflowed into cards — Launch's price
+     was also bumped to $999 (was $3500) per the same request. Core is
+     the highlighted "Most Popular" plan: solid accent CTA + an
+     accent-tinted border/glow, matching the reference's middle-card
+     treatment; Launch/Studio get the outline CTA. One responsive grid
+     replaces the old separate desktop-grid/mobile-stack pair — cards
+     reflow to 1 column below `lg`, so there's no more need for blank
+     filler cells to keep row-lines aligned. */
+  .pricing-cards{
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border: 1px solid var(--ink-border);
-    border-radius: 6px;
-    overflow: hidden;
-    background: var(--ink-950);
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
   }
-  .pricing-cell{
-    padding: 1.1rem 1.35rem;
-    border-right: 1px solid var(--ink-border);
-    border-bottom: 1px solid var(--ink-border);
+  @media (min-width: 1024px){
+    .pricing-cards{ grid-template-columns: repeat(3, 1fr); align-items: start; }
+  }
+  .pricing-card{
+    background: var(--ink-900);
+    border: 1px solid var(--ink-border);
+    border-radius: 24px;
+    box-shadow: var(--shadow-card);
+    padding: .5rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    min-height: 3.1rem;
   }
-  .pricing-grid > .pricing-cell:nth-child(3n){ border-right: 0; }
-  .pricing-grid > .pricing-cell:nth-last-child(-n+3){ border-bottom: 0; }
-  .pricing-head strong{ color: var(--cream); font-size: 1.05rem; font-weight: 700; letter-spacing: -.01em; }
-  .pricing-head span{ margin-top: .3rem; font-size: .82rem; color: var(--cream-dim); }
-  .pricing-price{ font-weight: 700; color: var(--cream); font-size: .98rem; }
-  .pricing-feature{ color: var(--pricing-teal); font-size: .9rem; line-height: 1.5; }
-
-  .pricing-mobile{ display: grid; gap: 1.5rem; }
-  .pricing-mobile-card{
-    --pricing-teal: var(--cream);
-    background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
-    border: 1px solid rgba(255,255,255,.12);
+  .pricing-card-popular{
+    border-color: rgba(143,168,255,.35);
+    box-shadow: 0 0 0 1px rgba(143,168,255,.12), var(--shadow-card);
+  }
+  .pc-header{
+    position: relative;
+    overflow: hidden;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--ink-border);
     border-radius: 18px;
     padding: 1.5rem 1.5rem 1.75rem;
   }
-  .pricing-mobile-card h3{ font-size: 1.15rem; font-weight: 700; color: var(--cream); }
-  .pricing-mobile-card .pm-duration{ margin-top: .2rem; font-size: .85rem; color: var(--cream-dim); }
-  .pricing-mobile-card .pm-price{ margin-top: .9rem; font-weight: 700; color: var(--cream); font-size: 1.1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--ink-border); }
-  .pricing-mobile-card ul{ margin-top: 1rem; display: grid; gap: .65rem; }
-  .pricing-mobile-card li{ color: var(--pricing-teal); font-size: .9rem; line-height: 1.5; }
+  .pc-header::before{
+    content: '';
+    position: absolute; inset: 0 0 auto 0; height: 6rem;
+    background: linear-gradient(180deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,.02) 55%, transparent 100%);
+    pointer-events: none;
+  }
+  .pc-plan-row{ position: relative; display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+  .pc-plan-name{ display: flex; align-items: center; gap: .55rem; font-weight: 700; font-size: 1.05rem; letter-spacing: -.01em; color: var(--cream); }
+  .pc-plan-name i{ font-size: 1.15rem; color: var(--accent-hot); }
+  .pc-badge{
+    font-size: .72rem; font-weight: 600; letter-spacing: .02em;
+    color: var(--accent-hot);
+    border: 1px solid rgba(143,168,255,.4);
+    background: rgba(143,168,255,.08);
+    padding: .25rem .65rem;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .pc-duration{ position: relative; margin-top: .35rem; font-size: .82rem; color: var(--cream-dim); }
+  .pc-price-row{ position: relative; margin-top: 1.4rem; display: flex; align-items: flex-end; gap: .35rem; }
+  .pc-price{ font-size: 2.1rem; font-weight: 800; letter-spacing: -.03em; color: var(--cream); line-height: 1; }
+  .pc-period{ padding-bottom: .2rem; font-size: .92rem; color: var(--cream-dim); }
+  .pc-btn{
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1.5rem;
+    width: 100%;
+    padding: .8rem 1rem;
+    border-radius: 999px;
+    font-weight: 600; font-size: .92rem;
+    white-space: nowrap;
+    touch-action: manipulation;
+    transition: transform .35s var(--ease-spring), box-shadow .35s var(--ease-spring), background-color .35s var(--ease-spring), border-color .35s var(--ease-spring), filter .35s var(--ease-spring);
+  }
+  .pc-btn-solid{ background: var(--accent-hot); color: var(--ink-950); box-shadow: var(--shadow-btn); }
+  .pc-btn-solid:hover{ transform: translateY(-2px); box-shadow: var(--shadow-btn-hover); filter: brightness(1.04); }
+  .pc-btn-solid:active{ transform: translateY(0) scale(.98); box-shadow: var(--shadow-btn); }
+  .pc-btn-outline{ background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.15); color: var(--cream); }
+  .pc-btn-outline:hover{ border-color: rgba(255,255,255,.3); background: rgba(255,255,255,.06); transform: translateY(-2px); }
+  .pc-btn-outline:active{ transform: translateY(0) scale(.98); }
+  .pc-btn:focus-visible{ outline: 2px solid var(--accent-hot); outline-offset: 2px; }
+  .pc-features{ display: grid; gap: .85rem; padding: 1.35rem 1.1rem 1rem; }
+  .pc-features li{ display: flex; align-items: flex-start; gap: .65rem; font-size: .88rem; line-height: 1.55; color: var(--cream-dim); }
+  .pc-features li i{ font-size: 1.05rem; color: var(--accent); margin-top: .15rem; flex-shrink: 0; }
 
   /* Industry Standard: sticky-stack scroll reveal, reverse-engineered from
      contentfloww.com's own "Podcast trailers" section (curled their live
@@ -1447,123 +1483,93 @@
 </section>
 
 <!-- ================= PRICING (added after the restored Gravity section)
-     — matches a user-supplied reference screenshot exactly: layout,
-     spacing, and the teal feature-row color are all lifted from that
-     screenshot rather than the site's own design tokens. Desktop shows
-     the literal 3-column comparison grid; below `lg:` each plan renders
-     as its own stacked card instead (see the CSS comment above
-     .pricing-grid for why). ================= -->
+     — rebuilt from a 3-column comparison-grid into individual plan cards
+     per a shadcn "pricing-card" component reference: soft outer shell,
+     inset glass-highlighted header (plan name/badge/price/CTA), feature
+     list below. Core is the "Most Popular" highlighted plan (solid CTA +
+     accent-tinted border); Launch/Studio use the outline CTA. Single
+     responsive grid — no separate desktop/mobile markup needed anymore.
+     Launch's price is $999 (bumped up from $3500 per request). ================= -->
 <section class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
 
-    <div class="pricing-grid reveal hidden lg:grid">
-      <div class="pricing-cell pricing-head"><strong class="font-display">Launch</strong><span>1 month</span></div>
-      <div class="pricing-cell pricing-head"><strong class="font-display">Core</strong><span>3 months</span></div>
-      <div class="pricing-cell pricing-head"><strong class="font-display">Studio</strong><span>6 months+</span></div>
+    <div class="pricing-cards reveal">
 
-      <div class="pricing-cell pricing-price">$3500</div>
-      <div class="pricing-cell pricing-price">$2500/mo</div>
-      <div class="pricing-cell pricing-price">Let&rsquo;s talk</div>
-
-      <div class="pricing-cell pricing-feature">Pre-Launch Content Planning</div>
-      <div class="pricing-cell pricing-feature">Tailored roadmap</div>
-      <div class="pricing-cell pricing-feature">Everything in Core</div>
-
-      <div class="pricing-cell pricing-feature">20 Produced Content</div>
-      <div class="pricing-cell pricing-feature">60 Produced Content</div>
-      <div class="pricing-cell pricing-feature">120+ Produced Content</div>
-
-      <div class="pricing-cell pricing-feature">Flagship Launch Video</div>
-      <div class="pricing-cell pricing-feature">Repeatable Pre-Production System</div>
-      <div class="pricing-cell pricing-feature">Dedicated Creative Team</div>
-
-      <div class="pricing-cell pricing-feature">Filming Assistance</div>
-      <div class="pricing-cell pricing-feature">Repurposing Existing Materials</div>
-      <div class="pricing-cell pricing-feature">Podcast Production</div>
-
-      <div class="pricing-cell pricing-feature">Made for Pre-Launch Founders</div>
-      <div class="pricing-cell pricing-feature">Built around LinkedIn</div>
-      <div class="pricing-cell pricing-feature">Shooting Direction</div>
-
-      <div class="pricing-cell"></div>
-      <div class="pricing-cell pricing-feature">Scheduling</div>
-      <div class="pricing-cell pricing-feature">Custom Analytics Dashboard</div>
-
-      <div class="pricing-cell"></div>
-      <div class="pricing-cell pricing-feature">Video Content</div>
-      <div class="pricing-cell pricing-feature">Multi-platform expansion (6 core channels)</div>
-
-      <div class="pricing-cell"></div>
-      <div class="pricing-cell pricing-feature">Bi-weekly checkins</div>
-      <div class="pricing-cell pricing-feature">Long-form content</div>
-
-      <div class="pricing-cell"></div>
-      <div class="pricing-cell pricing-feature">Monthly Performance Report</div>
-      <div class="pricing-cell pricing-feature">Mass Distribution (clipping)</div>
-
-      <div class="pricing-cell"></div>
-      <div class="pricing-cell pricing-feature">Upcoming Month Optimization</div>
-      <div class="pricing-cell pricing-feature">Repeatable Post-Production System</div>
-
-      <div class="pricing-cell"></div>
-      <div class="pricing-cell pricing-feature">Made for Startup &amp; Scaleup Founders</div>
-      <div class="pricing-cell pricing-feature">Access to Limited Community</div>
-
-      <div class="pricing-cell"></div>
-      <div class="pricing-cell"></div>
-      <div class="pricing-cell pricing-feature">Made for Enterprise Founders</div>
-    </div>
-
-    <div class="pricing-mobile reveal lg:hidden">
-      <div class="pricing-mobile-card">
-        <h3 class="font-display">Launch</h3>
-        <p class="pm-duration">1 month</p>
-        <p class="pm-price">$3500</p>
-        <ul>
-          <li>Pre-Launch Content Planning</li>
-          <li>20 Produced Content</li>
-          <li>Flagship Launch Video</li>
-          <li>Filming Assistance</li>
-          <li>Made for Pre-Launch Founders</li>
+      <div class="pricing-card">
+        <div class="pc-header">
+          <div class="pc-plan-row">
+            <span class="pc-plan-name"><i class="ph-bold ph-rocket-launch" aria-hidden="true"></i>Launch</span>
+          </div>
+          <p class="pc-duration">1 month</p>
+          <div class="pc-price-row">
+            <span class="pc-price">$999</span>
+          </div>
+          <a href="#cta" class="pc-btn pc-btn-outline">Book a Call</a>
+        </div>
+        <ul class="pc-features">
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Pre-Launch Content Planning</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>20 Produced Content</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Flagship Launch Video</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Filming Assistance</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Made for Pre-Launch Founders</li>
         </ul>
       </div>
-      <div class="pricing-mobile-card">
-        <h3 class="font-display">Core</h3>
-        <p class="pm-duration">3 months</p>
-        <p class="pm-price">$2500/mo</p>
-        <ul>
-          <li>Tailored roadmap</li>
-          <li>60 Produced Content</li>
-          <li>Repeatable Pre-Production System</li>
-          <li>Repurposing Existing Materials</li>
-          <li>Built around LinkedIn</li>
-          <li>Scheduling</li>
-          <li>Video Content</li>
-          <li>Bi-weekly checkins</li>
-          <li>Monthly Performance Report</li>
-          <li>Upcoming Month Optimization</li>
-          <li>Made for Startup &amp; Scaleup Founders</li>
+
+      <div class="pricing-card pricing-card-popular">
+        <div class="pc-header">
+          <div class="pc-plan-row">
+            <span class="pc-plan-name"><i class="ph-bold ph-briefcase" aria-hidden="true"></i>Core</span>
+            <span class="pc-badge">Most Popular</span>
+          </div>
+          <p class="pc-duration">3 months</p>
+          <div class="pc-price-row">
+            <span class="pc-price">$2500</span>
+            <span class="pc-period">/mo</span>
+          </div>
+          <a href="#cta" class="pc-btn pc-btn-solid">Book a Call</a>
+        </div>
+        <ul class="pc-features">
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Tailored roadmap</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>60 Produced Content</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Repeatable Pre-Production System</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Repurposing Existing Materials</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Built around LinkedIn</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Scheduling</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Video Content</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Bi-weekly checkins</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Monthly Performance Report</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Upcoming Month Optimization</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Made for Startup &amp; Scaleup Founders</li>
         </ul>
       </div>
-      <div class="pricing-mobile-card">
-        <h3 class="font-display">Studio</h3>
-        <p class="pm-duration">6 months+</p>
-        <p class="pm-price">Let&rsquo;s talk</p>
-        <ul>
-          <li>Everything in Core</li>
-          <li>120+ Produced Content</li>
-          <li>Dedicated Creative Team</li>
-          <li>Podcast Production</li>
-          <li>Shooting Direction</li>
-          <li>Custom Analytics Dashboard</li>
-          <li>Multi-platform expansion (6 core channels)</li>
-          <li>Long-form content</li>
-          <li>Mass Distribution (clipping)</li>
-          <li>Repeatable Post-Production System</li>
-          <li>Access to Limited Community</li>
-          <li>Made for Enterprise Founders</li>
+
+      <div class="pricing-card">
+        <div class="pc-header">
+          <div class="pc-plan-row">
+            <span class="pc-plan-name"><i class="ph-bold ph-buildings" aria-hidden="true"></i>Studio</span>
+          </div>
+          <p class="pc-duration">6 months+</p>
+          <div class="pc-price-row">
+            <span class="pc-price">Let&rsquo;s talk</span>
+          </div>
+          <a href="#cta" class="pc-btn pc-btn-outline">Book a Call</a>
+        </div>
+        <ul class="pc-features">
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Everything in Core</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>120+ Produced Content</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Dedicated Creative Team</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Podcast Production</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Shooting Direction</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Custom Analytics Dashboard</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Multi-platform expansion (6 core channels)</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Long-form content</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Mass Distribution (clipping)</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Repeatable Post-Production System</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Access to Limited Community</li>
+          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Made for Enterprise Founders</li>
         </ul>
       </div>
+
     </div>
 
   </div>
