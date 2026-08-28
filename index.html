@@ -699,23 +699,109 @@
     .rp-src, .rp-current-in, .rp-current-out, .rp-hub, .rp-hub i, .rp-final{ animation: none; }
   }
 
-  /* Retention section (new) — "Private, regional delivery" network diagram,
-     reproduced from repixa.io's own Enterprise-infrastructure grid (curled
-     live HTML/CSS), recolored onto Claviro's dark ink + accent blue.
-     Also a standalone .mirror-card, same treatment as Repurpose above. */
+  /* Retention section — REBUILT FROM SCRATCH 2026-08-28, replacing the
+     "Private, regional delivery" network diagram entirely (was reproduced
+     from repixa.io's Enterprise-infrastructure grid, curled live HTML/CSS)
+     per "replace this animation with something which indicates that
+     posting consistency results in customer retention. Make a detailed
+     animation." New concept, three pieces synced on one 8s loop: `.rt-day`
+     ×5 (a streak row, checking off one at a time — "consistent posting")
+     → `.rt-curve-main` (a retention line chart that progressively draws
+     itself upward as the streak builds, then holds high) → `.rt-dot` ×3
+     (a small cluster of customers that appear once the curve tops out —
+     the retained audience the consistency bought). Same underlying
+     techniques as the Repurpose diagrams above: `pathLength`-normalized
+     SVG paths, and reduced-motion bases set to whichever state reads as a
+     complete, intentional static image — here that's everything already
+     checked/drawn/arrived, not everything empty. `--ease-spring` is
+     reused here as an @keyframes timing-function for the first time
+     (previously only used on `transition`s elsewhere in this file) — same
+     curve, just applied to a different animation type. h3/p copy changed
+     with it (was repixa's own regional-infrastructure text, unrelated to
+     what's drawn now). */
   .rt-card{ max-width: 26rem; margin: 0 auto; }
   .rt-visual{ align-items: center; justify-content: center; }
-  .rt-network{ width: 230px; height: 150px; max-width: 78%; overflow: visible; }
-  .rt-line{ fill: none; stroke: rgba(76,110,245,.55); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 6 8; animation: rt-flow 4.8s linear infinite; }
-  .rt-line-b{ animation-delay: -1.5s; }
-  .rt-node{ fill: var(--ink-900); stroke: rgba(255,255,255,.4); stroke-width: 2.5; stroke-dasharray: 6 8; }
-  .rt-slot{ fill: none; stroke: rgba(255,255,255,.45); stroke-width: 5; stroke-linecap: round; }
-  .rt-pulse{ fill: var(--accent-hot); filter: drop-shadow(0 0 10px rgba(76,110,245,.6)); animation: rt-pulse 2.2s ease-in-out infinite; }
-  .rt-pulse-2{ animation-delay: -1.1s; }
-  @keyframes rt-flow{ to{ stroke-dashoffset: -56; } }
-  @keyframes rt-pulse{ 0%,100%{ transform: scale(1); opacity: .55; } 50%{ transform: scale(1.75); opacity: 1; } }
+  .rt-day{
+    position: absolute; top: 15%; transform: translate(-50%,-50%) scale(1);
+    width: 30px; height: 30px; border-radius: 8px;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.16);
+    display: grid; place-items: center; font-size: 1rem; color: var(--accent-hot);
+    box-shadow: 0 6px 14px rgba(0,0,0,.24);
+    opacity: 1;
+  }
+  .rt-day-1{ left: 11.5%; animation: rt-day-pop-1 8s var(--ease-spring) infinite; }
+  .rt-day-2{ left: 30.8%; animation: rt-day-pop-2 8s var(--ease-spring) infinite; }
+  .rt-day-3{ left: 50%;   animation: rt-day-pop-3 8s var(--ease-spring) infinite; }
+  .rt-day-4{ left: 69.2%; animation: rt-day-pop-4 8s var(--ease-spring) infinite; }
+  .rt-day-5{ left: 88.5%; animation: rt-day-pop-5 8s var(--ease-spring) infinite; }
+  .rt-chart{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .rt-axis{ fill: none; stroke: rgba(255,255,255,.12); stroke-width: 1; stroke-dasharray: 2 4; }
+  .rt-curve-main{
+    fill: none; stroke: var(--accent-hot); stroke-width: 2.6; stroke-linecap: round;
+    filter: drop-shadow(0 0 6px rgba(76,110,245,.5));
+    stroke-dasharray: 1000; stroke-dashoffset: 0;
+    animation: rt-curve-draw 8s var(--ease-spring) infinite;
+  }
+  .rt-dot{
+    fill: var(--accent-hot); filter: drop-shadow(0 0 5px rgba(76,110,245,.7));
+    transform-box: fill-box; transform-origin: center;
+    opacity: 1; transform: scale(1);
+    animation: rt-dot-pop 8s var(--ease-spring) infinite;
+  }
+  .rt-dot-2{ animation-delay: .15s; }
+  .rt-dot-3{ animation-delay: .3s; }
+  /* Each day chip dims/shrinks only during its own "not checked off yet"
+     window, then pops to its base look (opacity:1/scale(1), declared on
+     .rt-day above) and stays there for the rest of the loop — the five
+     wake-up points (10/23/36/49/62%) are evenly spaced ~13% apart, about
+     1s of the 8s loop per day, so the streak visibly fills in left to
+     right instead of all at once. */
+  @keyframes rt-day-pop-1{
+    0%, 4%, 98%, 100%{ opacity: .4; transform: translate(-50%,-50%) scale(.85); }
+    10%, 92%{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  }
+  @keyframes rt-day-pop-2{
+    0%, 17%, 98%, 100%{ opacity: .4; transform: translate(-50%,-50%) scale(.85); }
+    23%, 92%{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  }
+  @keyframes rt-day-pop-3{
+    0%, 30%, 98%, 100%{ opacity: .4; transform: translate(-50%,-50%) scale(.85); }
+    36%, 92%{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  }
+  @keyframes rt-day-pop-4{
+    0%, 43%, 98%, 100%{ opacity: .4; transform: translate(-50%,-50%) scale(.85); }
+    49%, 92%{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  }
+  @keyframes rt-day-pop-5{
+    0%, 56%, 98%, 100%{ opacity: .4; transform: translate(-50%,-50%) scale(.85); }
+    62%, 92%{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  }
+  /* Curve rests fully drawn (stroke-dashoffset:0 in the base .rt-curve-main
+     rule above) and only un-draws briefly at the very start/end of each
+     loop (the "resetting" beat). A single dasharray equal to the whole
+     pathLength, animating dashoffset from that same value down to 0, is
+     the standard self-drawing-line technique — distinct from the short-
+     dash/long-gap "traveling bead" used on the Repurpose diagrams above:
+     there the dash is short and travels along a fixed-length line; here
+     the dash IS the whole line and its drawn LENGTH grows. Finishes
+     drawing at 68%, just after the 5th day pops at 62%, so the last
+     check-off visibly "completes" the curve a beat later. */
+  @keyframes rt-curve-draw{
+    0%, 4%{ stroke-dashoffset: 1000; }
+    68%, 92%{ stroke-dashoffset: 0; }
+    98%, 100%{ stroke-dashoffset: 1000; }
+  }
+  /* Customer dots rest visible (base .rt-dot rule above) and only hide
+     during the collect/draw phase, popping in right as the curve above
+     finishes (74%) — the small .15s/.3s delays are a cosmetic stagger
+     only (all three still land inside the same beat), not a real
+     sequence, same idiom as the Repurpose diagrams' cosmetic offsets. */
+  @keyframes rt-dot-pop{
+    0%, 66%, 98%, 100%{ opacity: 0; transform: scale(0); }
+    74%, 92%{ opacity: 1; transform: scale(1); }
+  }
   @media (prefers-reduced-motion: reduce){
-    .rt-line, .rt-line-b, .rt-pulse, .rt-pulse-2{ animation: none; }
+    .rt-day-1, .rt-day-2, .rt-day-3, .rt-day-4, .rt-day-5, .rt-curve-main, .rt-dot{ animation: none; }
   }
 
   /* Enablement section (replaced "Results"/testimonials) — a trimmed,
@@ -1830,18 +1916,21 @@
 
     <div class="mirror-card rt-card reveal mt-12">
       <div class="mirror-visual rt-visual" aria-hidden="true">
-        <svg class="rt-network" viewBox="0 0 230 150">
-          <path class="rt-line" d="M32 78H78V36H130V78" />
-          <path class="rt-line rt-line-b" d="M130 78V118H178V78H210" />
-          <rect class="rt-node rt-node-main" x="78" y="24" width="52" height="52" rx="5" />
-          <rect class="rt-node" x="146" y="104" width="54" height="38" rx="5" />
-          <path class="rt-slot" d="M94 44h20M94 57h20M161 119h25M161 131h25" />
-          <circle class="rt-pulse" cx="78" cy="78" r="3" />
-          <circle class="rt-pulse rt-pulse-2" cx="178" cy="78" r="3" />
+        <div class="rt-day rt-day-1"><i class="ph-bold ph-check" aria-hidden="true"></i></div>
+        <div class="rt-day rt-day-2"><i class="ph-bold ph-check" aria-hidden="true"></i></div>
+        <div class="rt-day rt-day-3"><i class="ph-bold ph-check" aria-hidden="true"></i></div>
+        <div class="rt-day rt-day-4"><i class="ph-bold ph-check" aria-hidden="true"></i></div>
+        <div class="rt-day rt-day-5"><i class="ph-bold ph-check" aria-hidden="true"></i></div>
+        <svg class="rt-chart" viewBox="0 0 260 195" preserveAspectRatio="none">
+          <path class="rt-axis" d="M25 182 H235" />
+          <path class="rt-curve-main" pathLength="1000" d="M25 158 C70 152,95 110,135 95 C175 82,205 72,235 68" />
+          <circle class="rt-dot rt-dot-1" cx="222" cy="58" r="4" />
+          <circle class="rt-dot rt-dot-2" cx="238" cy="49" r="4" />
+          <circle class="rt-dot rt-dot-3" cx="248" cy="64" r="4" />
         </svg>
       </div>
-      <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Private, regional delivery</h3>
-      <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Serve each demo from the nearest region with resilient infrastructure and consistent performance.</p>
+      <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Consistent posting keeps them coming back</h3>
+      <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Sporadic content loses an audience before it forms. A steady, predictable cadence is what turns casual viewers into people who stick around.</p>
     </div>
   </div>
 </section>
