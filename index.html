@@ -428,9 +428,17 @@
        is turned off below under reduced-motion, so both cards just sit
        stacked and centered instead of stuck at an off-position frame. */
     transform: translate(-50%, -50%);
-    animation: mirror-post-cycle 3.6s ease-in-out infinite;
+    /* 9s / 5 cards = one "slot" every 1.8s — see the mirror-post-cycle
+       keyframe comment below for how a slot breaks down into
+       front-hold/exit/hidden/enter. Each card's animation-delay is
+       -(its slot index × 1.8s) so they land in sequence, one after
+       another, sharing this exact same keyframe. */
+    animation: mirror-post-cycle 9s ease-in-out infinite;
   }
   .mirror-drift-card-b{ animation-delay: -1.8s; }
+  .mirror-drift-card-c{ animation-delay: -3.6s; }
+  .mirror-drift-card-d{ animation-delay: -5.4s; }
+  .mirror-drift-card-e{ animation-delay: -7.2s; }
   .mirror-drift-top{ display: flex; align-items: center; gap: .5rem; }
   .mirror-drift-avatar{ flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); }
   .mirror-drift-lines{ flex: 1; display: grid; gap: .35rem; min-width: 0; }
@@ -440,21 +448,36 @@
   .mirror-drift-body{ display: grid; gap: .4rem; }
   .mirror-drift-body span{ display: block; height: 6px; border-radius: 20px; background: rgba(255,255,255,.08); }
   .mirror-drift-body span:last-child{ width: 55%; }
-  /* Each cross-fading card is a genuinely different post FORMAT, not
-     just the same 2-line shape with tweaked widths — per explicit
-     request to make it obvious these are different pieces of content,
-     not one frozen frame. Card A: a plain 3-line text post (full, full,
-     short). Card B: an image post — a media placeholder block above a
-     single short caption line. */
+  /* Five genuinely different post FORMATS cycle through in turn, not
+     just the same shape with tweaked widths — per explicit request to
+     make each slide obviously a different piece of content. Card A:
+     plain 3-line text post (full, full, short). Card B: image post —
+     media block + short caption. Card C: a "quote"/one-liner post — a
+     single wide statement line. Card D: a bulleted-list post — four
+     short lines. Card E: a video post — same media block as B, plus a
+     centered play-circle icon. Header last-line width also varies a
+     little per card just for extra visual variety, purely cosmetic. */
   .mirror-drift-card-b .mirror-drift-lines span:last-child{ width: 42%; }
+  .mirror-drift-card-c .mirror-drift-lines span:last-child{ width: 50%; }
+  .mirror-drift-card-d .mirror-drift-lines span:last-child{ width: 55%; }
+  .mirror-drift-card-e .mirror-drift-lines span:last-child{ width: 46%; }
   .mirror-drift-body-media{ gap: .5rem; }
   .mirror-drift-media{
     width: 100%; height: 2.6rem;
     border-radius: .4rem;
     background: rgba(255,255,255,.05);
     border: 1px solid var(--ink-border);
+    display: flex; align-items: center; justify-content: center;
   }
   .mirror-drift-body-media span:last-child{ width: 40%; }
+  .mirror-drift-play{ font-size: 1.5rem; color: rgba(255,255,255,.32); }
+  .mirror-drift-body-quote{ height: 100%; align-content: center; }
+  .mirror-drift-body-quote span:last-child{ height: 9px; width: 82%; background: rgba(255,255,255,.16); }
+  .mirror-drift-body-list{ gap: .3rem; }
+  .mirror-drift-body-list span{ width: 40%; }
+  .mirror-drift-body-list span:nth-child(2){ width: 32%; }
+  .mirror-drift-body-list span:nth-child(3){ width: 44%; }
+  .mirror-drift-body-list span:last-child{ width: 26%; }
 
   /* "Understands buyer intent" card, REBUILT 2026-08-27 — the
      chat-bubbles + "Detected priorities" meter-bar panel is GONE
@@ -502,27 +525,32 @@
     85%, 100%{ transform: translate(var(--dx,0), var(--dy,0)) scale(.2); opacity: 0; }
   }
   @keyframes ml-pulse{ 0%{ transform: scale(.85); opacity: .5; } 100%{ transform: scale(1.35); opacity: 0; } }
-  /* Cross-fade cycle, shared by both `.mirror-drift-card` instances
-     (the 2nd offset -1.8s, exactly half of the 3.6s duration — was 6s/
-     -3s until "make it faster" — via animation-delay, so it's always
-     running exactly opposite this one; if the duration ever changes
-     again, the delay MUST stay at exactly half of it or the two cards
-     fall out of sync). Each card's own timeline: sits at front
-     (centered, full opacity) 0-40%, exits upward while fading out
-     40-50%, INSTANTLY teleports to a position below center at
-     50%→50.01% (invisible at that exact instant since opacity is 0, so
-     the jump never shows), waits there hidden 50-90%, then rises back
-     up into the front spot while fading in 90-100% (which loops
-     seamlessly into 0%). Because the 2nd card is exactly half a cycle
-     out of phase, its "40-50% exiting" window lines up with this card's
-     "90-100% rising in" window and vice versa — that's what makes one
-     visibly fade away right as the other rises into the middle, instead
-     of both just fading in/out independently at random-looking moments. */
+  /* Cross-fade cycle, shared by ALL FIVE `.mirror-drift-card` instances
+     — generalized 2026-08-28 from an original 2-card version to hold N
+     cards in sequence ("add three more variations"). Duration is 9s,
+     one "slot" per card = 9s/5 = 1.8s = 20% of the keyframe's 0-100%.
+     Each card's own timeline, as a fraction of the FULL 9s (not just its
+     own slot): front-hold+visible 0-16%, exits upward while fading out
+     16-20%, INSTANTLY teleports to a position below center at
+     20%→20.01% (invisible at that exact instant since opacity is 0, so
+     the jump never shows), waits hidden through every OTHER card's slot
+     (20.01-96%), then rises back up into the front spot while fading in
+     96-100% (loops seamlessly into 0%). Every card runs this identical
+     keyframe, just staggered by animation-delay in steps of -1.8s (see
+     `.mirror-drift-card-b/-c/-d/-e` above) — that's what lines up card
+     N's "16-20% exiting" window with card N+1's "96-100% rising in"
+     window, so they visibly hand off to each other one at a time instead
+     of all fading in/out independently. **If the card COUNT ever
+     changes, both the duration split and every card's delay need
+     recalculating together** — delay step = duration/cardCount, and the
+     16%/20%/96% marks above are (holdFrac)/(slotWidth)/(100-transFrac)
+     for slotWidth=100/cardCount — they're only correct for exactly 5
+     cards at a 4%-of-slot transition width. */
   @keyframes mirror-post-cycle{
-    0%, 40%{ transform: translate(-50%, -50%) scale(1); opacity: 1; }
-    50%{ transform: translate(-50%, calc(-50% - 16px)) scale(.92); opacity: 0; }
-    50.01%{ transform: translate(-50%, calc(-50% + 16px)) scale(.92); opacity: 0; }
-    90%{ transform: translate(-50%, calc(-50% + 16px)) scale(.92); opacity: 0; }
+    0%, 16%{ transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    20%{ transform: translate(-50%, calc(-50% - 16px)) scale(.92); opacity: 0; }
+    20.01%{ transform: translate(-50%, calc(-50% + 16px)) scale(.92); opacity: 0; }
+    96%{ transform: translate(-50%, calc(-50% + 16px)) scale(.92); opacity: 0; }
     100%{ transform: translate(-50%, -50%) scale(1); opacity: 1; }
   }
   @media (prefers-reduced-motion: reduce){
@@ -1537,6 +1565,33 @@
             </div>
             <div class="mirror-drift-body mirror-drift-body-media">
               <div class="mirror-drift-media"></div>
+              <span></span>
+            </div>
+          </div>
+          <div class="mirror-drift-card mirror-drift-card-c">
+            <div class="mirror-drift-top">
+              <div class="mirror-drift-avatar"></div>
+              <div class="mirror-drift-lines"><span></span><span></span></div>
+              <i class="ph-fill ph-linkedin-logo mirror-drift-brand" aria-hidden="true"></i>
+            </div>
+            <div class="mirror-drift-body mirror-drift-body-quote"><span></span></div>
+          </div>
+          <div class="mirror-drift-card mirror-drift-card-d">
+            <div class="mirror-drift-top">
+              <div class="mirror-drift-avatar"></div>
+              <div class="mirror-drift-lines"><span></span><span></span></div>
+              <i class="ph-fill ph-linkedin-logo mirror-drift-brand" aria-hidden="true"></i>
+            </div>
+            <div class="mirror-drift-body mirror-drift-body-list"><span></span><span></span><span></span><span></span></div>
+          </div>
+          <div class="mirror-drift-card mirror-drift-card-e">
+            <div class="mirror-drift-top">
+              <div class="mirror-drift-avatar"></div>
+              <div class="mirror-drift-lines"><span></span><span></span></div>
+              <i class="ph-fill ph-linkedin-logo mirror-drift-brand" aria-hidden="true"></i>
+            </div>
+            <div class="mirror-drift-body mirror-drift-body-media">
+              <div class="mirror-drift-media"><i class="ph-fill ph-play-circle mirror-drift-play" aria-hidden="true"></i></div>
               <span></span>
             </div>
           </div>
