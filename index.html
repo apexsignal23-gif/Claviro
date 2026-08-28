@@ -559,6 +559,63 @@
     }
   }
 
+  /* "What Changes By Day 90" section (id="process") — the "Profile
+     activity, first 90 days" line chart was static (no classes, no
+     animation at all) until 2026-08-28, per "animate the graph so that
+     it looks like it is increasing." Reuses the Retention section's
+     self-drawing-line technique (a `pathLength`-normalized path,
+     `stroke-dasharray` set to that same length, `stroke-dashoffset`
+     animating length→0) for the stroke, plus a synced `clip-path`
+     left-to-right wipe for the fill area beneath it — dasharray/
+     dashoffset can only progressively reveal a STROKED outline, not a
+     filled shape, so the fill needs a different mechanism; clip-path is
+     the standard, compositor-cheap tool for a reveal like this. The
+     endpoint dot pops in once the line finishes. Runs as its own
+     independent infinite loop, same as every other animated diagram on
+     this page — separate from and unrelated to `.reveal`'s one-time
+     scroll-in fade on the card that contains it; the two don't interact,
+     the chart just keeps looping on its own once the card has revealed. */
+  .day90-line{
+    fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round;
+    stroke-dasharray: 1000; stroke-dashoffset: 0;
+    animation: day90-draw 5s var(--ease-spring) infinite;
+  }
+  .day90-fill{
+    fill: var(--accent); opacity: .08;
+    clip-path: inset(0 0% 0 0);
+    animation: day90-reveal 5s var(--ease-spring) infinite;
+  }
+  .day90-dot{
+    fill: var(--accent);
+    transform-box: fill-box; transform-origin: center;
+    opacity: 1; transform: scale(1);
+    animation: day90-dot-pop 5s var(--ease-spring) infinite;
+  }
+  /* Line rests fully drawn (stroke-dashoffset:0 in the base .day90-line
+     rule above) and only un-draws briefly at the very start/end of each
+     loop — reduced-motion just leaves the original static, fully-drawn
+     chart, matching how this chart always looked before this change.
+     Fill's clip-path is kept in lockstep with the same 0-70%/70-88%/
+     96-100% timing so the shaded area's right edge always sits right
+     where the line currently ends, never ahead of or behind it. */
+  @keyframes day90-draw{
+    0%, 4%{ stroke-dashoffset: 1000; }
+    70%, 88%{ stroke-dashoffset: 0; }
+    96%, 100%{ stroke-dashoffset: 1000; }
+  }
+  @keyframes day90-reveal{
+    0%, 4%{ clip-path: inset(0 100% 0 0); }
+    70%, 88%{ clip-path: inset(0 0% 0 0); }
+    96%, 100%{ clip-path: inset(0 100% 0 0); }
+  }
+  @keyframes day90-dot-pop{
+    0%, 66%, 96%, 100%{ opacity: 0; transform: scale(.4); }
+    74%, 88%{ opacity: 1; transform: scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .day90-line, .day90-fill, .day90-dot{ animation: none; }
+  }
+
   /* Repurpose section (replaced "The People Behind Your Feed" / Team) —
      single .mirror-card reused as a standalone centered card instead of
      Mirror's 3-up grid.
@@ -1847,11 +1904,11 @@
         <line x1="0" y1="150" x2="400" y2="150" stroke="var(--ink-border)" stroke-width="1"/>
         <line x1="0" y1="90" x2="400" y2="90" stroke="var(--ink-border)" stroke-width="1"/>
         <line x1="0" y1="30" x2="400" y2="30" stroke="var(--ink-border)" stroke-width="1"/>
-        <path d="M0,150 C40,148 60,145 90,138 C130,128 150,110 190,95 C230,80 250,60 290,42 C325,26 360,18 400,10"
-              fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M0,150 C40,148 60,145 90,138 C130,128 150,110 190,95 C230,80 250,60 290,42 C325,26 360,18 400,10 L400,170 L0,170 Z"
-              fill="var(--accent)" opacity=".08"/>
-        <circle cx="400" cy="10" r="4.5" fill="var(--accent)"/>
+        <path class="day90-line" pathLength="1000"
+              d="M0,150 C40,148 60,145 90,138 C130,128 150,110 190,95 C230,80 250,60 290,42 C325,26 360,18 400,10"/>
+        <path class="day90-fill"
+              d="M0,150 C40,148 60,145 90,138 C130,128 150,110 190,95 C230,80 250,60 290,42 C325,26 360,18 400,10 L400,170 L0,170 Z"/>
+        <circle class="day90-dot" cx="400" cy="10" r="4.5"/>
       </svg>
       <p class="mt-4 text-[0.78rem] text-[var(--cream-dimmer)]">Illustrative curve. Individual results vary by market, offer, and consistency.</p>
     </div>
