@@ -561,12 +561,20 @@
 
   /* Repurpose section (replaced "The People Behind Your Feed" / Team) —
      single .mirror-card reused as a standalone centered card instead of
-     Mirror's 3-up grid. The hub-and-spoke "Learns from every demo"
-     animation is reproduced from repixa.io's own Features grid (curled
+     Mirror's 3-up grid. The hub-and-spoke layout (8 "Demo" pills + wires +
+     center icon) is reproduced from repixa.io's own Features grid (curled
      their live HTML/CSS, not guessed from the screenshot), recolored onto
      Claviro's dark ink + accent blue. The center icon is a Phosphor glyph
      standing in for repixa's own logo mark image, which isn't ours to
-     reuse. */
+     reuse.
+
+     2026-08-28: the MOTION itself was rebuilt in-house (no longer matches
+     repixa's original timing) to make the "repurpose, then distribute"
+     idea legible as two distinct beats instead of one synced flash:
+     inbound beads sweep every spoke from pill→core (collect), the core
+     glows brighter mid-cycle (process), then the same beads sweep back
+     core→pill (distribute). See the .rp-current-flow keyframe comment
+     below for the dashoffset-direction technique if this needs retuning. */
   .rp-card{ max-width: 26rem; margin: 0 auto; }
   .rp-visual{ align-items: center; justify-content: center; }
   .rp-cloud{ position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 214px; height: 214px; }
@@ -580,22 +588,23 @@
     display: grid; place-items: center;
     font-size: .56rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
     color: var(--cream-dim); box-shadow: 0 8px 18px rgba(0,0,0,.28);
-    animation: rp-spark 4.2s ease-in-out infinite;
+    animation: rp-spark 6.4s ease-in-out infinite;
   }
   .rp-demo-1{ left: calc(50% - 24px); top: calc(50% - 98px); }
-  .rp-demo-2{ left: calc(50% + 37px); top: calc(50% - 73px); animation-delay: .18s; }
-  .rp-demo-3{ left: calc(50% + 62px); top: calc(50% - 12px); animation-delay: .36s; }
-  .rp-demo-4{ left: calc(50% + 37px); top: calc(50% + 49px); animation-delay: .54s; }
-  .rp-demo-5{ left: calc(50% - 24px); top: calc(50% + 74px); animation-delay: .72s; }
-  .rp-demo-6{ left: calc(50% - 85px); top: calc(50% + 49px); animation-delay: .9s; }
-  .rp-demo-7{ left: calc(50% - 110px); top: calc(50% - 12px); animation-delay: 1.08s; }
-  .rp-demo-8{ left: calc(50% - 85px); top: calc(50% - 73px); animation-delay: 1.26s; }
+  .rp-demo-2{ left: calc(50% + 37px); top: calc(50% - 73px); animation-delay: -.08s; }
+  .rp-demo-3{ left: calc(50% + 62px); top: calc(50% - 12px); animation-delay: -.16s; }
+  .rp-demo-4{ left: calc(50% + 37px); top: calc(50% + 49px); animation-delay: -.24s; }
+  .rp-demo-5{ left: calc(50% - 24px); top: calc(50% + 74px); animation-delay: -.32s; }
+  .rp-demo-6{ left: calc(50% - 85px); top: calc(50% + 49px); animation-delay: -.4s; }
+  .rp-demo-7{ left: calc(50% - 110px); top: calc(50% - 12px); animation-delay: -.48s; }
+  .rp-demo-8{ left: calc(50% - 85px); top: calc(50% - 73px); animation-delay: -.56s; }
   .rp-wires{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   .rp-line{ fill: none; stroke: rgba(255,255,255,.14); stroke-width: 1.35; stroke-linecap: round; }
   .rp-current{
-    fill: none; stroke: var(--accent-hot); stroke-width: 2.2; stroke-linecap: round;
-    stroke-dasharray: 0 454; filter: drop-shadow(0 0 8px rgba(76,110,245,.5));
-    animation: rp-current-flow 5s linear infinite;
+    fill: none; stroke: var(--accent-hot); stroke-width: 2.5; stroke-linecap: round;
+    stroke-dasharray: 30 424; stroke-dashoffset: 0; opacity: 0;
+    filter: drop-shadow(0 0 7px rgba(76,110,245,.65));
+    animation: rp-current-flow 6.4s linear infinite;
   }
   .rp-core{
     position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
@@ -603,13 +612,51 @@
     background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
     display: grid; place-items: center; color: var(--accent-hot); font-size: 1.4rem;
     box-shadow: 0 14px 34px rgba(0,0,0,.4), 0 0 0 7px rgba(76,110,245,.12);
-    animation: rp-breathe 3.4s ease-in-out infinite;
+    animation: rp-breathe 3.4s ease-in-out infinite, rp-core-pulse 6.4s ease-in-out infinite;
   }
-  @keyframes rp-spark{ 0%,100%{ opacity: .62; } 42%,58%{ opacity: 1; box-shadow: 0 0 0 4px rgba(76,110,245,.16); } }
-  @keyframes rp-current-flow{ 0%,14%{ stroke-dasharray: 0 454; opacity: .35; } 42%,62%{ stroke-dasharray: 454 454; opacity: 1; } 100%{ stroke-dasharray: 0 454; stroke-dashoffset: -454; opacity: .35; } }
+  .rp-core i{ animation: rp-core-spin 6.4s linear infinite; }
+  /* Demo pills glow bright while "connected" (just after departing / just
+     before+after arriving, i.e. the 92%-8% wrap) and dim while their data
+     is off traveling — sharing the exact 6.4s timeline below so pills,
+     wires and core all read as one coordinated story, not three separate
+     loops that happen to overlap. */
+  @keyframes rp-spark{
+    0%, 8%, 92%, 100%{ opacity: 1; color: var(--cream); box-shadow: 0 0 0 5px rgba(76,110,245,.22), 0 8px 18px rgba(0,0,0,.28); }
+    20%, 80%{ opacity: .7; color: var(--cream-dim); box-shadow: 0 8px 18px rgba(0,0,0,.28); }
+  }
+  /* A short bead (30 of the 454 pathLength units) sweeps every spoke inward
+     from its demo pill to the core (0-40%, "collect"), goes dark while the
+     core visibly processes it — see rp-core-pulse — (44-58%), then sweeps
+     back outward from the core to every pill (58-96%, "distribute"). Every
+     path below is drawn outer-point-first / core-point-last, and decreasing
+     stroke-dashoffset moves a dash toward the END of its path — so 0→-454
+     reads as inbound and the -454→0 return leg reads as outbound, with no
+     repositioning hack needed between the two: the outbound leg just
+     continues the same offset value back the way it came. */
+  @keyframes rp-current-flow{
+    0%{ stroke-dashoffset: 0; opacity: 0; }
+    4%{ opacity: 1; }
+    40%{ stroke-dashoffset: -454; opacity: 1; }
+    44%{ opacity: 0; }
+    58%{ stroke-dashoffset: -454; opacity: 0; }
+    62%{ opacity: 1; }
+    96%{ stroke-dashoffset: 0; opacity: 1; }
+    100%{ stroke-dashoffset: 0; opacity: 0; }
+  }
   @keyframes rp-breathe{ 0%,100%{ transform: translate(-50%,-50%) scale(1); } 50%{ transform: translate(-50%,-50%) scale(1.05); } }
+  /* Core glow intensifies right in the middle of the shared 6.4s cycle —
+     the window where rp-current-flow above has every bead hidden inside
+     the hub — so the "processing" beat has a visible tell of its own
+     instead of just an empty pause. The recycle icon spins continuously
+     at the same 6.4s pace, independent of this pulse. */
+  @keyframes rp-core-pulse{
+    0%, 36%, 100%{ box-shadow: 0 14px 34px rgba(0,0,0,.4), 0 0 0 7px rgba(76,110,245,.12); }
+    47%{ box-shadow: 0 14px 34px rgba(0,0,0,.4), 0 0 0 14px rgba(76,110,245,.3); }
+    58%{ box-shadow: 0 14px 34px rgba(0,0,0,.4), 0 0 0 7px rgba(76,110,245,.12); }
+  }
+  @keyframes rp-core-spin{ to{ transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce){
-    .rp-demo, .rp-current, .rp-core{ animation: none; }
+    .rp-demo, .rp-current, .rp-core, .rp-core i{ animation: none; }
   }
 
   /* Retention section (new) — "Private, regional delivery" network diagram,
