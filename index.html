@@ -561,102 +561,118 @@
 
   /* Repurpose section (replaced "The People Behind Your Feed" / Team) —
      single .mirror-card reused as a standalone centered card instead of
-     Mirror's 3-up grid. The hub-and-spoke layout (8 "Demo" pills + wires +
-     center icon) is reproduced from repixa.io's own Features grid (curled
-     their live HTML/CSS, not guessed from the screenshot), recolored onto
-     Claviro's dark ink + accent blue. The center icon is a Phosphor glyph
-     standing in for repixa's own logo mark image, which isn't ours to
-     reuse.
+     Mirror's 3-up grid.
 
-     2026-08-28: the MOTION itself was rebuilt in-house (no longer matches
-     repixa's original timing) to make the "repurpose, then distribute"
-     idea legible as two distinct beats instead of one synced flash:
-     inbound beads sweep every spoke from pill→core (collect), the core
-     glows brighter mid-cycle (process), then the same beads sweep back
-     core→pill (distribute). See the .rp-current-flow keyframe comment
-     below for the dashoffset-direction technique if this needs retuning. */
+     2026-08-28: REBUILT FROM SCRATCH, twice in the same day — first the
+     motion alone was retimed (superseded history below), then the whole
+     hub-and-spoke CONCEPT was scrapped per "redo this whole thing...
+     make something which indicates content is being repurposed for
+     them." The old picture (8 identical "Demo" pills orbiting a center
+     icon, reproduced from repixa.io's own Features grid) couldn't say
+     "repurposed" at any timing, because every spoke led to an IDENTICAL
+     node — nothing in the shape itself was actually a different format.
+     Replaced with a one-source/three-destination fan: `.rp-source` (a
+     mic icon — "the raw recording") sits at top, three curved wires lead
+     down to three `.rp-format` chips that each look genuinely different
+     (a LinkedIn post, a carousel, a video clip) — the diagram's SHAPE is
+     now the content: one input, three visibly different outputs.
+     Nothing below this comment is repixa's — it's original, built for
+     this card specifically. The h3/p copy in the markup changed with it
+     (was repixa's own "Learns from every demo... fed back into Laura",
+     never tailored to Claviro, and no longer matched what's drawn here).
+
+     Superseded history, kept for context only, don't resurrect: earlier
+     the same day the 8-pill hub was kept as-is and only retimed —
+     `.rp-current`/`.rp-demo`/`.rp-core` shared a 6.4s collect-then-
+     distribute cycle (inbound beads pill→core, a core-glow "process"
+     beat, outbound beads core→pill). The dashoffset-direction bead
+     technique from that pass carries forward unchanged into
+     `.rp-current-travel` below, just pointed one-way instead of
+     there-and-back. */
   .rp-card{ max-width: 26rem; margin: 0 auto; }
   .rp-visual{ align-items: center; justify-content: center; }
-  .rp-cloud{ position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 214px; height: 214px; }
-  .rp-cloud::before{
-    content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
-    width: 188px; height: 188px; border-radius: 50%; border: 1px solid rgba(255,255,255,.14);
+  .rp-source{
+    position: absolute; left: 50%; top: 20%; transform: translate(-50%,-50%) scale(1);
+    width: 52px; height: 52px; border-radius: 16px;
+    background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
+    display: grid; place-items: center; color: var(--accent-hot); font-size: 1.3rem;
+    box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 7px rgba(76,110,245,.14);
+    animation: rp-source-pulse 6s ease-in-out infinite;
   }
-  .rp-demo{
-    position: absolute; width: 48px; height: 24px; border-radius: 999px;
-    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.16);
-    display: grid; place-items: center;
-    font-size: .56rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
-    color: var(--cream-dim); box-shadow: 0 8px 18px rgba(0,0,0,.28);
-    animation: rp-spark 6.4s ease-in-out infinite;
-  }
-  .rp-demo-1{ left: calc(50% - 24px); top: calc(50% - 98px); }
-  .rp-demo-2{ left: calc(50% + 37px); top: calc(50% - 73px); animation-delay: -.08s; }
-  .rp-demo-3{ left: calc(50% + 62px); top: calc(50% - 12px); animation-delay: -.16s; }
-  .rp-demo-4{ left: calc(50% + 37px); top: calc(50% + 49px); animation-delay: -.24s; }
-  .rp-demo-5{ left: calc(50% - 24px); top: calc(50% + 74px); animation-delay: -.32s; }
-  .rp-demo-6{ left: calc(50% - 85px); top: calc(50% + 49px); animation-delay: -.4s; }
-  .rp-demo-7{ left: calc(50% - 110px); top: calc(50% - 12px); animation-delay: -.48s; }
-  .rp-demo-8{ left: calc(50% - 85px); top: calc(50% - 73px); animation-delay: -.56s; }
   .rp-wires{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   .rp-line{ fill: none; stroke: rgba(255,255,255,.14); stroke-width: 1.35; stroke-linecap: round; }
   .rp-current{
-    fill: none; stroke: var(--accent-hot); stroke-width: 2.5; stroke-linecap: round;
-    stroke-dasharray: 30 424; stroke-dashoffset: 0; opacity: 0;
-    filter: drop-shadow(0 0 7px rgba(76,110,245,.65));
-    animation: rp-current-flow 6.4s linear infinite;
+    fill: none; stroke: var(--accent-hot); stroke-width: 2.4; stroke-linecap: round;
+    stroke-dasharray: 34 420; stroke-dashoffset: 0; opacity: 0;
+    filter: drop-shadow(0 0 7px rgba(76,110,245,.6));
+    animation: rp-current-travel 6s linear infinite;
   }
-  .rp-core{
-    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
-    width: 59px; height: 59px; border-radius: 18px;
-    background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
-    display: grid; place-items: center; color: var(--accent-hot); font-size: 1.4rem;
-    box-shadow: 0 14px 34px rgba(0,0,0,.4), 0 0 0 7px rgba(76,110,245,.12);
-    animation: rp-breathe 3.4s ease-in-out infinite, rp-core-pulse 6.4s ease-in-out infinite;
+  .rp-current-2{ animation-delay: -.08s; }
+  .rp-current-3{ animation-delay: -.16s; }
+  .rp-format{
+    position: absolute; top: 80%; transform: translate(-50%,-50%) scale(1);
+    width: 68px; height: 52px; border-radius: 10px;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.16);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .32rem;
+    opacity: 1; box-shadow: 0 8px 18px rgba(0,0,0,.28);
+    animation: rp-format-receive 6s ease-in-out infinite;
   }
-  .rp-core i{ animation: rp-core-spin 6.4s linear infinite; }
-  /* Demo pills glow bright while "connected" (just after departing / just
-     before+after arriving, i.e. the 92%-8% wrap) and dim while their data
-     is off traveling — sharing the exact 6.4s timeline below so pills,
-     wires and core all read as one coordinated story, not three separate
-     loops that happen to overlap. */
-  @keyframes rp-spark{
-    0%, 8%, 92%, 100%{ opacity: 1; color: var(--cream); box-shadow: 0 0 0 5px rgba(76,110,245,.22), 0 8px 18px rgba(0,0,0,.28); }
-    20%, 80%{ opacity: .7; color: var(--cream-dim); box-shadow: 0 8px 18px rgba(0,0,0,.28); }
+  .rp-format-post{ left: 18%; }
+  .rp-format-carousel{ left: 50%; animation-delay: -.08s; }
+  .rp-format-video{ left: 82%; animation-delay: -.16s; }
+  .rp-format-post i{ font-size: .95rem; color: #0a66c2; }
+  .rp-format-lines{ width: 75%; display: grid; gap: .22rem; }
+  .rp-format-lines span{ display: block; height: 4px; border-radius: 20px; background: rgba(255,255,255,.2); }
+  .rp-format-lines span:last-child{ width: 60%; }
+  .rp-format-carousel i{ font-size: 1.15rem; color: var(--cream-dim); }
+  .rp-format-dots{ display: flex; gap: .24rem; }
+  .rp-format-dots span{ width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,.28); }
+  .rp-format-dots span:first-child{ background: var(--accent-hot); }
+  .rp-format-video i{ font-size: 1.3rem; color: var(--cream-dim); }
+  .rp-format-video span{ display: block; width: 55%; height: 4px; border-radius: 20px; background: rgba(255,255,255,.2); }
+  /* Source pulses once per cycle right as it "emits" (14-24%, lined up
+     with the beads departing in rp-current-travel below). Resting scale
+     is a constant 1 outside that window — same value as the base
+     .rp-source rule above — so prefers-reduced-motion just leaves a
+     normal, non-pulsing icon with no separate override needed. */
+  @keyframes rp-source-pulse{
+    0%, 10%, 100%{ transform: translate(-50%,-50%) scale(1); }
+    16%{ transform: translate(-50%,-50%) scale(1.12); }
+    24%{ transform: translate(-50%,-50%) scale(1); }
   }
-  /* A short bead (30 of the 454 pathLength units) sweeps every spoke inward
-     from its demo pill to the core (0-40%, "collect"), goes dark while the
-     core visibly processes it — see rp-core-pulse — (44-58%), then sweeps
-     back outward from the core to every pill (58-96%, "distribute"). Every
-     path below is drawn outer-point-first / core-point-last, and decreasing
-     stroke-dashoffset moves a dash toward the END of its path — so 0→-454
-     reads as inbound and the -454→0 return leg reads as outbound, with no
-     repositioning hack needed between the two: the outbound leg just
-     continues the same offset value back the way it came. */
-  @keyframes rp-current-flow{
-    0%{ stroke-dashoffset: 0; opacity: 0; }
-    4%{ opacity: 1; }
-    40%{ stroke-dashoffset: -454; opacity: 1; }
-    44%{ opacity: 0; }
-    58%{ stroke-dashoffset: -454; opacity: 0; }
-    62%{ opacity: 1; }
-    96%{ stroke-dashoffset: 0; opacity: 1; }
-    100%{ stroke-dashoffset: 0; opacity: 0; }
+  /* One short bead per wire (34 of the 454 pathLength units) travels
+     ONE-WAY from the source down to its own format chip — all three
+     wires share this exact timeline (the small per-wire animation-delay
+     above just keeps the three departures from looking perfectly
+     triplicated, not a real stagger). All three paths are drawn
+     source-point-first / chip-point-last, and decreasing
+     stroke-dashoffset moves a dash toward the END of its own path — so
+     0→-454 reads as "heading down to the chip" on every one of them.
+     The jump back from -454 to 0 at the loop seam happens while opacity
+     is 0 on both sides of it, so it's invisible — the one-way version of
+     the teleport trick .mirror-post-cycle uses elsewhere on this page. */
+  @keyframes rp-current-travel{
+    0%, 12%{ stroke-dashoffset: 0; opacity: 0; }
+    16%{ opacity: 1; }
+    46%{ stroke-dashoffset: -454; opacity: 1; }
+    50%, 100%{ stroke-dashoffset: -454; opacity: 0; }
   }
-  @keyframes rp-breathe{ 0%,100%{ transform: translate(-50%,-50%) scale(1); } 50%{ transform: translate(-50%,-50%) scale(1.05); } }
-  /* Core glow intensifies right in the middle of the shared 6.4s cycle —
-     the window where rp-current-flow above has every bead hidden inside
-     the hub — so the "processing" beat has a visible tell of its own
-     instead of just an empty pause. The recycle icon spins continuously
-     at the same 6.4s pace, independent of this pulse. */
-  @keyframes rp-core-pulse{
-    0%, 36%, 100%{ box-shadow: 0 14px 34px rgba(0,0,0,.4), 0 0 0 7px rgba(76,110,245,.12); }
-    47%{ box-shadow: 0 14px 34px rgba(0,0,0,.4), 0 0 0 14px rgba(76,110,245,.3); }
-    58%{ box-shadow: 0 14px 34px rgba(0,0,0,.4), 0 0 0 7px rgba(76,110,245,.12); }
+  /* Format chips rest fully visible — opacity:1/scale:1 in the BASE
+     .rp-format rule above, not just this keyframe's own resting value —
+     so a reduced-motion visitor still sees all three finished formats
+     plainly, just without the dim-then-arrive motion; a frozen
+     mid-fade chip would've read as broken, a permanently-"delivered"
+     chip reads as a clean static diagram. Animated users see each chip
+     dim while its bead is in transit and pop back to full brightness
+     right as it lands (46-52%, matching rp-current-travel's own
+     arrival window above). */
+  @keyframes rp-format-receive{
+    0%, 46%{ opacity: .4; transform: translate(-50%,-50%) scale(.82); }
+    52%, 86%{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
+    96%, 100%{ opacity: .4; transform: translate(-50%,-50%) scale(.82); }
   }
-  @keyframes rp-core-spin{ to{ transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce){
-    .rp-demo, .rp-current, .rp-core, .rp-core i{ animation: none; }
+    .rp-source, .rp-current, .rp-format{ animation: none; }
   }
 
   /* Retention section (new) — "Private, regional delivery" network diagram,
@@ -1663,38 +1679,30 @@
 
     <div class="mirror-card rp-card reveal mt-12">
       <div class="mirror-visual rp-visual" aria-hidden="true">
-        <div class="rp-cloud">
-          <span class="rp-demo rp-demo-1">Demo</span>
-          <span class="rp-demo rp-demo-2">Demo</span>
-          <span class="rp-demo rp-demo-3">Demo</span>
-          <span class="rp-demo rp-demo-4">Demo</span>
-          <span class="rp-demo rp-demo-5">Demo</span>
-          <span class="rp-demo rp-demo-6">Demo</span>
-          <span class="rp-demo rp-demo-7">Demo</span>
-          <span class="rp-demo rp-demo-8">Demo</span>
-        </div>
+        <div class="rp-source"><i class="ph-fill ph-microphone" aria-hidden="true"></i></div>
         <svg class="rp-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
-          <path class="rp-line" d="M130 15 L130 96" />
-          <path class="rp-line" d="M216 98 L130 98" />
-          <path class="rp-line" d="M130 183 L130 100" />
-          <path class="rp-line" d="M44 98 L130 98" />
-          <path class="rp-line" d="M191 37 L130 96" />
-          <path class="rp-line" d="M69 37 L130 96" />
-          <path class="rp-line" d="M191 159 L130 100" />
-          <path class="rp-line" d="M69 159 L130 100" />
-          <path class="rp-current" pathLength="454" d="M130 15 L130 96" />
-          <path class="rp-current" pathLength="454" d="M216 98 L130 98" />
-          <path class="rp-current" pathLength="454" d="M130 183 L130 100" />
-          <path class="rp-current" pathLength="454" d="M44 98 L130 98" />
-          <path class="rp-current" pathLength="454" d="M191 37 L130 96" />
-          <path class="rp-current" pathLength="454" d="M69 37 L130 96" />
-          <path class="rp-current" pathLength="454" d="M191 159 L130 100" />
-          <path class="rp-current" pathLength="454" d="M69 159 L130 100" />
+          <path class="rp-line" d="M130 58 Q70 98 47 138" />
+          <path class="rp-line" d="M130 60 L130 140" />
+          <path class="rp-line" d="M130 58 Q190 98 213 138" />
+          <path class="rp-current rp-current-1" pathLength="454" d="M130 58 Q70 98 47 138" />
+          <path class="rp-current rp-current-2" pathLength="454" d="M130 60 L130 140" />
+          <path class="rp-current rp-current-3" pathLength="454" d="M130 58 Q190 98 213 138" />
         </svg>
-        <div class="rp-core"><i class="ph-bold ph-arrows-clockwise" aria-hidden="true"></i></div>
+        <div class="rp-format rp-format-post">
+          <i class="ph-fill ph-linkedin-logo" aria-hidden="true"></i>
+          <div class="rp-format-lines"><span></span><span></span></div>
+        </div>
+        <div class="rp-format rp-format-carousel">
+          <i class="ph-fill ph-stack" aria-hidden="true"></i>
+          <div class="rp-format-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="rp-format rp-format-video">
+          <i class="ph-fill ph-play-circle" aria-hidden="true"></i>
+          <span></span>
+        </div>
       </div>
-      <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Learns from every demo</h3>
-      <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Every interaction is logged, scored, and fed back into Laura so each demo gets sharper.</p>
+      <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">One recording, repurposed everywhere</h3>
+      <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Every podcast, call, or raw idea gets cut into LinkedIn posts, carousels, and clips — so an hour of your time becomes a week of content.</p>
     </div>
   </div>
 </section>
