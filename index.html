@@ -397,17 +397,42 @@
   .ml-chip-3{ top: 66%; left: 20%; animation-delay: 1.8s; }
   .ml-chip-4{ top: 66%; right: 20%; animation-delay: 2.7s; }
 
-  /* "Instant, natural interactions" card: two overlapping animated wave
-     paths on a soft accent glow, standing in for live voice/cursor motion. */
-  .mirror-wave-visual{ padding: 0; align-items: center; justify-content: center; }
-  .mirror-wave-visual::before{
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(60% 60% at 50% 40%, rgba(76,110,245,.18), transparent 70%);
+  /* "Instant, natural interactions" card, REBUILT 2026-08-28 — the two
+     overlapping animated wave paths are GONE, replaced per explicit
+     request with a small LinkedIn-post "frame" that continuously drifts
+     across the box: it slides right until fully off-screen, then wraps
+     back to the left edge and starts again — a one-directional
+     conveyor/marquee loop, not a back-and-forth ping-pong. Reuses the
+     same dark-card visual language as the real `.li-post` component
+     (Industry Standard section) but with abstract skeleton-bar content
+     instead of real names/text, since this is a generic decorative loop
+     rather than a specific post. `overflow:hidden` on the visual box is
+     what actually clips the card off-screen on both sides — don't drop
+     it or the drifting card will spill out of the rounded corners. */
+  .mirror-drift-visual{ overflow: hidden; }
+  .mirror-drift-card{
+    position: absolute; top: 50%; left: 50%;
+    width: 74%;
+    background: var(--ink-950);
+    border: 1px solid var(--ink-border);
+    border-radius: .5rem;
+    padding: .75rem .85rem;
+    display: flex; flex-direction: column; gap: .55rem;
+    /* Static resting position (centered) — what shows if the drift
+       animation is turned off below under reduced-motion, so the card
+       doesn't sit stuck at an off-center animation start-frame. */
+    transform: translate(-50%, -50%);
+    animation: mirror-post-drift 6s linear infinite;
   }
-  .mirror-wave-visual svg{ position: relative; width: 118%; height: 100%; transform: translateX(-7%); }
-  .mirror-wave-visual path{ fill: none; stroke-width: 2.3; stroke-linecap: round; stroke-dasharray: 520; animation: mirror-wave-draw 5.2s ease-in-out infinite; }
-  .mirror-wave-a{ stroke: rgba(255,255,255,.35); }
-  .mirror-wave-b{ stroke: var(--accent-hot); animation-delay: -1.7s; }
+  .mirror-drift-top{ display: flex; align-items: center; gap: .5rem; }
+  .mirror-drift-avatar{ flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); }
+  .mirror-drift-lines{ flex: 1; display: grid; gap: .35rem; min-width: 0; }
+  .mirror-drift-lines span{ display: block; height: 6px; border-radius: 20px; background: rgba(255,255,255,.14); }
+  .mirror-drift-lines span:last-child{ width: 60%; }
+  .mirror-drift-brand{ flex: none; font-size: .95rem; color: #0a66c2; }
+  .mirror-drift-body{ display: grid; gap: .4rem; }
+  .mirror-drift-body span{ display: block; height: 6px; border-radius: 20px; background: rgba(255,255,255,.08); }
+  .mirror-drift-body span:last-child{ width: 70%; }
 
   /* "Understands buyer intent" card, REBUILT 2026-08-27 — the
      chat-bubbles + "Detected priorities" meter-bar panel is GONE
@@ -446,7 +471,6 @@
   .mirror-qa-screen span:nth-child(2){ width: 60%; animation-delay: .2s; }
 
   @keyframes mirror-chat-rise{ 0%,100%{ transform: translateY(0); opacity: .82; } 50%{ transform: translateY(-4px); opacity: 1; } }
-  @keyframes mirror-wave-draw{ 0%{ stroke-dashoffset: 520; opacity: .3; } 42%,78%{ stroke-dashoffset: 0; opacity: .85; } 100%{ stroke-dashoffset: -520; opacity: .3; } }
   @keyframes mirror-wave-bounce{ 0%,100%{ transform: scaleY(.7); } 50%{ transform: scaleY(1.08); } }
   @keyframes mirror-qa-load{ 0%,100%{ transform: scaleX(.62); transform-origin: left; opacity: .5; } 50%{ transform: scaleX(1); opacity: 1; } }
   @keyframes ml-drift{
@@ -456,8 +480,18 @@
     85%, 100%{ transform: translate(var(--dx,0), var(--dy,0)) scale(.2); opacity: 0; }
   }
   @keyframes ml-pulse{ 0%{ transform: scale(.85); opacity: .5; } 100%{ transform: scale(1.35); opacity: 0; } }
+  /* One-directional conveyor: drifts from off-screen left to off-screen
+     right, then snaps back to the start and repeats — NOT a ping-pong
+     (deliberately no reverse/alternate direction). -160%/+160% (of the
+     card's OWN width, it's a percentage transform) comfortably clears
+     both edges of `.mirror-drift-visual` since the card itself is only
+     74% of the box width. */
+  @keyframes mirror-post-drift{
+    0%{ transform: translate(-160%, -50%); }
+    100%{ transform: translate(160%, -50%); }
+  }
   @media (prefers-reduced-motion: reduce){
-    .mirror-wave-visual path, .mirror-qa-bubble, .mirror-qa-wave span, .mirror-qa-screen span, .ml-chip, .ml-avatar::after{
+    .mirror-qa-bubble, .mirror-qa-wave span, .mirror-qa-screen span, .ml-chip, .ml-avatar::after, .mirror-drift-card{
       animation: none;
     }
   }
@@ -1451,11 +1485,15 @@
       </div>
 
       <div class="mirror-card">
-        <div class="mirror-visual mirror-wave-visual" aria-hidden="true">
-          <svg viewBox="0 0 420 160" preserveAspectRatio="none">
-            <path class="mirror-wave-a" d="M0 84 C24 24 44 132 68 78 S112 52 140 83 S190 112 218 70 S262 18 284 90 S322 146 350 66 S386 38 420 88" />
-            <path class="mirror-wave-b" d="M0 104 C28 150 46 34 76 82 S122 112 150 74 S192 30 222 88 S270 114 302 42 S334 22 360 98 S394 140 420 72" />
-          </svg>
+        <div class="mirror-visual mirror-drift-visual" aria-hidden="true">
+          <div class="mirror-drift-card">
+            <div class="mirror-drift-top">
+              <div class="mirror-drift-avatar"></div>
+              <div class="mirror-drift-lines"><span></span><span></span></div>
+              <i class="ph-fill ph-linkedin-logo mirror-drift-brand" aria-hidden="true"></i>
+            </div>
+            <div class="mirror-drift-body"><span></span><span></span></div>
+          </div>
         </div>
         <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Instant, natural interactions</h3>
         <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Keep voice, cursor motion, screen control, and answers responsive enough to feel live in the room.</p>
