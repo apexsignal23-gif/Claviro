@@ -439,11 +439,22 @@
   .mirror-drift-brand{ flex: none; font-size: .95rem; color: #0a66c2; }
   .mirror-drift-body{ display: grid; gap: .4rem; }
   .mirror-drift-body span{ display: block; height: 6px; border-radius: 20px; background: rgba(255,255,255,.08); }
-  .mirror-drift-body span:last-child{ width: 70%; }
-  /* Slight content variety so the two cross-fading cards don't read as
-     a single frozen image. */
+  .mirror-drift-body span:last-child{ width: 55%; }
+  /* Each cross-fading card is a genuinely different post FORMAT, not
+     just the same 2-line shape with tweaked widths — per explicit
+     request to make it obvious these are different pieces of content,
+     not one frozen frame. Card A: a plain 3-line text post (full, full,
+     short). Card B: an image post — a media placeholder block above a
+     single short caption line. */
   .mirror-drift-card-b .mirror-drift-lines span:last-child{ width: 42%; }
-  .mirror-drift-card-b .mirror-drift-body span:last-child{ width: 50%; }
+  .mirror-drift-body-media{ gap: .5rem; }
+  .mirror-drift-media{
+    width: 100%; height: 2.6rem;
+    border-radius: .4rem;
+    background: rgba(255,255,255,.05);
+    border: 1px solid var(--ink-border);
+  }
+  .mirror-drift-body-media span:last-child{ width: 40%; }
 
   /* "Understands buyer intent" card, REBUILT 2026-08-27 — the
      chat-bubbles + "Detected priorities" meter-bar panel is GONE
@@ -1516,7 +1527,7 @@
               <div class="mirror-drift-lines"><span></span><span></span></div>
               <i class="ph-fill ph-linkedin-logo mirror-drift-brand" aria-hidden="true"></i>
             </div>
-            <div class="mirror-drift-body"><span></span><span></span></div>
+            <div class="mirror-drift-body"><span></span><span></span><span></span></div>
           </div>
           <div class="mirror-drift-card mirror-drift-card-b">
             <div class="mirror-drift-top">
@@ -1524,7 +1535,10 @@
               <div class="mirror-drift-lines"><span></span><span></span></div>
               <i class="ph-fill ph-linkedin-logo mirror-drift-brand" aria-hidden="true"></i>
             </div>
-            <div class="mirror-drift-body"><span></span><span></span></div>
+            <div class="mirror-drift-body mirror-drift-body-media">
+              <div class="mirror-drift-media"></div>
+              <span></span>
+            </div>
           </div>
         </div>
         <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Instant, natural interactions</h3>
