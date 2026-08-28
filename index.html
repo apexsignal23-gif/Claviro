@@ -563,116 +563,140 @@
      single .mirror-card reused as a standalone centered card instead of
      Mirror's 3-up grid.
 
-     2026-08-28: REBUILT FROM SCRATCH, twice in the same day — first the
-     motion alone was retimed (superseded history below), then the whole
-     hub-and-spoke CONCEPT was scrapped per "redo this whole thing...
-     make something which indicates content is being repurposed for
-     them." The old picture (8 identical "Demo" pills orbiting a center
-     icon, reproduced from repixa.io's own Features grid) couldn't say
-     "repurposed" at any timing, because every spoke led to an IDENTICAL
-     node — nothing in the shape itself was actually a different format.
-     Replaced with a one-source/three-destination fan: `.rp-source` (a
-     mic icon — "the raw recording") sits at top, three curved wires lead
-     down to three `.rp-format` chips that each look genuinely different
-     (a LinkedIn post, a carousel, a video clip) — the diagram's SHAPE is
-     now the content: one input, three visibly different outputs.
-     Nothing below this comment is repixa's — it's original, built for
-     this card specifically. The h3/p copy in the markup changed with it
-     (was repixa's own "Learns from every demo... fed back into Laura",
-     never tailored to Claviro, and no longer matched what's drawn here).
+     2026-08-28: REBUILT A THIRD TIME the same day, this time from a
+     hand-drawn reference sketch — topology flipped from the previous
+     version's "one source fans out to three formats" to this sketch's
+     "three sources converge into one hub, which feeds one final piece."
+     Structure: `.rp-src` ×3 (video/audio/notes icons, top row) → wires
+     converge on `.rp-hub` (middle) → one more wire continues down to
+     `.rp-final` (bottom, a mini LinkedIn-post card). Every technique
+     (SVG `pathLength`-normalized dash beads, decreasing dashoffset =
+     travel toward the path's drawn end, picking whichever resting state
+     actually looks intentional as a static prefers-reduced-motion image)
+     carries forward unchanged from the previous two rebuilds — only the
+     shapes and their arrangement changed to match the sketch. Superseded
+     history below is kept for context only; none of it is still live.
 
-     Superseded history, kept for context only, don't resurrect: earlier
-     the same day the 8-pill hub was kept as-is and only retimed —
-     `.rp-current`/`.rp-demo`/`.rp-core` shared a 6.4s collect-then-
-     distribute cycle (inbound beads pill→core, a core-glow "process"
-     beat, outbound beads core→pill). The dashoffset-direction bead
-     technique from that pass carries forward unchanged into
-     `.rp-current-travel` below, just pointed one-way instead of
-     there-and-back. */
+     Superseded (same day, in order): (1) original hub-and-spoke — 8
+     identical "Demo" pills orbiting a center icon, reproduced from
+     repixa.io's Features grid, retimed once before being scrapped
+     outright since every spoke led to an identical node and couldn't
+     say "repurposed" at any pacing; (2) one-source/three-format fan — a
+     mic at top fanning out to LinkedIn-post/carousel/video chips,
+     replaced per this sketch's opposite (many-to-one) topology instead. */
   .rp-card{ max-width: 26rem; margin: 0 auto; }
   .rp-visual{ align-items: center; justify-content: center; }
-  .rp-source{
-    position: absolute; left: 50%; top: 20%; transform: translate(-50%,-50%) scale(1);
-    width: 52px; height: 52px; border-radius: 16px;
-    background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
-    display: grid; place-items: center; color: var(--accent-hot); font-size: 1.3rem;
-    box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 7px rgba(76,110,245,.14);
-    animation: rp-source-pulse 6s ease-in-out infinite;
+  .rp-src{
+    position: absolute; top: 16%; transform: translate(-50%,-50%) scale(1);
+    width: 46px; height: 40px; border-radius: 10px;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.16);
+    display: grid; place-items: center; color: var(--cream-dim); font-size: 1.05rem;
+    box-shadow: 0 8px 18px rgba(0,0,0,.28);
+    animation: rp-src-send 6.5s ease-in-out infinite;
   }
+  .rp-src-video{ left: 21%; }
+  .rp-src-audio{ left: 50%; animation-delay: -.08s; }
+  .rp-src-notes{ left: 79%; animation-delay: -.16s; }
   .rp-wires{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   .rp-line{ fill: none; stroke: rgba(255,255,255,.14); stroke-width: 1.35; stroke-linecap: round; }
-  .rp-current{
+  .rp-current-in{
     fill: none; stroke: var(--accent-hot); stroke-width: 2.4; stroke-linecap: round;
     stroke-dasharray: 34 420; stroke-dashoffset: 0; opacity: 0;
     filter: drop-shadow(0 0 7px rgba(76,110,245,.6));
-    animation: rp-current-travel 6s linear infinite;
+    animation: rp-flow-in 6.5s linear infinite;
   }
-  .rp-current-2{ animation-delay: -.08s; }
-  .rp-current-3{ animation-delay: -.16s; }
-  .rp-format{
-    position: absolute; top: 80%; transform: translate(-50%,-50%) scale(1);
-    width: 68px; height: 52px; border-radius: 10px;
+  .rp-current-in-2{ animation-delay: -.08s; }
+  .rp-current-in-3{ animation-delay: -.16s; }
+  .rp-current-out{
+    fill: none; stroke: var(--accent-hot); stroke-width: 2.4; stroke-linecap: round;
+    stroke-dasharray: 34 420; stroke-dashoffset: 0; opacity: 0;
+    filter: drop-shadow(0 0 7px rgba(76,110,245,.6));
+    animation: rp-flow-out 6.5s linear infinite;
+  }
+  .rp-hub{
+    position: absolute; left: 50%; top: 58%; transform: translate(-50%,-50%) scale(1);
+    width: 58px; height: 52px; border-radius: 16px;
+    background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
+    display: grid; place-items: center; color: var(--accent-hot); font-size: 1.4rem;
+    box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 7px rgba(76,110,245,.12);
+    animation: rp-hub-pulse 6.5s ease-in-out infinite;
+  }
+  .rp-hub i{ animation: rp-hub-spin 6.5s linear infinite; }
+  .rp-final{
+    position: absolute; left: 50%; top: 85%; transform: translate(-50%,-50%) scale(1);
+    width: 78px; height: 46px; border-radius: 10px;
     background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.16);
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .32rem;
+    display: flex; align-items: center; justify-content: center; gap: .4rem;
+    padding: 0 .5rem;
     opacity: 1; box-shadow: 0 8px 18px rgba(0,0,0,.28);
-    animation: rp-format-receive 6s ease-in-out infinite;
+    animation: rp-final-receive 6.5s ease-in-out infinite;
   }
-  .rp-format-post{ left: 18%; }
-  .rp-format-carousel{ left: 50%; animation-delay: -.08s; }
-  .rp-format-video{ left: 82%; animation-delay: -.16s; }
-  .rp-format-post i{ font-size: .95rem; color: #0a66c2; }
-  .rp-format-lines{ width: 75%; display: grid; gap: .22rem; }
-  .rp-format-lines span{ display: block; height: 4px; border-radius: 20px; background: rgba(255,255,255,.2); }
-  .rp-format-lines span:last-child{ width: 60%; }
-  .rp-format-carousel i{ font-size: 1.15rem; color: var(--cream-dim); }
-  .rp-format-dots{ display: flex; gap: .24rem; }
-  .rp-format-dots span{ width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,.28); }
-  .rp-format-dots span:first-child{ background: var(--accent-hot); }
-  .rp-format-video i{ font-size: 1.3rem; color: var(--cream-dim); }
-  .rp-format-video span{ display: block; width: 55%; height: 4px; border-radius: 20px; background: rgba(255,255,255,.2); }
-  /* Source pulses once per cycle right as it "emits" (14-24%, lined up
-     with the beads departing in rp-current-travel below). Resting scale
-     is a constant 1 outside that window — same value as the base
-     .rp-source rule above — so prefers-reduced-motion just leaves a
-     normal, non-pulsing icon with no separate override needed. */
-  @keyframes rp-source-pulse{
-    0%, 10%, 100%{ transform: translate(-50%,-50%) scale(1); }
-    16%{ transform: translate(-50%,-50%) scale(1.12); }
-    24%{ transform: translate(-50%,-50%) scale(1); }
+  .rp-final i{ font-size: 1rem; color: #0a66c2; flex: none; }
+  .rp-final-lines{ flex: 1; display: grid; gap: .22rem; min-width: 0; }
+  .rp-final-lines span{ display: block; height: 4px; border-radius: 20px; background: rgba(255,255,255,.2); }
+  .rp-final-lines span:last-child{ width: 60%; }
+  /* Sources rest dim (color matches the base .rp-src rule above) and pop
+     brighter/bigger once, right as they "send" (17%) — prefers-reduced-
+     motion just leaves the plain dim resting chip, which reads fine on
+     its own as 3 idle input icons. */
+  @keyframes rp-src-send{
+    0%, 12%, 100%{ transform: translate(-50%,-50%) scale(1); color: var(--cream-dim); }
+    17%{ transform: translate(-50%,-50%) scale(1.14); color: var(--cream); }
+    24%, 96%{ transform: translate(-50%,-50%) scale(1); color: var(--cream-dim); }
   }
-  /* One short bead per wire (34 of the 454 pathLength units) travels
-     ONE-WAY from the source down to its own format chip — all three
-     wires share this exact timeline (the small per-wire animation-delay
-     above just keeps the three departures from looking perfectly
-     triplicated, not a real stagger). All three paths are drawn
-     source-point-first / chip-point-last, and decreasing
-     stroke-dashoffset moves a dash toward the END of its own path — so
-     0→-454 reads as "heading down to the chip" on every one of them.
-     The jump back from -454 to 0 at the loop seam happens while opacity
-     is 0 on both sides of it, so it's invisible — the one-way version of
-     the teleport trick .mirror-post-cycle uses elsewhere on this page. */
-  @keyframes rp-current-travel{
-    0%, 12%{ stroke-dashoffset: 0; opacity: 0; }
-    16%{ opacity: 1; }
-    46%{ stroke-dashoffset: -454; opacity: 1; }
-    50%, 100%{ stroke-dashoffset: -454; opacity: 0; }
+  /* Three beads (34 of the 454 pathLength units each) travel ONE-WAY
+     from their own source down to where all three paths converge at
+     the hub's top edge — same shared timeline, same tiny cosmetic
+     delay-offset trick as every prior version of this card (keeps the
+     three departures from looking like an exact triplicate, not a real
+     stagger). All three paths are drawn source-point-first/hub-point-
+     last, so decreasing stroke-dashoffset moves a bead toward the hub —
+     same rule as every earlier version, just pointed at a shared
+     destination instead of each bead having its own. */
+  @keyframes rp-flow-in{
+    0%, 14%{ stroke-dashoffset: 0; opacity: 0; }
+    18%{ opacity: 1; }
+    44%{ stroke-dashoffset: -454; opacity: 1; }
+    48%, 100%{ stroke-dashoffset: -454; opacity: 0; }
   }
-  /* Format chips rest fully visible — opacity:1/scale:1 in the BASE
-     .rp-format rule above, not just this keyframe's own resting value —
-     so a reduced-motion visitor still sees all three finished formats
-     plainly, just without the dim-then-arrive motion; a frozen
-     mid-fade chip would've read as broken, a permanently-"delivered"
-     chip reads as a clean static diagram. Animated users see each chip
-     dim while its bead is in transit and pop back to full brightness
-     right as it lands (46-52%, matching rp-current-travel's own
-     arrival window above). */
-  @keyframes rp-format-receive{
-    0%, 46%{ opacity: .4; transform: translate(-50%,-50%) scale(.82); }
-    52%, 86%{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
-    96%, 100%{ opacity: .4; transform: translate(-50%,-50%) scale(.82); }
+  /* Hub brightens/grows right as the three inbound beads arrive (peaks
+     50%, settles by 62% just as the outbound bead below departs) — the
+     one visible "this is where the repurposing actually happens" beat.
+     The icon's spin is a separate, constant, un-gated animation on the
+     nested <i> (different element, so it never fights this scale/glow
+     pulse for the same property) — an ambient "still working" detail,
+     not phase-timed to anything else. */
+  @keyframes rp-hub-pulse{
+    0%, 40%, 100%{ transform: translate(-50%,-50%) scale(1); box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 7px rgba(76,110,245,.12); }
+    50%{ transform: translate(-50%,-50%) scale(1.08); box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 14px rgba(76,110,245,.3); }
+    62%{ transform: translate(-50%,-50%) scale(1); box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 7px rgba(76,110,245,.12); }
+  }
+  @keyframes rp-hub-spin{ to{ transform: rotate(360deg); } }
+  /* Single bead, hub→final, departs right as the hub pulse above settles
+     (58-62%) and lands at 70% — same one-way dashoffset technique as
+     the inbound beads, just a shorter path with its own delay so it
+     starts after the collect+process phase instead of alongside it. */
+  @keyframes rp-flow-out{
+    0%, 58%{ stroke-dashoffset: 0; opacity: 0; }
+    62%{ opacity: 1; }
+    70%{ stroke-dashoffset: -454; opacity: 1; }
+    74%, 100%{ stroke-dashoffset: -454; opacity: 0; }
+  }
+  /* Final card rests at its BRIGHT/delivered look (opacity:1/scale(1) in
+     the base .rp-final rule above, not just this keyframe's own resting
+     value) so prefers-reduced-motion always shows one complete finished
+     post, never a permanently half-faded placeholder — same reasoning
+     as the previous rebuild's format chips. Animated users see it dim
+     through the whole collect+process phase (nothing to show yet) and
+     pop to full brightness right as the outbound bead lands (74%),
+     holding until just before the loop resets. */
+  @keyframes rp-final-receive{
+    0%, 68%{ opacity: .42; transform: translate(-50%,-50%) scale(.82); }
+    74%, 94%{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
+    100%{ opacity: .42; transform: translate(-50%,-50%) scale(.82); }
   }
   @media (prefers-reduced-motion: reduce){
-    .rp-source, .rp-current, .rp-format{ animation: none; }
+    .rp-src, .rp-current-in, .rp-current-out, .rp-hub, .rp-hub i, .rp-final{ animation: none; }
   }
 
   /* Retention section (new) — "Private, regional delivery" network diagram,
@@ -1679,30 +1703,27 @@
 
     <div class="mirror-card rp-card reveal mt-12">
       <div class="mirror-visual rp-visual" aria-hidden="true">
-        <div class="rp-source"><i class="ph-fill ph-microphone" aria-hidden="true"></i></div>
+        <div class="rp-src rp-src-video"><i class="ph-fill ph-video-camera" aria-hidden="true"></i></div>
+        <div class="rp-src rp-src-audio"><i class="ph-fill ph-microphone" aria-hidden="true"></i></div>
+        <div class="rp-src rp-src-notes"><i class="ph-fill ph-note-pencil" aria-hidden="true"></i></div>
         <svg class="rp-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
-          <path class="rp-line" d="M130 58 Q70 98 47 138" />
-          <path class="rp-line" d="M130 60 L130 140" />
-          <path class="rp-line" d="M130 58 Q190 98 213 138" />
-          <path class="rp-current rp-current-1" pathLength="454" d="M130 58 Q70 98 47 138" />
-          <path class="rp-current rp-current-2" pathLength="454" d="M130 60 L130 140" />
-          <path class="rp-current rp-current-3" pathLength="454" d="M130 58 Q190 98 213 138" />
+          <path class="rp-line" d="M55 46 Q58 75 130 96" />
+          <path class="rp-line" d="M130 46 L130 96" />
+          <path class="rp-line" d="M205 46 Q202 75 130 96" />
+          <path class="rp-line" d="M130 131 L130 150" />
+          <path class="rp-current-in" pathLength="454" d="M55 46 Q58 75 130 96" />
+          <path class="rp-current-in rp-current-in-2" pathLength="454" d="M130 46 L130 96" />
+          <path class="rp-current-in rp-current-in-3" pathLength="454" d="M205 46 Q202 75 130 96" />
+          <path class="rp-current-out" pathLength="454" d="M130 131 L130 150" />
         </svg>
-        <div class="rp-format rp-format-post">
+        <div class="rp-hub"><i class="ph-bold ph-arrows-clockwise" aria-hidden="true"></i></div>
+        <div class="rp-final">
           <i class="ph-fill ph-linkedin-logo" aria-hidden="true"></i>
-          <div class="rp-format-lines"><span></span><span></span></div>
-        </div>
-        <div class="rp-format rp-format-carousel">
-          <i class="ph-fill ph-stack" aria-hidden="true"></i>
-          <div class="rp-format-dots"><span></span><span></span><span></span></div>
-        </div>
-        <div class="rp-format rp-format-video">
-          <i class="ph-fill ph-play-circle" aria-hidden="true"></i>
-          <span></span>
+          <div class="rp-final-lines"><span></span><span></span></div>
         </div>
       </div>
-      <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">One recording, repurposed everywhere</h3>
-      <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Every podcast, call, or raw idea gets cut into LinkedIn posts, carousels, and clips — so an hour of your time becomes a week of content.</p>
+      <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Everything in, one finished post out</h3>
+      <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Video calls, voice notes, rough ideas — whatever you hand us gets pulled into one system and repurposed into a single, ready-to-publish piece of content.</p>
     </div>
   </div>
 </section>
