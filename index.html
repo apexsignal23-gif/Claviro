@@ -397,33 +397,40 @@
   .ml-chip-3{ top: 66%; left: 20%; animation-delay: 1.8s; }
   .ml-chip-4{ top: 66%; right: 20%; animation-delay: 2.7s; }
 
-  /* "Instant, natural interactions" card, REBUILT 2026-08-28 — the two
-     overlapping animated wave paths are GONE, replaced per explicit
-     request with a small LinkedIn-post "frame" that continuously drifts
-     across the box: it slides right until fully off-screen, then wraps
-     back to the left edge and starts again — a one-directional
-     conveyor/marquee loop, not a back-and-forth ping-pong. Reuses the
-     same dark-card visual language as the real `.li-post` component
+  /* "Instant, natural interactions" card — REBUILT 2026-08-28, then
+     REVISED again the same day. First version drifted a single card
+     horizontally off-screen and wrapped it back in from the left (a
+     marquee). Per explicit follow-up feedback, that's GONE too — now
+     TWO stacked LinkedIn-post "frames" cross-fade in place: the front
+     card fades out while rising slightly, and at that exact same
+     moment the second card (which had been waiting just below, invisible)
+     rises up and fades into the front/center spot — "one going away
+     while one comes in the middle." Both cards run the IDENTICAL
+     `mirror-post-cycle` keyframe, just 50% out of phase via a negative
+     `animation-delay` on the second one — see that keyframe's own
+     comment below for exactly how the phase-offset trick works. Reuses
+     the same dark-card visual language as the real `.li-post` component
      (Industry Standard section) but with abstract skeleton-bar content
      instead of real names/text, since this is a generic decorative loop
-     rather than a specific post. `overflow:hidden` on the visual box is
-     what actually clips the card off-screen on both sides — don't drop
-     it or the drifting card will spill out of the rounded corners. */
+     rather than a specific post. `overflow:hidden` on the visual box
+     still matters — it keeps the "waiting below" phase's card from
+     poking out past the box's bottom edge. */
   .mirror-drift-visual{ overflow: hidden; }
   .mirror-drift-card{
     position: absolute; top: 50%; left: 50%;
-    width: 74%;
+    width: 88%;
     background: var(--ink-950);
     border: 1px solid var(--ink-border);
     border-radius: .5rem;
     padding: .75rem .85rem;
     display: flex; flex-direction: column; gap: .55rem;
-    /* Static resting position (centered) — what shows if the drift
-       animation is turned off below under reduced-motion, so the card
-       doesn't sit stuck at an off-center animation start-frame. */
+    /* Static resting position (centered) — what shows if the animation
+       is turned off below under reduced-motion, so both cards just sit
+       stacked and centered instead of stuck at an off-position frame. */
     transform: translate(-50%, -50%);
-    animation: mirror-post-drift 6s linear infinite;
+    animation: mirror-post-cycle 6s ease-in-out infinite;
   }
+  .mirror-drift-card-b{ animation-delay: -3s; }
   .mirror-drift-top{ display: flex; align-items: center; gap: .5rem; }
   .mirror-drift-avatar{ flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); }
   .mirror-drift-lines{ flex: 1; display: grid; gap: .35rem; min-width: 0; }
@@ -433,6 +440,10 @@
   .mirror-drift-body{ display: grid; gap: .4rem; }
   .mirror-drift-body span{ display: block; height: 6px; border-radius: 20px; background: rgba(255,255,255,.08); }
   .mirror-drift-body span:last-child{ width: 70%; }
+  /* Slight content variety so the two cross-fading cards don't read as
+     a single frozen image. */
+  .mirror-drift-card-b .mirror-drift-lines span:last-child{ width: 42%; }
+  .mirror-drift-card-b .mirror-drift-body span:last-child{ width: 50%; }
 
   /* "Understands buyer intent" card, REBUILT 2026-08-27 — the
      chat-bubbles + "Detected priorities" meter-bar panel is GONE
@@ -480,15 +491,26 @@
     85%, 100%{ transform: translate(var(--dx,0), var(--dy,0)) scale(.2); opacity: 0; }
   }
   @keyframes ml-pulse{ 0%{ transform: scale(.85); opacity: .5; } 100%{ transform: scale(1.35); opacity: 0; } }
-  /* One-directional conveyor: drifts from off-screen left to off-screen
-     right, then snaps back to the start and repeats — NOT a ping-pong
-     (deliberately no reverse/alternate direction). -160%/+160% (of the
-     card's OWN width, it's a percentage transform) comfortably clears
-     both edges of `.mirror-drift-visual` since the card itself is only
-     74% of the box width. */
-  @keyframes mirror-post-drift{
-    0%{ transform: translate(-160%, -50%); }
-    100%{ transform: translate(160%, -50%); }
+  /* Cross-fade cycle, shared by both `.mirror-drift-card` instances
+     (the 2nd offset -3s, exactly half of the 6s duration, via
+     animation-delay — so it's always running exactly opposite this
+     one). Each card's own timeline: sits at front (centered, full
+     opacity) 0-40%, exits upward while fading out 40-50%, INSTANTLY
+     teleports to a position below center at 50%→50.01% (invisible at
+     that exact instant since opacity is 0, so the jump never shows),
+     waits there hidden 50-90%, then rises back up into the front spot
+     while fading in 90-100% (which loops seamlessly into 0%). Because
+     the 2nd card is 3s out of phase, its "40-50% exiting" window lines
+     up with this card's "90-100% rising in" window and vice versa —
+     that's what makes one visibly fade away right as the other rises
+     into the middle, instead of both just fading in/out independently
+     at random-looking moments. */
+  @keyframes mirror-post-cycle{
+    0%, 40%{ transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50%{ transform: translate(-50%, calc(-50% - 16px)) scale(.92); opacity: 0; }
+    50.01%{ transform: translate(-50%, calc(-50% + 16px)) scale(.92); opacity: 0; }
+    90%{ transform: translate(-50%, calc(-50% + 16px)) scale(.92); opacity: 0; }
+    100%{ transform: translate(-50%, -50%) scale(1); opacity: 1; }
   }
   @media (prefers-reduced-motion: reduce){
     .mirror-qa-bubble, .mirror-qa-wave span, .mirror-qa-screen span, .ml-chip, .ml-avatar::after, .mirror-drift-card{
@@ -1487,6 +1509,14 @@
       <div class="mirror-card">
         <div class="mirror-visual mirror-drift-visual" aria-hidden="true">
           <div class="mirror-drift-card">
+            <div class="mirror-drift-top">
+              <div class="mirror-drift-avatar"></div>
+              <div class="mirror-drift-lines"><span></span><span></span></div>
+              <i class="ph-fill ph-linkedin-logo mirror-drift-brand" aria-hidden="true"></i>
+            </div>
+            <div class="mirror-drift-body"><span></span><span></span></div>
+          </div>
+          <div class="mirror-drift-card mirror-drift-card-b">
             <div class="mirror-drift-top">
               <div class="mirror-drift-avatar"></div>
               <div class="mirror-drift-lines"><span></span><span></span></div>
