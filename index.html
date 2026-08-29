@@ -641,6 +641,8 @@
      say "repurposed" at any pacing; (2) one-source/three-format fan — a
      mic at top fanning out to LinkedIn-post/carousel/video chips,
      replaced per this sketch's opposite (many-to-one) topology instead. */
+  .rp-grid{ display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  @media (min-width: 768px){ .rp-grid{ grid-template-columns: repeat(2, 1fr); } }
   .rp-card{ max-width: 26rem; margin: 0 auto; }
   .rp-visual{ align-items: center; justify-content: center; }
   .rp-src{
@@ -754,6 +756,160 @@
   }
   @media (prefers-reduced-motion: reduce){
     .rp-src, .rp-current-in, .rp-current-out, .rp-hub, .rp-hub i, .rp-final{ animation: none; }
+  }
+
+  /* "Publishing" card — 2nd card added to the Repurpose section 2026-08-30
+     (which is why `.rp-grid` above exists now; this section held only one
+     centered `.rp-card` before). Built from a detailed spec the user gave
+     directly (element-by-element: a calendar/clock anchor, a post preview
+     above it, an audience cluster below, a bell/target corner accent;
+     motion: post→calendar draw, a calendar "tick", then calendar→audience
+     lines drawing in sequence with one audience icon flashing green for
+     "engagement"). Reuses the self-drawing-line technique (`pathLength`-
+     normalized paths, `stroke-dasharray` = that length, `stroke-dashoffset`
+     animating length→0) from Retention/Day-90 rather than the Repurpose
+     card's own bead-travel technique, since the spec explicitly describes
+     lines "drawing" and "lighting up" — a drawn line, not a traveling dot.
+     Class prefix `.pub-` (distinct from this section's own `.rp-`) so the
+     two cards' CSS never collides despite sitting in the same section. */
+  .pub-visual{ align-items: center; justify-content: center; }
+  .pub-post{
+    position: absolute; left: 50%; top: 14%; transform: translate(-50%,-50%);
+    width: 64px; height: 34px; border-radius: 8px;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.16);
+    display: flex; align-items: center; gap: .4rem; padding: 0 .5rem;
+    box-shadow: 0 8px 18px rgba(0,0,0,.28);
+    opacity: 1;
+    animation: pub-post-pop 7s var(--ease-spring) infinite;
+  }
+  .pub-post i{ font-size: .85rem; color: var(--cream-dim); flex: none; }
+  .pub-post-lines{ flex: 1; display: grid; gap: .2rem; min-width: 0; }
+  .pub-post-lines span{ display: block; height: 4px; border-radius: 20px; background: rgba(255,255,255,.2); }
+  .pub-post-lines span:last-child{ width: 55%; }
+  .pub-cal{
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%) scale(1);
+    width: 56px; height: 50px; border-radius: 16px;
+    background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
+    display: grid; place-items: center; color: var(--accent-hot); font-size: 1.35rem;
+    box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 7px rgba(76,110,245,.12);
+    animation: pub-cal-tick 7s var(--ease-spring) infinite;
+  }
+  .pub-bell{
+    position: absolute; top: 12%; left: 84%; transform: translate(-50%,-50%);
+    width: 24px; height: 24px; border-radius: 50%;
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.16);
+    display: grid; place-items: center; color: var(--accent-hot); font-size: .85rem;
+    box-shadow: 0 6px 14px rgba(0,0,0,.24);
+  }
+  .pub-bell i{ display: block; animation: pub-bell-ring 7s ease-in-out infinite; }
+  .pub-audience{
+    position: absolute; transform: translate(-50%,-50%) scale(1);
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.18);
+    display: grid; place-items: center; color: var(--cream-dim); font-size: .9rem;
+    box-shadow: 0 6px 14px rgba(0,0,0,.24);
+    opacity: 1;
+  }
+  .pub-audience-1{ left: 29%; top: 80%; animation: pub-aud-1 7s var(--ease-spring) infinite; }
+  .pub-audience-2{ left: 50%; top: 87%; animation: pub-aud-2 7s var(--ease-spring) infinite, pub-aud-2-flicker 7s ease-in-out infinite; }
+  .pub-audience-3{ left: 71%; top: 80%; animation: pub-aud-3 7s var(--ease-spring) infinite; }
+  .pub-wires{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .pub-line{ fill: none; stroke: rgba(255,255,255,.14); stroke-width: 1.35; stroke-linecap: round; }
+  .pub-draw{
+    fill: none; stroke: var(--accent-hot); stroke-width: 2.2; stroke-linecap: round;
+    filter: drop-shadow(0 0 6px rgba(76,110,245,.55));
+    stroke-dasharray: 1000; stroke-dashoffset: 0;
+  }
+  .pub-draw-1{ animation: pub-draw-1 7s var(--ease-spring) infinite; }
+  .pub-draw-2{ animation: pub-draw-2 7s var(--ease-spring) infinite; }
+  .pub-draw-3{ animation: pub-draw-3 7s var(--ease-spring) infinite; }
+  .pub-draw-4{ animation: pub-draw-4 7s var(--ease-spring) infinite; }
+  /* Post preview pops once near the start (content "about to be
+     scheduled") and stays lit — same rest-at-complete-state principle as
+     every diagram on this page: base .pub-post above is already the lit
+     look, so reduced-motion just shows a normal, always-lit post chip. */
+  @keyframes pub-post-pop{
+    0%, 6%, 96%, 100%{ opacity: .5; transform: translate(-50%,-50%) scale(.85); }
+    14%, 90%{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  }
+  /* Beat 1: content enters the schedule — the post→calendar line draws
+     14-30%, right after the post pops. */
+  @keyframes pub-draw-1{
+    0%, 14%{ stroke-dashoffset: 1000; opacity: 0; }
+    18%{ opacity: 1; }
+    30%, 90%{ stroke-dashoffset: 0; opacity: 1; }
+    96%, 100%{ stroke-dashoffset: 1000; opacity: 0; }
+  }
+  /* Beat 2: the scheduling "tick" — calendar grows/glows brighter right
+     after its incoming line lands, 30-44%. The bell echoes this same
+     moment with a small independent wiggle (separate keyframe below, own
+     element) rather than being driven by the same keyframe, since it's a
+     rotation and this is a scale/glow pulse — two different transforms
+     that would otherwise fight if forced onto one shared animation. */
+  @keyframes pub-cal-tick{
+    0%, 28%, 100%{ transform: translate(-50%,-50%) scale(1); box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 7px rgba(76,110,245,.12); }
+    36%{ transform: translate(-50%,-50%) scale(1.12); box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 14px rgba(76,110,245,.32); }
+    44%{ transform: translate(-50%,-50%) scale(1); box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 7px rgba(76,110,245,.12); }
+  }
+  @keyframes pub-bell-ring{
+    0%, 30%, 100%{ transform: rotate(0deg); }
+    34%{ transform: rotate(-14deg); }
+    38%{ transform: rotate(12deg); }
+    42%, 90%{ transform: rotate(0deg); }
+  }
+  /* Beat 3: calendar→audience lines draw ONE AT A TIME (not together) —
+     44-52% (left), 52-60% (center), 60-68% (right) — each audience icon
+     popping to full brightness right as its own line lands, matching the
+     spec's "each one lighting up sequentially... over time, not all at
+     once." */
+  @keyframes pub-draw-2{
+    0%, 44%{ stroke-dashoffset: 1000; opacity: 0; }
+    46%{ opacity: 1; }
+    52%, 90%{ stroke-dashoffset: 0; opacity: 1; }
+    96%, 100%{ stroke-dashoffset: 1000; opacity: 0; }
+  }
+  @keyframes pub-aud-1{
+    0%, 44%, 96%, 100%{ opacity: .45; transform: translate(-50%,-50%) scale(.8); }
+    52%, 90%{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  }
+  @keyframes pub-draw-3{
+    0%, 52%{ stroke-dashoffset: 1000; opacity: 0; }
+    54%{ opacity: 1; }
+    60%, 90%{ stroke-dashoffset: 0; opacity: 1; }
+    96%, 100%{ stroke-dashoffset: 1000; opacity: 0; }
+  }
+  /* This is the audience icon the spec calls out to flash green
+     ("echoing the green voice-waveform accent from Card 2... to suggest
+     engagement or response"). Its own glyph color never changes (still
+     plain `var(--cream-dim)`, matching the other two) — instead a second,
+     independent animation layers a green-tinted `box-shadow` ring on top
+     for a couple of frames, same halo-pulse technique as `pub-cal-tick`'s
+     blue glow, just tinted `rgba(52,211,153,...)` (the `#34d399` green
+     already used by "Understands buyer intent"'s voice-waveform) instead
+     of blue. Keeps this within the same box-shadow-glow idiom used
+     everywhere else on this page rather than animating the icon's actual
+     `color` property. */
+  @keyframes pub-aud-2{
+    0%, 52%, 96%, 100%{ opacity: .45; transform: translate(-50%,-50%) scale(.8); }
+    60%, 90%{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  }
+  @keyframes pub-aud-2-flicker{
+    0%, 58%, 66%, 100%{ box-shadow: 0 6px 14px rgba(0,0,0,.24); }
+    62%{ box-shadow: 0 6px 14px rgba(0,0,0,.24), 0 0 0 6px rgba(52,211,153,.45); }
+  }
+  @keyframes pub-draw-4{
+    0%, 60%{ stroke-dashoffset: 1000; opacity: 0; }
+    62%{ opacity: 1; }
+    68%, 90%{ stroke-dashoffset: 0; opacity: 1; }
+    96%, 100%{ stroke-dashoffset: 1000; opacity: 0; }
+  }
+  @keyframes pub-aud-3{
+    0%, 60%, 96%, 100%{ opacity: .45; transform: translate(-50%,-50%) scale(.8); }
+    68%, 90%{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .pub-post, .pub-cal, .pub-bell i, .pub-draw-1, .pub-draw-2, .pub-draw-3, .pub-draw-4,
+    .pub-audience-1, .pub-audience-2, .pub-audience-3{ animation: none; }
   }
 
   /* Retention section — REBUILT FROM SCRATCH 2026-08-28, replacing the
@@ -1751,33 +1907,18 @@
         Real-time output, <span class="text-shine inline-block">synced to you</span>
       </h2>
       <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">We don&rsquo;t see our craft as addition or subtraction. It&rsquo;s simpler than that. We extract your company&rsquo;s intellectual capital (IC) and convert it into content.</p>
-      <div class="mt-7 flex flex-col gap-5">
-        <div>
-          <h4 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">The IC already exists in your company</h4>
-          <p class="mt-1.5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">Every business has it, built into the way your team thinks, sells, and solves problems for customers.</p>
-        </div>
-        <div>
-          <h4 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">We pull it out of the right person</h4>
-          <p class="mt-1.5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">Whoever holds that understanding walks us through it. A voice note, a call, whatever works. That&rsquo;s the whole extraction process.</p>
-        </div>
-        <div>
-          <h4 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">We produce content from it</h4>
-          <p class="mt-1.5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">We turn that into content that meets industry-standard quality. Produced to perform, represent, and attract.</p>
-        </div>
-      </div>
     </div>
 
     <div class="mirror-grid reveal mt-12">
       <div class="mirror-card">
         <div class="mirror-visual mirror-learn-visual" aria-hidden="true">
-          <div class="ml-avatar"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
+          <div class="ml-avatar"><i class="ph-fill ph-building" aria-hidden="true"></i></div>
           <span class="ml-chip ml-chip-1" style="--dx:28px;--dy:38px;"><i class="ph-bold ph-book-open" aria-hidden="true"></i></span>
           <span class="ml-chip ml-chip-2" style="--dx:-28px;--dy:38px;"><i class="ph-bold ph-lightbulb" aria-hidden="true"></i></span>
-          <span class="ml-chip ml-chip-3" style="--dx:28px;--dy:-38px;"><i class="ph-bold ph-building" aria-hidden="true"></i></span>
           <span class="ml-chip ml-chip-4" style="--dx:-28px;--dy:-38px;"><i class="ph-bold ph-graduation-cap" aria-hidden="true"></i></span>
         </div>
-        <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Answers questions live</h3>
-        <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Prospects ask anything mid-demo. Laura answers in context using your product knowledge and approved paths.</p>
+        <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">The IC already exists in your company</h3>
+        <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Every business has it, built into the way your team thinks, sells, and solves problems for customers.</p>
       </div>
 
       <div class="mirror-card">
@@ -1787,8 +1928,8 @@
           <div class="mirror-qa-wave"><span></span><span></span><span></span><span></span></div>
           <div class="mirror-qa-screen"><span></span><span></span></div>
         </div>
-        <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Understands buyer intent</h3>
-        <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Laura listens, analyzes questions, and detects what the prospect actually cares about in real time.</p>
+        <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">We pull it out of the right person</h3>
+        <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Whoever holds that understanding walks us through it. A voice note, a call, whatever works. That&rsquo;s the whole extraction process.</p>
       </div>
 
       <div class="mirror-card">
@@ -1840,8 +1981,8 @@
             </div>
           </div>
         </div>
-        <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Instant, natural interactions</h3>
-        <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Keep voice, cursor motion, screen control, and answers responsive enough to feel live in the room.</p>
+        <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">We produce content from it</h3>
+        <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">We turn that into content that meets industry-standard quality. Produced to perform, represent, and attract.</p>
       </div>
     </div>
   </div>
@@ -1852,40 +1993,64 @@
      curled from repixa.io ================= -->
 <section id="repurpose" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
-    <div class="reveal max-w-[34rem] mx-auto text-center">
+    <div class="reveal max-w-[34rem]">
       <h2 class="text-shine inline-block text-balance hero-h1 text-[1.9rem] sm:text-[2.5rem] leading-[1.12] tracking-[-0.025em]">
         We handle the distribution
       </h2>
       <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">Once the content is produced, we don&rsquo;t hand it back and walk away. We manage where it goes and how far it reaches.</p>
-      <div class="mt-6">
-        <h4 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Publishing</h4>
-        <p class="mt-1.5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">It goes out on a schedule built around your audience, modeled to get seen by the people who matter.</p>
-      </div>
     </div>
 
-    <div class="mirror-card rp-card reveal mt-12">
-      <div class="mirror-visual rp-visual" aria-hidden="true">
-        <div class="rp-src rp-src-video"><i class="ph-fill ph-video-camera" aria-hidden="true"></i></div>
-        <div class="rp-src rp-src-audio"><i class="ph-fill ph-user-sound" aria-hidden="true"></i></div>
-        <div class="rp-src rp-src-notes"><i class="ph-fill ph-note-pencil" aria-hidden="true"></i></div>
-        <svg class="rp-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
-          <path class="rp-line" d="M55 46 Q58 75 130 96" />
-          <path class="rp-line" d="M130 46 L130 96" />
-          <path class="rp-line" d="M205 46 Q202 75 130 96" />
-          <path class="rp-line" d="M130 131 L130 150" />
-          <path class="rp-current-in" pathLength="454" d="M55 46 Q58 75 130 96" />
-          <path class="rp-current-in rp-current-in-2" pathLength="454" d="M130 46 L130 96" />
-          <path class="rp-current-in rp-current-in-3" pathLength="454" d="M205 46 Q202 75 130 96" />
-          <path class="rp-current-out" pathLength="454" d="M130 131 L130 150" />
-        </svg>
-        <div class="rp-hub"><i class="ph-bold ph-arrows-clockwise" aria-hidden="true"></i></div>
-        <div class="rp-final">
-          <i class="ph-fill ph-linkedin-logo" aria-hidden="true"></i>
-          <div class="rp-final-lines"><span></span><span></span></div>
+    <div class="rp-grid reveal mt-12">
+      <div class="mirror-card rp-card">
+        <div class="mirror-visual rp-visual" aria-hidden="true">
+          <div class="rp-src rp-src-video"><i class="ph-fill ph-video-camera" aria-hidden="true"></i></div>
+          <div class="rp-src rp-src-audio"><i class="ph-fill ph-user-sound" aria-hidden="true"></i></div>
+          <div class="rp-src rp-src-notes"><i class="ph-fill ph-note-pencil" aria-hidden="true"></i></div>
+          <svg class="rp-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
+            <path class="rp-line" d="M55 46 Q58 75 130 96" />
+            <path class="rp-line" d="M130 46 L130 96" />
+            <path class="rp-line" d="M205 46 Q202 75 130 96" />
+            <path class="rp-line" d="M130 131 L130 150" />
+            <path class="rp-current-in" pathLength="454" d="M55 46 Q58 75 130 96" />
+            <path class="rp-current-in rp-current-in-2" pathLength="454" d="M130 46 L130 96" />
+            <path class="rp-current-in rp-current-in-3" pathLength="454" d="M205 46 Q202 75 130 96" />
+            <path class="rp-current-out" pathLength="454" d="M130 131 L130 150" />
+          </svg>
+          <div class="rp-hub"><i class="ph-bold ph-arrows-clockwise" aria-hidden="true"></i></div>
+          <div class="rp-final">
+            <i class="ph-fill ph-linkedin-logo" aria-hidden="true"></i>
+            <div class="rp-final-lines"><span></span><span></span></div>
+          </div>
         </div>
+        <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Repurposing</h3>
+        <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">If you&rsquo;ve already said it somewhere, a podcast, a webinar, a recorded call, we turn it into content and distribute it instead of letting it go to waste.</p>
       </div>
-      <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Repurposing</h3>
-      <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">If you&rsquo;ve already said it somewhere, a podcast, a webinar, a recorded call, we turn it into content and distribute it instead of letting it go to waste.</p>
+
+      <div class="mirror-card rp-card">
+        <div class="mirror-visual pub-visual" aria-hidden="true">
+          <div class="pub-bell"><i class="ph-bold ph-bell" aria-hidden="true"></i></div>
+          <div class="pub-post">
+            <i class="ph-fill ph-note" aria-hidden="true"></i>
+            <div class="pub-post-lines"><span></span><span></span></div>
+          </div>
+          <svg class="pub-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
+            <path class="pub-line" d="M130 44 L130 72" />
+            <path class="pub-line" d="M130 118 Q100 135 75 150" />
+            <path class="pub-line" d="M130 120 L130 157" />
+            <path class="pub-line" d="M130 118 Q160 135 185 150" />
+            <path class="pub-draw pub-draw-1" d="M130 44 L130 72" />
+            <path class="pub-draw pub-draw-2" d="M130 118 Q100 135 75 150" />
+            <path class="pub-draw pub-draw-3" d="M130 120 L130 157" />
+            <path class="pub-draw pub-draw-4" d="M130 118 Q160 135 185 150" />
+          </svg>
+          <div class="pub-cal"><i class="ph-fill ph-calendar-check" aria-hidden="true"></i></div>
+          <div class="pub-audience pub-audience-1"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
+          <div class="pub-audience pub-audience-2"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
+          <div class="pub-audience pub-audience-3"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
+        </div>
+        <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Publishing</h3>
+        <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">It goes out on a schedule built around your audience, modeled to get seen by the people who matter.</p>
+      </div>
     </div>
   </div>
 </section>
