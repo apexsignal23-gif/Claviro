@@ -956,12 +956,22 @@
     17%{ transform: translate(-50%,-50%) scale(1.14); }
     24%, 96%{ transform: translate(-50%,-50%) scale(1); }
   }
+  /* `preserveAspectRatio="none"` above stretches this SVG's 260x195
+     coordinate space non-uniformly to fill a box far wider than that
+     ratio — fine for straight lines, but it scales a curved path's
+     stroke width differently depending on which way the curve is
+     pointing at each point (more "vertical" stretches thicker, more
+     "horizontal" stretches thinner), which is exactly what was making
+     these lines look fat-to-thin instead of a constant width.
+     `vector-effect: non-scaling-stroke` renders the stroke in constant
+     screen pixels regardless of that coordinate stretch, fixing it. */
   .fl-wires{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-  .fl-line{ fill: none; stroke: rgba(255,255,255,.14); stroke-width: 1.7; stroke-linecap: round; }
+  .fl-line{ fill: none; stroke: rgba(255,255,255,.14); stroke-width: 1.7; stroke-linecap: round; vector-effect: non-scaling-stroke; }
   .fl-current-in{
     fill: none; stroke: var(--accent-hot); stroke-width: 2.9; stroke-linecap: round;
     stroke-dasharray: 34 420; stroke-dashoffset: 0; opacity: 0;
     filter: drop-shadow(0 0 7px rgba(76,110,245,.6));
+    vector-effect: non-scaling-stroke;
     animation: rp-flow-in 6.5s linear infinite;
   }
   .fl-current-in-2{ animation-delay: -.08s; }
@@ -969,6 +979,7 @@
     fill: none; stroke: var(--accent-hot); stroke-width: 2.9; stroke-linecap: round;
     stroke-dasharray: 34 420; stroke-dashoffset: 0; opacity: 0;
     filter: drop-shadow(0 0 7px rgba(76,110,245,.6));
+    vector-effect: non-scaling-stroke;
     animation: rp-flow-out 6.5s linear infinite;
   }
   .fl-hub{
@@ -993,12 +1004,36 @@
      one more synced step, so it just always drifts. */
   .fl-loopback{
     fill: none; stroke: rgba(76,110,245,.28); stroke-width: 1.6; stroke-linecap: round;
-    stroke-dasharray: 8 20;
+    stroke-dasharray: 8 20; vector-effect: non-scaling-stroke;
     animation: fl-loop-travel 3s linear infinite;
   }
   @keyframes fl-loop-travel{ to{ stroke-dashoffset: -560; } }
+  /* The little "flag" arrowhead used to just sit fixed at the loopback
+     line's end — an SVG `marker-end` doesn't travel with a dash
+     animation, it's pinned to the path's geometric endpoint, so it read
+     as static even while the dashes behind it flowed. Replaced with an
+     actual traveling shape: `offset-path` walks it along the exact same
+     curve, `offset-rotate: auto` keeps it pointed the way it's moving,
+     and it fades in/out at each end (the same "invisible teleport" this
+     page uses everywhere to hide a reset) instead of popping back to
+     the start. Runs bottom (`.fl-final`) → top (`.fl-src-analytics`),
+     same direction and duration as the dashed line it rides along. */
+  .fl-loop-flag{
+    fill: rgba(76,110,245,.75);
+    filter: drop-shadow(0 0 4px rgba(76,110,245,.7));
+    offset-path: path('M100 160 C 15 150, 5 70, 42 40');
+    offset-rotate: auto;
+    animation: fl-loop-flag-move 3s linear infinite;
+  }
+  @keyframes fl-loop-flag-move{
+    0%, 4%{ offset-distance: 0%; opacity: 0; }
+    12%{ opacity: 1; }
+    88%{ opacity: 1; }
+    96%, 100%{ offset-distance: 100%; opacity: 0; }
+  }
   @media (prefers-reduced-motion: reduce){
     .fl-src, .fl-current-in, .fl-current-out, .fl-hub, .fl-hub i, .fl-final, .fl-loopback{ animation: none; }
+    .fl-loop-flag{ animation: none; opacity: 0; }
   }
 
   /* Retention section — REBUILT FROM SCRATCH 2026-08-28, replacing the
@@ -2181,18 +2216,14 @@
           <div class="fl-src fl-src-analytics"><i class="ph-fill ph-chart-line-up" aria-hidden="true"></i></div>
           <div class="fl-src fl-src-content"><i class="ph-fill ph-note" aria-hidden="true"></i></div>
           <svg class="fl-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
-            <defs>
-              <marker id="fl-arrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
-                <path d="M0,0 L10,5 L0,10 Z" fill="rgba(76,110,245,.55)" />
-              </marker>
-            </defs>
             <path class="fl-line" d="M55 46 Q58 75 130 96" />
             <path class="fl-line" d="M205 46 Q202 75 130 96" />
             <path class="fl-line" d="M130 131 L130 150" />
             <path class="fl-current-in" pathLength="454" d="M55 46 Q58 75 130 96" />
             <path class="fl-current-in fl-current-in-2" pathLength="454" d="M205 46 Q202 75 130 96" />
             <path class="fl-current-out" pathLength="454" d="M130 131 L130 150" />
-            <path class="fl-loopback" d="M100 160 C 15 150, 5 70, 42 40" marker-end="url(#fl-arrow)" />
+            <path class="fl-loopback" d="M100 160 C 15 150, 5 70, 42 40" />
+            <path class="fl-loop-flag" d="M-6,-4.5 L6,0 L-6,4.5 Z" />
           </svg>
           <div class="fl-hub"><i class="ph-bold ph-arrows-clockwise" aria-hidden="true"></i></div>
           <div class="fl-final"><i class="ph-fill ph-calendar-check" aria-hidden="true"></i></div>
