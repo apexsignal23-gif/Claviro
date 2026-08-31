@@ -1008,32 +1008,34 @@
     animation: fl-loop-travel 3s linear infinite;
   }
   @keyframes fl-loop-travel{ to{ stroke-dashoffset: -560; } }
-  /* The little "flag" arrowhead used to just sit fixed at the loopback
-     line's end — an SVG `marker-end` doesn't travel with a dash
-     animation, it's pinned to the path's geometric endpoint, so it read
-     as static even while the dashes behind it flowed. Replaced with an
-     actual traveling shape: `offset-path` walks it along the exact same
-     curve, `offset-rotate: auto` keeps it pointed the way it's moving,
-     and it fades in/out at each end (the same "invisible teleport" this
-     page uses everywhere to hide a reset) instead of popping back to
-     the start. Runs bottom (`.fl-final`) → top (`.fl-src-analytics`),
-     same direction and duration as the dashed line it rides along. */
-  .fl-loop-flag{
-    fill: rgba(76,110,245,.75);
-    filter: drop-shadow(0 0 4px rgba(76,110,245,.7));
-    offset-path: path('M100 160 C 15 150, 5 70, 42 40');
-    offset-rotate: auto;
-    animation: fl-loop-flag-move 3s linear infinite;
+  /* A bright traveling bead riding the same curve, in the same direction
+     (path is drawn bottom-first/top-last, so a decreasing dashoffset
+     moves it from `.fl-final` up toward `.fl-src-analytics` — the same
+     "decreasing offset = moves toward the drawn end" rule every bead on
+     this page follows). First tried an actual arrow shape moved via
+     `offset-path`, but that broke badly: this SVG's `preserveAspectRatio
+     ="none"` stretches its coordinate space non-uniformly to fill a box
+     far wider than its own viewBox ratio, and `offset-path` resolved the
+     shape's position/scale against a DIFFERENT effective coordinate
+     space than the one `<path>` shapes actually render in — the shape
+     ended up oversized and nowhere near the line. A plain dasharray/
+     dashoffset bead (exactly how every other flow-line on this page
+     works) renders in that same stretched space as the line itself, so
+     it can't ever drift out of alignment like that. No `pathLength`
+     normalization needed here since the offset target is just a clean
+     multiple of the dash pattern's own length (18+70=88 → -880, 10x) for
+     seamless infinite tiling, not a one-shot full-path traversal. */
+  .fl-loop-bead{
+    fill: none; stroke: #8fa4ff; stroke-width: 3; stroke-linecap: round;
+    stroke-dasharray: 18 70; stroke-dashoffset: 0;
+    filter: drop-shadow(0 0 5px rgba(76,110,245,.75));
+    vector-effect: non-scaling-stroke;
+    animation: fl-loop-bead-move 3s linear infinite;
   }
-  @keyframes fl-loop-flag-move{
-    0%, 4%{ offset-distance: 0%; opacity: 0; }
-    12%{ opacity: 1; }
-    88%{ opacity: 1; }
-    96%, 100%{ offset-distance: 100%; opacity: 0; }
-  }
+  @keyframes fl-loop-bead-move{ to{ stroke-dashoffset: -880; } }
   @media (prefers-reduced-motion: reduce){
     .fl-src, .fl-current-in, .fl-current-out, .fl-hub, .fl-hub i, .fl-final, .fl-loopback{ animation: none; }
-    .fl-loop-flag{ animation: none; opacity: 0; }
+    .fl-loop-bead{ animation: none; opacity: 0; }
   }
 
   /* Retention section — REBUILT FROM SCRATCH 2026-08-28, replacing the
@@ -2223,7 +2225,7 @@
             <path class="fl-current-in fl-current-in-2" pathLength="454" d="M205 46 Q202 75 130 96" />
             <path class="fl-current-out" pathLength="454" d="M130 131 L130 150" />
             <path class="fl-loopback" d="M100 160 C 15 150, 5 70, 42 40" />
-            <path class="fl-loop-flag" d="M-6,-4.5 L6,0 L-6,4.5 Z" />
+            <path class="fl-loop-bead" d="M100 160 C 15 150, 5 70, 42 40" />
           </svg>
           <div class="fl-hub"><i class="ph-bold ph-arrows-clockwise" aria-hidden="true"></i></div>
           <div class="fl-final"><i class="ph-fill ph-calendar-check" aria-hidden="true"></i></div>
