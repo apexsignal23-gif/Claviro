@@ -641,8 +641,16 @@
      say "repurposed" at any pacing; (2) one-source/three-format fan — a
      mic at top fanning out to LinkedIn-post/carousel/video chips,
      replaced per this sketch's opposite (many-to-one) topology instead. */
-  .rp-grid{ display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  .rp-grid{ position: relative; display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
   @media (min-width: 768px){ .rp-grid{ grid-template-columns: repeat(2, 1fr); } }
+  /* Subtle vertical rule-line grid sitting behind the two cards (visible
+     in the gap between them and just past their edges) — decorative
+     only, `z-index:-1` keeps it behind the grid's own (non-positioned)
+     card children within this now-`position:relative` container. */
+  .rp-grid-lines{
+    position: absolute; inset: -1.5rem; z-index: -1; pointer-events: none;
+    background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 1px, transparent 1px 72px);
+  }
   .rp-card{ max-width: 26rem; margin: 0 auto; }
   .rp-visual{ align-items: center; justify-content: center; }
   .rp-src{
@@ -2152,6 +2160,7 @@
     </div>
 
     <div class="rp-grid reveal mt-12">
+      <div class="rp-grid-lines" aria-hidden="true"></div>
       <div class="mirror-card rp-card">
         <div class="mirror-visual pub-visual" aria-hidden="true">
           <div class="pub-bell"><i class="ph-bold ph-bell" aria-hidden="true"></i></div>
