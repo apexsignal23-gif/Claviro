@@ -930,7 +930,17 @@
      accent color (green / blue) instead of an animation fighting it back
      to gray every cycle. Class prefix `.fl-`. */
   .fl-card{ max-width: none; }
-  .fl-visual{ align-items: center; justify-content: center; max-height: 26rem; }
+  /* .mirror-visual's base `aspect-ratio: 4/3` is what was quietly
+     shrinking this box back down to a narrow column even after the card
+     itself went full-width — with a wide, fixed-height box, the browser
+     was solving the ratio by narrowing the box instead of just letting
+     it be a wide rectangle. Overridden to `auto` + an explicit height so
+     width and height stop trading off against each other. The actual
+     diagram then lives in `.fl-stage` below, a fixed-size, centered
+     "stage" inside this now-wide box, so the icons/lines stay a compact
+     cluster in the middle instead of stretching edge-to-edge with it. */
+  .fl-visual{ align-items: center; justify-content: center; aspect-ratio: auto; height: 22rem; }
+  .fl-stage{ position: relative; width: 22rem; max-width: 100%; height: 100%; }
   .fl-src{
     position: absolute; top: 16%; transform: translate(-50%,-50%) scale(1);
     width: 46px; height: 40px; border-radius: 10px;
@@ -2167,24 +2177,26 @@
 
     <div class="mirror-card fl-card reveal mt-12">
       <div class="mirror-visual fl-visual" aria-hidden="true">
-        <div class="fl-src fl-src-analytics"><i class="ph-fill ph-chart-line-up" aria-hidden="true"></i></div>
-        <div class="fl-src fl-src-content"><i class="ph-fill ph-note" aria-hidden="true"></i></div>
-        <svg class="fl-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
-          <defs>
-            <marker id="fl-arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
-              <path d="M0,0 L8,4 L0,8 Z" fill="rgba(76,110,245,.55)" />
-            </marker>
-          </defs>
-          <path class="fl-line" d="M55 46 Q58 75 130 96" />
-          <path class="fl-line" d="M205 46 Q202 75 130 96" />
-          <path class="fl-line" d="M130 131 L130 150" />
-          <path class="fl-current-in" pathLength="454" d="M55 46 Q58 75 130 96" />
-          <path class="fl-current-in fl-current-in-2" pathLength="454" d="M205 46 Q202 75 130 96" />
-          <path class="fl-current-out" pathLength="454" d="M130 131 L130 150" />
-          <path class="fl-loopback" d="M100 160 C 15 150, 5 70, 42 40" marker-end="url(#fl-arrow)" />
-        </svg>
-        <div class="fl-hub"><i class="ph-bold ph-arrows-clockwise" aria-hidden="true"></i></div>
-        <div class="fl-final"><i class="ph-fill ph-calendar-check" aria-hidden="true"></i></div>
+        <div class="fl-stage">
+          <div class="fl-src fl-src-analytics"><i class="ph-fill ph-chart-line-up" aria-hidden="true"></i></div>
+          <div class="fl-src fl-src-content"><i class="ph-fill ph-note" aria-hidden="true"></i></div>
+          <svg class="fl-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
+            <defs>
+              <marker id="fl-arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 Z" fill="rgba(76,110,245,.55)" />
+              </marker>
+            </defs>
+            <path class="fl-line" d="M55 46 Q58 75 130 96" />
+            <path class="fl-line" d="M205 46 Q202 75 130 96" />
+            <path class="fl-line" d="M130 131 L130 150" />
+            <path class="fl-current-in" pathLength="454" d="M55 46 Q58 75 130 96" />
+            <path class="fl-current-in fl-current-in-2" pathLength="454" d="M205 46 Q202 75 130 96" />
+            <path class="fl-current-out" pathLength="454" d="M130 131 L130 150" />
+            <path class="fl-loopback" d="M100 160 C 15 150, 5 70, 42 40" marker-end="url(#fl-arrow)" />
+          </svg>
+          <div class="fl-hub"><i class="ph-bold ph-arrows-clockwise" aria-hidden="true"></i></div>
+          <div class="fl-final"><i class="ph-fill ph-calendar-check" aria-hidden="true"></i></div>
+        </div>
       </div>
       <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">The Feedback Loop</h3>
       <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Every post we publish feeds back in. What actually landed shapes next month&rsquo;s production, so the system gets sharper instead of repeating itself.</p>
