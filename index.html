@@ -912,6 +912,85 @@
     .pub-audience-1, .pub-audience-2, .pub-audience-3{ animation: none; }
   }
 
+  /* "The Feedback Loop" card — NEW section added right after Repurpose,
+     2026-08-31, from a detailed spec: an analytics/engagement icon
+     (top-left, green) and a "content produced" icon (top-right, blue)
+     both feed into the same center loop icon (visually identical to the
+     Repurposing card's `.rp-hub`), which dispatches down to a calendar
+     "next month" node — plus a faint dashed arrow that continuously
+     travels from that bottom node back up to the analytics icon, never
+     synced to the main beat, implying the whole thing repeats monthly.
+     Topologically this is the exact same choreography as the Repurposing
+     card (N sources → hub → one final node), so it intentionally reuses
+     that card's `rp-flow-in`/`rp-flow-out`/`rp-hub-pulse`/`rp-hub-spin`/
+     `rp-final-receive` keyframes by name rather than duplicating identical
+     percentage keyframes under new ones — only the source "pop" is its
+     own new keyframe (`fl-src-pop`), because it deliberately drops the
+     color half of `rp-src-send` so each source icon can hold a fixed
+     accent color (green / blue) instead of an animation fighting it back
+     to gray every cycle. Class prefix `.fl-`. */
+  .fl-card{ max-width: 26rem; margin: 0 auto; }
+  .fl-visual{ align-items: center; justify-content: center; }
+  .fl-src{
+    position: absolute; top: 16%; transform: translate(-50%,-50%) scale(1);
+    width: 46px; height: 40px; border-radius: 10px;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.16);
+    display: grid; place-items: center; color: var(--cream-dim); font-size: 1.05rem;
+    box-shadow: 0 8px 18px rgba(0,0,0,.28);
+    animation: fl-src-pop 6.5s ease-in-out infinite;
+  }
+  .fl-src-analytics{ left: 21%; color: #34d399; }
+  .fl-src-content{ left: 79%; color: var(--accent-hot); animation-delay: -.08s; }
+  @keyframes fl-src-pop{
+    0%, 12%, 100%{ transform: translate(-50%,-50%) scale(1); }
+    17%{ transform: translate(-50%,-50%) scale(1.14); }
+    24%, 96%{ transform: translate(-50%,-50%) scale(1); }
+  }
+  .fl-wires{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .fl-line{ fill: none; stroke: rgba(255,255,255,.14); stroke-width: 1.35; stroke-linecap: round; }
+  .fl-current-in{
+    fill: none; stroke: var(--accent-hot); stroke-width: 2.4; stroke-linecap: round;
+    stroke-dasharray: 34 420; stroke-dashoffset: 0; opacity: 0;
+    filter: drop-shadow(0 0 7px rgba(76,110,245,.6));
+    animation: rp-flow-in 6.5s linear infinite;
+  }
+  .fl-current-in-2{ animation-delay: -.08s; }
+  .fl-current-out{
+    fill: none; stroke: var(--accent-hot); stroke-width: 2.4; stroke-linecap: round;
+    stroke-dasharray: 34 420; stroke-dashoffset: 0; opacity: 0;
+    filter: drop-shadow(0 0 7px rgba(76,110,245,.6));
+    animation: rp-flow-out 6.5s linear infinite;
+  }
+  .fl-hub{
+    position: absolute; left: 50%; top: 58%; transform: translate(-50%,-50%) scale(1);
+    width: 58px; height: 52px; border-radius: 16px;
+    background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
+    display: grid; place-items: center; color: var(--accent-hot); font-size: 1.4rem;
+    box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 7px rgba(76,110,245,.12);
+    animation: rp-hub-pulse 6.5s ease-in-out infinite;
+  }
+  .fl-hub i{ animation: rp-hub-spin 6.5s linear infinite; }
+  .fl-final{
+    position: absolute; left: 50%; top: 85%; transform: translate(-50%,-50%) scale(1);
+    width: 56px; height: 50px; border-radius: 16px;
+    background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
+    display: grid; place-items: center; color: var(--accent-hot); font-size: 1.35rem;
+    opacity: 1; box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 7px rgba(76,110,245,.12);
+    animation: rp-final-receive 6.5s ease-in-out infinite;
+  }
+  /* Faint dashed arrow, continuously traveling, never gated to the 6.5s
+     beat above — an ambient "this repeats every month" cue rather than
+     one more synced step, so it just always drifts. */
+  .fl-loopback{
+    fill: none; stroke: rgba(76,110,245,.28); stroke-width: 1.3; stroke-linecap: round;
+    stroke-dasharray: 8 20;
+    animation: fl-loop-travel 3s linear infinite;
+  }
+  @keyframes fl-loop-travel{ to{ stroke-dashoffset: -560; } }
+  @media (prefers-reduced-motion: reduce){
+    .fl-src, .fl-current-in, .fl-current-out, .fl-hub, .fl-hub i, .fl-final, .fl-loopback{ animation: none; }
+  }
+
   /* Retention section — REBUILT FROM SCRATCH 2026-08-28, replacing the
      "Private, regional delivery" network diagram entirely (was reproduced
      from repixa.io's Enterprise-infrastructure grid, curled live HTML/CSS)
@@ -2072,6 +2151,43 @@
         <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Publishing</h3>
         <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">It goes out on a schedule built around your audience, modeled to get seen by the people who matter.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= THE FEEDBACK LOOP ================= -->
+<section id="feedback-loop" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+  <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
+    <div class="reveal max-w-[34rem]">
+      <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
+        The production is <span class="text-shine inline-block">performance-driven</span>
+      </h2>
+      <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">Nothing here runs on guesswork, since we don&rsquo;t repeat the same approach every month.</p>
+    </div>
+
+    <div class="mirror-card fl-card reveal mt-12">
+      <div class="mirror-visual fl-visual" aria-hidden="true">
+        <div class="fl-src fl-src-analytics"><i class="ph-fill ph-chart-line-up" aria-hidden="true"></i></div>
+        <div class="fl-src fl-src-content"><i class="ph-fill ph-note" aria-hidden="true"></i></div>
+        <svg class="fl-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
+          <defs>
+            <marker id="fl-arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="rgba(76,110,245,.55)" />
+            </marker>
+          </defs>
+          <path class="fl-line" d="M55 46 Q58 75 130 96" />
+          <path class="fl-line" d="M205 46 Q202 75 130 96" />
+          <path class="fl-line" d="M130 131 L130 150" />
+          <path class="fl-current-in" pathLength="454" d="M55 46 Q58 75 130 96" />
+          <path class="fl-current-in fl-current-in-2" pathLength="454" d="M205 46 Q202 75 130 96" />
+          <path class="fl-current-out" pathLength="454" d="M130 131 L130 150" />
+          <path class="fl-loopback" d="M100 160 C 15 150, 5 70, 42 40" marker-end="url(#fl-arrow)" />
+        </svg>
+        <div class="fl-hub"><i class="ph-bold ph-arrows-clockwise" aria-hidden="true"></i></div>
+        <div class="fl-final"><i class="ph-fill ph-calendar-check" aria-hidden="true"></i></div>
+      </div>
+      <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">The Feedback Loop</h3>
+      <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Every post we publish feeds back in. What actually landed shapes next month&rsquo;s production, so the system gets sharper instead of repeating itself.</p>
     </div>
   </div>
 </section>
