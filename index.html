@@ -641,15 +641,20 @@
      say "repurposed" at any pacing; (2) one-source/three-format fan — a
      mic at top fanning out to LinkedIn-post/carousel/video chips,
      replaced per this sketch's opposite (many-to-one) topology instead. */
-  .rp-grid{ position: relative; display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  .rp-grid{ display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
   @media (min-width: 768px){ .rp-grid{ grid-template-columns: repeat(2, 1fr); } }
-  /* Subtle vertical rule-line grid sitting behind the two cards (visible
-     in the gap between them and just past their edges) — decorative
-     only, `z-index:-1` keeps it behind the grid's own (non-positioned)
-     card children within this now-`position:relative` container. */
+  /* Vertical rule-line grid behind the WHOLE Repurpose section (heading
+     included, not just the card row — matches the reference screenshot,
+     where the lines ran the full height of the shot) and full-bleed to
+     the viewport edges rather than stopping at the 1280px content
+     column, via the standard `left:50%; margin-left:-50vw; width:100vw`
+     breakout (the section has no `overflow:hidden` to clip it). Sits on
+     `#repurpose` itself (already `position:relative`), `z-index:-1` so
+     it stays behind the section's own non-positioned content. */
   .rp-grid-lines{
-    position: absolute; inset: -1.5rem; z-index: -1; pointer-events: none;
-    background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 1px, transparent 1px 72px);
+    position: absolute; z-index: -1; pointer-events: none;
+    top: 0; bottom: 0; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; width: 100vw;
+    background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.09) 0 1px, transparent 1px 72px);
   }
   .rp-card{ max-width: 26rem; margin: 0 auto; }
   .rp-visual{ align-items: center; justify-content: center; }
@@ -2151,6 +2156,7 @@
      Team) — single mirror-style card, "Learns from every demo" hub visual
      curled from repixa.io ================= -->
 <section id="repurpose" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+  <div class="rp-grid-lines" aria-hidden="true"></div>
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="reveal max-w-[34rem]">
       <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
@@ -2160,7 +2166,6 @@
     </div>
 
     <div class="rp-grid reveal mt-12">
-      <div class="rp-grid-lines" aria-hidden="true"></div>
       <div class="mirror-card rp-card">
         <div class="mirror-visual pub-visual" aria-hidden="true">
           <div class="pub-bell"><i class="ph-bold ph-bell" aria-hidden="true"></i></div>
