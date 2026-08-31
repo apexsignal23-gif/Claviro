@@ -643,21 +643,22 @@
      replaced per this sketch's opposite (many-to-one) topology instead. */
   .rp-grid{ display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
   @media (min-width: 768px){ .rp-grid{ grid-template-columns: repeat(2, 1fr); } }
-  /* Vertical rule-line grid behind the WHOLE Repurpose section (heading
-     included, not just the card row — matches the reference screenshot,
-     where the lines ran the full height of the shot) and full-bleed to
-     the viewport edges rather than stopping at the 1280px content
-     column, via the standard `left:50%; margin-left:-50vw; width:100vw`
-     breakout (the section has no `overflow:hidden` to clip it). Sits on
-     `#repurpose` itself (already `position:relative`), `z-index:-1` so
-     it stays behind the section's own non-positioned content. */
-  .rp-grid-lines{
-    position: absolute; z-index: -1; pointer-events: none;
-    top: 0; bottom: 0; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; width: 100vw;
-    background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.09) 0 1px, transparent 1px 72px);
-  }
   .rp-card{ max-width: 26rem; margin: 0 auto; }
-  .rp-visual{ align-items: center; justify-content: center; }
+  /* Square graph-paper grid drawn INTO each animation box's own
+     background (both `.rp-visual` and `.pub-visual`) — two crossed
+     `repeating-linear-gradient`s layered on top of `.mirror-visual`'s
+     base `background: var(--ink-900)` color (background-image doesn't
+     replace background-color, so both render together). Previous
+     attempts put this in the page margins / section background instead,
+     which was invisible since it sat behind the boxes' own opaque
+     background rather than inside it — this time it's on the boxes
+     themselves, which is what was actually asked for. */
+  .rp-visual, .pub-visual{
+    align-items: center; justify-content: center;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.07) 0 1px, transparent 1px 28px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 1px, transparent 1px 28px);
+  }
   .rp-src{
     position: absolute; top: 16%; transform: translate(-50%,-50%) scale(1);
     width: 46px; height: 40px; border-radius: 10px;
@@ -784,8 +785,10 @@
      card's own bead-travel technique, since the spec explicitly describes
      lines "drawing" and "lighting up" — a drawn line, not a traveling dot.
      Class prefix `.pub-` (distinct from this section's own `.rp-`) so the
-     two cards' CSS never collides despite sitting in the same section. */
-  .pub-visual{ align-items: center; justify-content: center; }
+     two cards' CSS never collides despite sitting in the same section.
+     (Its `.pub-visual` base styling, including the graph-paper grid
+     background, now lives with `.rp-visual`'s rule up above — merged
+     since both boxes share the exact same look.) */
   .pub-post{
     position: absolute; left: 50%; top: 14%; transform: translate(-50%,-50%);
     width: 64px; height: 34px; border-radius: 8px;
@@ -2156,7 +2159,6 @@
      Team) — single mirror-style card, "Learns from every demo" hub visual
      curled from repixa.io ================= -->
 <section id="repurpose" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
-  <div class="rp-grid-lines" aria-hidden="true"></div>
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="reveal max-w-[34rem]">
       <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
