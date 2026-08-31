@@ -644,21 +644,7 @@
   .rp-grid{ display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
   @media (min-width: 768px){ .rp-grid{ grid-template-columns: repeat(2, 1fr); } }
   .rp-card{ max-width: 26rem; margin: 0 auto; }
-  /* Square graph-paper grid drawn INTO each animation box's own
-     background (both `.rp-visual` and `.pub-visual`) — two crossed
-     `repeating-linear-gradient`s layered on top of `.mirror-visual`'s
-     base `background: var(--ink-900)` color (background-image doesn't
-     replace background-color, so both render together). Previous
-     attempts put this in the page margins / section background instead,
-     which was invisible since it sat behind the boxes' own opaque
-     background rather than inside it — this time it's on the boxes
-     themselves, which is what was actually asked for. */
-  .rp-visual, .pub-visual{
-    align-items: center; justify-content: center;
-    background-image:
-      repeating-linear-gradient(0deg, rgba(255,255,255,.07) 0 1px, transparent 1px 28px),
-      repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 1px, transparent 1px 28px);
-  }
+  .rp-visual{ align-items: center; justify-content: center; }
   .rp-src{
     position: absolute; top: 16%; transform: translate(-50%,-50%) scale(1);
     width: 46px; height: 40px; border-radius: 10px;
@@ -785,10 +771,8 @@
      card's own bead-travel technique, since the spec explicitly describes
      lines "drawing" and "lighting up" — a drawn line, not a traveling dot.
      Class prefix `.pub-` (distinct from this section's own `.rp-`) so the
-     two cards' CSS never collides despite sitting in the same section.
-     (Its `.pub-visual` base styling, including the graph-paper grid
-     background, now lives with `.rp-visual`'s rule up above — merged
-     since both boxes share the exact same look.) */
+     two cards' CSS never collides despite sitting in the same section. */
+  .pub-visual{ align-items: center; justify-content: center; }
   .pub-post{
     position: absolute; left: 50%; top: 14%; transform: translate(-50%,-50%);
     width: 64px; height: 34px; border-radius: 8px;
