@@ -2378,7 +2378,7 @@
       </svg>
 
       <!-- Connector 1: Section 1 → Section 2, scroll-linked pointer -->
-      <div class="d90-connector" data-d90-connector aria-hidden="true"></div>
+      <div class="d90-connector" aria-hidden="true"></div>
 
       <!-- Section 2: Who's Showing Up (new) -->
       <div>
@@ -2400,7 +2400,7 @@
       </div>
 
       <!-- Connector 2: Section 2 → Section 3, scroll-linked pointer -->
-      <div class="d90-connector" data-d90-connector aria-hidden="true"></div>
+      <div class="d90-connector" aria-hidden="true"></div>
 
       <!-- Section 3: The Momentum (new) -->
       <div>
@@ -3099,51 +3099,44 @@ void main() {
   });
 })();
 
-// "What Changes By Day 90" — Section 2 (bars) / Section 3 (momentum)
-// reveal is still driven by real scroll position on each of the two
-// connector lines (not a timer, not a one-shot IntersectionObserver) —
-// the visible traveling pointer dot/glow was removed per feedback ("two
-// white pin like things"), but the underlying scroll-progress tracking
-// stays, since that's what decides exactly when each section reveals.
-// Each connector's own progress (0-1) comes from its own live
-// getBoundingClientRect() against the viewport's vertical center, so it
-// stays correct no matter how tall the chart/bars/blocks render. The
-// section reveal below each connector is one-shot, latched via
-// `data-revealed` once its connector's progress reaches 100%.
+// "What Changes By Day 90" — Section 2 (bars) / Section 3 (momentum) used
+// to reveal on their own separate scroll-position trigger (each one only
+// popping in once you'd scrolled further down PAST the card), which
+// looked broken next to the rest of the page: everywhere else, a card's
+// whole contents fade in together the moment the card itself scrolls
+// into view via `.reveal`. Fixed by dropping the connector-position
+// tracking and instead latching both `data-revealed` the instant
+// `#d90-card` gets `.is-visible` from the shared `.reveal` observer above
+// — same one-shot moment as everything else, so bars/blocks now animate
+// in alongside the card instead of lagging behind it.
 (function () {
-  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var connectors = document.querySelectorAll('[data-d90-connector]');
-  if (reduceMotion || !connectors.length) return; // CSS already shows the complete static state
-
+  var card = document.getElementById('d90-card');
   var bars = document.getElementById('d90-bars');
   var momentum = document.getElementById('d90-momentum');
-  var revealTargets = [bars, momentum]; // connector 0 -> bars, connector 1 -> momentum
-  var ticking = false;
+  if (!card || (!bars && !momentum)) return;
 
-  function update() {
-    ticking = false;
-    var centerY = window.innerHeight * 0.5;
-    connectors.forEach(function (el, i) {
-      var rect = el.getBoundingClientRect();
-      var progress = rect.height ? (centerY - rect.top) / rect.height : 0;
-      progress = Math.max(0, Math.min(1, progress));
-      var target = revealTargets[i];
-      if (target && progress >= 0.98 && target.getAttribute('data-revealed') !== 'true') {
-        target.setAttribute('data-revealed', 'true');
-      }
-    });
+  function reveal() {
+    if (bars) bars.setAttribute('data-revealed', 'true');
+    if (momentum) momentum.setAttribute('data-revealed', 'true');
   }
 
-  function onScroll() {
-    if (!ticking) {
-      ticking = true;
-      requestAnimationFrame(update);
+  if (card.classList.contains('is-visible')) {
+    reveal();
+    return;
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    reveal();
+    return;
+  }
+
+  var mo = new MutationObserver(function () {
+    if (card.classList.contains('is-visible')) {
+      reveal();
+      mo.disconnect();
     }
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll);
-  update();
+  });
+  mo.observe(card, { attributes: true, attributeFilter: ['class'] });
 })();
 
 </script>
