@@ -644,14 +644,21 @@
   .rp-grid{ display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
   @media (min-width: 768px){ .rp-grid{ grid-template-columns: repeat(2, 1fr); } }
   .rp-card{ max-width: 26rem; margin: 0 auto; }
-  /* Top-to-bottom gradient behind the Repurposing/Publishing animation
-     boxes, from the user's own reference image (dark near-black at the
-     top, lighting to a charcoal gray at the bottom) — overrides
-     `.mirror-visual`'s flat `background: var(--ink-900)` for just these
-     two boxes, not every `.mirror-visual` on the page. */
+  /* A separate rectangular "frame" now sits behind each animation box,
+     bigger than the box itself so its edges show all the way around —
+     the gradient (from the user's own reference image: dark near-black
+     at the top, lighting to a charcoal gray at the bottom) lives on
+     THIS frame, not on the animation box, which sits inside it. The
+     animation box (`.rp-visual`/`.pub-visual`) went back to a plain
+     flat background so it still reads as its own distinct box nested
+     inside the gradient frame, not just a repaint of the same box. */
+  .rp-frame{
+    border-radius: 14px; padding: .85rem; margin-bottom: 1.25rem;
+    background: linear-gradient(180deg, var(--ink-950) 0%, #2e2e30 100%);
+  }
   .rp-visual, .pub-visual{
     align-items: center; justify-content: center;
-    background: linear-gradient(180deg, var(--ink-950) 0%, #2e2e30 100%);
+    margin-bottom: 0; background: var(--ink-900);
   }
   .rp-src{
     position: absolute; top: 16%; transform: translate(-50%,-50%) scale(1);
@@ -939,7 +946,7 @@
      color half of `rp-src-send` so each source icon can hold a fixed
      accent color (green / blue) instead of an animation fighting it back
      to gray every cycle. Class prefix `.fl-`. */
-  .fl-card{ max-width: none; }
+  .fl-card{ max-width: none; border-radius: 0; }
   /* .mirror-visual's base `aspect-ratio: 4/3` is what was quietly
      shrinking this box back down to a narrow column even after the card
      itself went full-width — with a wide, fixed-height box, the browser
@@ -953,7 +960,7 @@
      puts its `<h3>`/`<p>` after the visual) — `.mirror-visual`'s base
      `margin-bottom` doesn't make sense once the visual is the last
      child, so it's swapped for a `margin-top` here instead. */
-  .fl-visual{ align-items: center; justify-content: center; aspect-ratio: auto; height: 24rem; margin-bottom: 0; margin-top: 1.4rem; border-radius: 0; }
+  .fl-visual{ align-items: center; justify-content: center; aspect-ratio: auto; height: 24rem; margin-bottom: 0; margin-top: 1.4rem; }
   .fl-stage{ position: relative; width: 100%; height: 100%; }
   .fl-src{
     position: absolute; top: 16%; transform: translate(-50%,-50%) scale(1);
@@ -1845,23 +1852,17 @@
 
     <div class="marquee-wrap mt-8 overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]">
       <div class="marquee-track" id="marquee-track">
-        <span class="press-mark font-semibold text-[1.15rem] sm:text-[1.3rem] italic">Forbes</span>
-        <span class="press-mark font-bold text-[1.1rem] sm:text-[1.25rem] tracking-[-0.02em]">SaaStr</span>
-        <span class="press-mark font-bold text-[1.1rem] sm:text-[1.25rem] tracking-[-0.03em]">TechCrunch</span>
-        <span class="press-mark font-extrabold text-[1.1rem] sm:text-[1.25rem]">Inc.</span>
-        <span class="press-mark font-medium text-[1.05rem] sm:text-[1.2rem]">Fast Company</span>
-        <span class="press-mark font-semibold text-[1.1rem] sm:text-[1.25rem] tracking-[0.04em] uppercase">Wired</span>
-        <span class="press-mark font-medium text-[1.05rem] sm:text-[1.2rem] italic">Entrepreneur</span>
-        <span class="press-mark font-bold text-[1.1rem] sm:text-[1.25rem]">Y Combinator</span>
+        <span class="press-mark font-bold text-[1.1rem] sm:text-[1.25rem]">Yahoo Finance</span>
+        <span class="press-mark font-extrabold text-[1.1rem] sm:text-[1.25rem] tracking-[0.04em] uppercase">AWS</span>
+        <span class="press-mark font-bold text-[1.1rem] sm:text-[1.25rem]">Y-Combinator</span>
+        <span class="press-mark font-semibold text-[1.1rem] sm:text-[1.25rem]">ElevenLabs</span>
+        <span class="press-mark font-medium text-[1.05rem] sm:text-[1.2rem]">Street Insider</span>
         <!-- duplicate set for seamless loop -->
-        <span class="press-mark font-semibold text-[1.15rem] sm:text-[1.3rem] italic" aria-hidden="true">Forbes</span>
-        <span class="press-mark font-bold text-[1.1rem] sm:text-[1.25rem] tracking-[-0.02em]" aria-hidden="true">SaaStr</span>
-        <span class="press-mark font-bold text-[1.1rem] sm:text-[1.25rem] tracking-[-0.03em]" aria-hidden="true">TechCrunch</span>
-        <span class="press-mark font-extrabold text-[1.1rem] sm:text-[1.25rem]" aria-hidden="true">Inc.</span>
-        <span class="press-mark font-medium text-[1.05rem] sm:text-[1.2rem]" aria-hidden="true">Fast Company</span>
-        <span class="press-mark font-semibold text-[1.1rem] sm:text-[1.25rem] tracking-[0.04em] uppercase" aria-hidden="true">Wired</span>
-        <span class="press-mark font-medium text-[1.05rem] sm:text-[1.2rem] italic" aria-hidden="true">Entrepreneur</span>
-        <span class="press-mark font-bold text-[1.1rem] sm:text-[1.25rem]" aria-hidden="true">Y Combinator</span>
+        <span class="press-mark font-bold text-[1.1rem] sm:text-[1.25rem]" aria-hidden="true">Yahoo Finance</span>
+        <span class="press-mark font-extrabold text-[1.1rem] sm:text-[1.25rem] tracking-[0.04em] uppercase" aria-hidden="true">AWS</span>
+        <span class="press-mark font-bold text-[1.1rem] sm:text-[1.25rem]" aria-hidden="true">Y-Combinator</span>
+        <span class="press-mark font-semibold text-[1.1rem] sm:text-[1.25rem]" aria-hidden="true">ElevenLabs</span>
+        <span class="press-mark font-medium text-[1.05rem] sm:text-[1.2rem]" aria-hidden="true">Street Insider</span>
       </div>
     </div>
   </div>
@@ -2203,50 +2204,54 @@
 
     <div class="rp-grid reveal mt-12">
       <div class="mirror-card rp-card">
-        <div class="mirror-visual pub-visual" aria-hidden="true">
-          <div class="pub-bell"><i class="ph-bold ph-bell" aria-hidden="true"></i></div>
-          <div class="pub-post">
-            <i class="ph-fill ph-note" aria-hidden="true"></i>
-            <div class="pub-post-lines"><span></span><span></span></div>
+        <div class="rp-frame">
+          <div class="mirror-visual pub-visual" aria-hidden="true">
+            <div class="pub-bell"><i class="ph-bold ph-bell" aria-hidden="true"></i></div>
+            <div class="pub-post">
+              <i class="ph-fill ph-note" aria-hidden="true"></i>
+              <div class="pub-post-lines"><span></span><span></span></div>
+            </div>
+            <svg class="pub-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
+              <path class="pub-line" d="M130 44 L130 72" />
+              <path class="pub-line" d="M130 118 Q100 135 75 150" />
+              <path class="pub-line" d="M130 120 L130 157" />
+              <path class="pub-line" d="M130 118 Q160 135 185 150" />
+              <path class="pub-draw pub-draw-1" d="M130 44 L130 72" />
+              <path class="pub-draw pub-draw-2" d="M130 118 Q100 135 75 150" />
+              <path class="pub-draw pub-draw-3" d="M130 120 L130 157" />
+              <path class="pub-draw pub-draw-4" d="M130 118 Q160 135 185 150" />
+            </svg>
+            <div class="pub-cal"><i class="ph-fill ph-calendar-check" aria-hidden="true"></i></div>
+            <div class="pub-audience pub-audience-1"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
+            <div class="pub-audience pub-audience-2"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
+            <div class="pub-audience pub-audience-3"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
           </div>
-          <svg class="pub-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
-            <path class="pub-line" d="M130 44 L130 72" />
-            <path class="pub-line" d="M130 118 Q100 135 75 150" />
-            <path class="pub-line" d="M130 120 L130 157" />
-            <path class="pub-line" d="M130 118 Q160 135 185 150" />
-            <path class="pub-draw pub-draw-1" d="M130 44 L130 72" />
-            <path class="pub-draw pub-draw-2" d="M130 118 Q100 135 75 150" />
-            <path class="pub-draw pub-draw-3" d="M130 120 L130 157" />
-            <path class="pub-draw pub-draw-4" d="M130 118 Q160 135 185 150" />
-          </svg>
-          <div class="pub-cal"><i class="ph-fill ph-calendar-check" aria-hidden="true"></i></div>
-          <div class="pub-audience pub-audience-1"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
-          <div class="pub-audience pub-audience-2"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
-          <div class="pub-audience pub-audience-3"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
         </div>
         <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Publishing</h3>
         <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">It goes out on a schedule built around your audience, modeled to get seen by the people who matter.</p>
       </div>
 
       <div class="mirror-card rp-card">
-        <div class="mirror-visual rp-visual" aria-hidden="true">
-          <div class="rp-src rp-src-video"><i class="ph-fill ph-video-camera" aria-hidden="true"></i></div>
-          <div class="rp-src rp-src-audio"><i class="ph-fill ph-user-sound" aria-hidden="true"></i></div>
-          <div class="rp-src rp-src-notes"><i class="ph-fill ph-note-pencil" aria-hidden="true"></i></div>
-          <svg class="rp-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
-            <path class="rp-line" d="M55 46 Q58 75 130 96" />
-            <path class="rp-line" d="M130 46 L130 96" />
-            <path class="rp-line" d="M205 46 Q202 75 130 96" />
-            <path class="rp-line" d="M130 131 L130 150" />
-            <path class="rp-current-in" pathLength="454" d="M55 46 Q58 75 130 96" />
-            <path class="rp-current-in rp-current-in-2" pathLength="454" d="M130 46 L130 96" />
-            <path class="rp-current-in rp-current-in-3" pathLength="454" d="M205 46 Q202 75 130 96" />
-            <path class="rp-current-out" pathLength="454" d="M130 131 L130 150" />
-          </svg>
-          <div class="rp-hub"><i class="ph-bold ph-arrows-clockwise" aria-hidden="true"></i></div>
-          <div class="rp-final">
-            <i class="ph-fill ph-linkedin-logo" aria-hidden="true"></i>
-            <div class="rp-final-lines"><span></span><span></span></div>
+        <div class="rp-frame">
+          <div class="mirror-visual rp-visual" aria-hidden="true">
+            <div class="rp-src rp-src-video"><i class="ph-fill ph-video-camera" aria-hidden="true"></i></div>
+            <div class="rp-src rp-src-audio"><i class="ph-fill ph-user-sound" aria-hidden="true"></i></div>
+            <div class="rp-src rp-src-notes"><i class="ph-fill ph-note-pencil" aria-hidden="true"></i></div>
+            <svg class="rp-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
+              <path class="rp-line" d="M55 46 Q58 75 130 96" />
+              <path class="rp-line" d="M130 46 L130 96" />
+              <path class="rp-line" d="M205 46 Q202 75 130 96" />
+              <path class="rp-line" d="M130 131 L130 150" />
+              <path class="rp-current-in" pathLength="454" d="M55 46 Q58 75 130 96" />
+              <path class="rp-current-in rp-current-in-2" pathLength="454" d="M130 46 L130 96" />
+              <path class="rp-current-in rp-current-in-3" pathLength="454" d="M205 46 Q202 75 130 96" />
+              <path class="rp-current-out" pathLength="454" d="M130 131 L130 150" />
+            </svg>
+            <div class="rp-hub"><i class="ph-bold ph-arrows-clockwise" aria-hidden="true"></i></div>
+            <div class="rp-final">
+              <i class="ph-fill ph-linkedin-logo" aria-hidden="true"></i>
+              <div class="rp-final-lines"><span></span><span></span></div>
+            </div>
           </div>
         </div>
         <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Repurposing</h3>
@@ -2578,7 +2583,7 @@
      of this section), eyebrow label above the heading, and a CTA button
      inside the section itself, matching that reference exactly instead
      of adapting it. ================= -->
-<section id="faq" class="relative bg-[var(--ink-900)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="faq" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10 grid lg:grid-cols-[1fr_1.2fr] gap-14 items-start">
     <div class="reveal">
       <h2 class="text-shine inline-block text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
