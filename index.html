@@ -642,15 +642,6 @@
   .d90-card{ display: flex; flex-direction: column; }
   .d90-connector{ position: relative; height: 46px; margin: 0 auto; width: 2px; }
   .d90-track{ position: absolute; inset: 0; width: 2px; background: var(--ink-border); }
-  .d90-track-lit{
-    position: absolute; top: 0; left: 0; width: 2px; height: 0%;
-    background: linear-gradient(180deg, transparent, rgba(255,255,255,.65));
-  }
-  .d90-pointer{
-    position: absolute; left: 50%; top: 0%; transform: translate(-50%,-50%);
-    width: 9px; height: 9px; border-radius: 50%;
-    background: #fff; box-shadow: 0 0 0 4px rgba(255,255,255,.18), 0 0 10px 2px rgba(255,255,255,.55);
-  }
   .d90-bars{ display: grid; gap: .85rem; }
   .d90-bar-row{ display: grid; gap: .35rem; }
   .d90-bar-label{ font-size: .78rem; color: var(--cream-dim); }
@@ -672,7 +663,6 @@
   .d90-block i{ font-size: 1.15rem; color: var(--accent); }
   .d90-block p{ margin-top: .5rem; font-size: .8rem; line-height: 1.5; color: var(--cream-dim); }
   @media (prefers-reduced-motion: reduce){
-    .d90-pointer, .d90-track-lit{ display: none; }
     .d90-bar-fill{ width: var(--d90-bar-w); transition: none; }
     .d90-block{ opacity: 1; transform: none; transition: none; }
   }
@@ -2391,8 +2381,6 @@
       <!-- Connector 1: Section 1 → Section 2, scroll-linked pointer -->
       <div class="d90-connector" data-d90-connector aria-hidden="true">
         <div class="d90-track"></div>
-        <div class="d90-track-lit"></div>
-        <div class="d90-pointer"></div>
       </div>
 
       <!-- Section 2: Who's Showing Up (new) -->
@@ -2417,8 +2405,6 @@
       <!-- Connector 2: Section 2 → Section 3, scroll-linked pointer -->
       <div class="d90-connector" data-d90-connector aria-hidden="true">
         <div class="d90-track"></div>
-        <div class="d90-track-lit"></div>
-        <div class="d90-pointer"></div>
       </div>
 
       <!-- Section 3: The Momentum (new) -->
@@ -3119,14 +3105,16 @@ void main() {
 })();
 
 // "What Changes By Day 90" — Section 2 (bars) / Section 3 (momentum)
-// reveal is driven by a genuinely scroll-linked pointer on each of the
-// two connector lines, not a timer or a one-shot IntersectionObserver.
+// reveal is still driven by real scroll position on each of the two
+// connector lines (not a timer, not a one-shot IntersectionObserver) —
+// the visible traveling pointer dot/glow was removed per feedback ("two
+// white pin like things"), but the underlying scroll-progress tracking
+// stays, since that's what decides exactly when each section reveals.
 // Each connector's own progress (0-1) comes from its own live
 // getBoundingClientRect() against the viewport's vertical center, so it
 // stays correct no matter how tall the chart/bars/blocks render. The
-// pointer position always reflects current scroll (reverses freely on
-// scroll-up); only the section reveal below each connector is one-shot,
-// latched via `data-revealed` once its connector reaches 100%.
+// section reveal below each connector is one-shot, latched via
+// `data-revealed` once its connector's progress reaches 100%.
 (function () {
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var connectors = document.querySelectorAll('[data-d90-connector]');
@@ -3144,11 +3132,6 @@ void main() {
       var rect = el.getBoundingClientRect();
       var progress = rect.height ? (centerY - rect.top) / rect.height : 0;
       progress = Math.max(0, Math.min(1, progress));
-      el.style.setProperty('--d90-progress', progress);
-      var lit = el.querySelector('.d90-track-lit');
-      var pointer = el.querySelector('.d90-pointer');
-      if (lit) lit.style.height = (progress * 100) + '%';
-      if (pointer) pointer.style.top = (progress * 100) + '%';
       var target = revealTargets[i];
       if (target && progress >= 0.98 && target.getAttribute('data-revealed') !== 'true') {
         target.setAttribute('data-revealed', 'true');
