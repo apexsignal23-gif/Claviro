@@ -953,11 +953,11 @@
      puts its `<h3>`/`<p>` after the visual) — `.mirror-visual`'s base
      `margin-bottom` doesn't make sense once the visual is the last
      child, so it's swapped for a `margin-top` here instead. */
-  .fl-visual{ align-items: center; justify-content: center; aspect-ratio: auto; height: 24rem; margin-bottom: 0; margin-top: 1.4rem; }
+  .fl-visual{ align-items: center; justify-content: center; aspect-ratio: auto; height: 24rem; margin-bottom: 0; margin-top: 1.4rem; border-radius: 0; }
   .fl-stage{ position: relative; width: 100%; height: 100%; }
   .fl-src{
     position: absolute; top: 16%; transform: translate(-50%,-50%) scale(1);
-    width: 68px; height: 58px; border-radius: 0;
+    width: 68px; height: 58px; border-radius: 14px;
     background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.16);
     display: grid; place-items: center; color: var(--cream-dim); font-size: 1.5rem;
     box-shadow: 0 8px 18px rgba(0,0,0,.28);
@@ -998,7 +998,7 @@
   }
   .fl-hub{
     position: absolute; left: 50%; top: 58%; transform: translate(-50%,-50%) scale(1);
-    width: 84px; height: 76px; border-radius: 0;
+    width: 84px; height: 76px; border-radius: 22px;
     background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
     display: grid; place-items: center; color: var(--accent-hot); font-size: 2rem;
     box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 9px rgba(76,110,245,.12);
@@ -1007,7 +1007,7 @@
   .fl-hub i{ animation: rp-hub-spin 6.5s linear infinite; }
   .fl-final{
     position: absolute; left: 50%; top: 85%; transform: translate(-50%,-50%) scale(1);
-    width: 80px; height: 72px; border-radius: 0;
+    width: 80px; height: 72px; border-radius: 22px;
     background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
     display: grid; place-items: center; color: var(--accent-hot); font-size: 1.9rem;
     opacity: 1; box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 9px rgba(76,110,245,.12);
@@ -1928,7 +1928,7 @@
      2 cards: (1) a grid of raw LinkedIn post screenshots, (2) all 4
      vertical clips together. A 3rd card (one full-width video) was
      removed per explicit request — don't re-add it without being asked. -->
-<section id="industry-standard" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="industry-standard" class="relative bg-[var(--ink-900)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="iv-scroll-stack">
       <div class="iv-scroll-head reveal max-w-[34rem] self-start">
@@ -2192,7 +2192,7 @@
 <!-- ================= REPURPOSE (replaced "The People Behind Your Feed" /
      Team) — single mirror-style card, "Learns from every demo" hub visual
      curled from repixa.io ================= -->
-<section id="repurpose" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="repurpose" class="relative bg-[var(--ink-900)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="reveal max-w-[34rem]">
       <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
@@ -2295,7 +2295,7 @@
      Process"'s old slot — the Process section itself was removed
      entirely; kept id="process" so the nav's existing Process link still
      resolves to whatever now sits in that position) ================= -->
-<section id="process" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="process" class="relative bg-[var(--ink-900)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10 grid lg:grid-cols-[1.1fr_1fr] gap-14 items-center">
     <div class="reveal">
       <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em] max-w-[28rem]">
@@ -2383,7 +2383,7 @@
 <!-- ================= RETENTION (new) — single mirror-style card,
      "Private, regional delivery" network diagram curled from repixa.io
      ================= -->
-<section id="retention" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="retention" class="relative bg-[var(--ink-900)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="reveal max-w-[34rem] mx-auto text-center">
       <h2 class="text-shine inline-block text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
@@ -2456,7 +2456,7 @@
      accent-tinted border); Launch/Studio use the outline CTA. Single
      responsive grid — no separate desktop/mobile markup needed anymore.
      Launch's price is $999 (bumped up from $3500 per request). ================= -->
-<section class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section class="relative bg-[var(--ink-900)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
 
     <div class="pricing-cards reveal">
@@ -2578,13 +2578,12 @@
      of this section), eyebrow label above the heading, and a CTA button
      inside the section itself, matching that reference exactly instead
      of adapting it. ================= -->
-<section id="faq" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="faq" class="relative bg-[var(--ink-900)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10 grid lg:grid-cols-[1fr_1.2fr] gap-14 items-start">
     <div class="reveal">
       <h2 class="text-shine inline-block text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
         FAQs
       </h2>
-      <a href="#cta" class="btn-primary mt-8">Book a Discovery Call</a>
     </div>
 
     <div class="faq-list reveal">
