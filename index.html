@@ -1693,6 +1693,35 @@
     border-radius: 999px;
     display:flex; align-items:center; justify-content:center;
   }
+
+  /* FAQ section — new, added 2026-08-31, modeled after
+     metromediahouse.co's own FAQ block (a plain accordion list near the
+     bottom, right before the final CTA). Expand/collapse uses the CSS
+     grid `0fr → 1fr` row-size trick (`grid-template-rows`, transitioned)
+     rather than a JS-measured `max-height` — smooth at any content
+     length with no measurement code, and in the same "compositor-safe,
+     paint-only" spirit as this page's other pragmatic exceptions to the
+     transform/opacity-only rule (box-shadow glows, clip-path wipes, SVG
+     stroke-dasharray). The `+` icon just rotates 45° into an "×" via
+     `transform`, which IS strictly transform. One panel open at a time. */
+  .faq-list{ display: flex; flex-direction: column; border-top: 1px solid var(--ink-border); }
+  .faq-item{ border-bottom: 1px solid var(--ink-border); }
+  .faq-q{
+    width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+    padding: 1.35rem 0; background: none; border: none; cursor: pointer; text-align: left;
+    font-family: 'Manrope','Inter Tight',sans-serif; font-weight: 600; font-size: 1rem; color: var(--cream);
+  }
+  .faq-q:hover{ color: var(--accent-text); }
+  .faq-q:focus-visible{ outline: 2px solid var(--accent-hot); outline-offset: 4px; border-radius: 4px; }
+  .faq-icon{ flex: none; font-size: 1.15rem; color: var(--accent-hot); transition: transform .35s var(--ease-spring); }
+  .faq-item[data-open="true"] .faq-icon{ transform: rotate(45deg); }
+  .faq-a-wrap{ display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s var(--ease-spring); }
+  .faq-item[data-open="true"] .faq-a-wrap{ grid-template-rows: 1fr; }
+  .faq-a{ overflow: hidden; min-height: 0; }
+  .faq-a p{ padding: 0 2.5rem 1.35rem 0; font-size: .92rem; line-height: 1.65; color: var(--cream-dim); }
+  @media (prefers-reduced-motion: reduce){
+    .faq-a-wrap, .faq-icon{ transition: none; }
+  }
 </style>
 </head>
 <body class="antialiased">
@@ -2522,6 +2551,81 @@
   </div>
 </section>
 
+<!-- ================= FAQ (modeled after metromediahouse.co's own FAQ
+     block near the bottom of their page) ================= -->
+<section id="faq" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+  <div class="max-w-[720px] mx-auto px-6 lg:px-10">
+    <div class="reveal text-center">
+      <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
+        Questions you might <span class="text-shine inline-block">already have</span>
+      </h2>
+      <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">If something&rsquo;s still unclear after this, just ask on the call.</p>
+    </div>
+
+    <div class="faq-list reveal mt-12">
+      <div class="faq-item" data-open="false">
+        <button class="faq-q" id="faq-q-1" aria-expanded="false" aria-controls="faq-a-1">
+          <span>Who is this for?</span>
+          <i class="ph-bold ph-plus faq-icon" aria-hidden="true"></i>
+        </button>
+        <div class="faq-a-wrap" id="faq-a-1" role="region" aria-labelledby="faq-q-1">
+          <div class="faq-a"><p>Founders and execs at B2B SaaS companies past $1M in ARR who know a personal presence on LinkedIn moves deals, but don&rsquo;t have three hours a week to write and produce it themselves.</p></div>
+        </div>
+      </div>
+
+      <div class="faq-item" data-open="false">
+        <button class="faq-q" id="faq-q-2" aria-expanded="false" aria-controls="faq-a-2">
+          <span>Do I have to write anything myself?</span>
+          <i class="ph-bold ph-plus faq-icon" aria-hidden="true"></i>
+        </button>
+        <div class="faq-a-wrap" id="faq-a-2" role="region" aria-labelledby="faq-q-2">
+          <div class="faq-a"><p>No. We pull it out of you instead, a voice note, a call, whatever&rsquo;s easiest, then turn that into content that sounds like you, not a template with your name on it.</p></div>
+        </div>
+      </div>
+
+      <div class="faq-item" data-open="false">
+        <button class="faq-q" id="faq-q-3" aria-expanded="false" aria-controls="faq-a-3">
+          <span>What&rsquo;s the minimum commitment?</span>
+          <i class="ph-bold ph-plus faq-icon" aria-hidden="true"></i>
+        </button>
+        <div class="faq-a-wrap" id="faq-a-3" role="region" aria-labelledby="faq-q-3">
+          <div class="faq-a"><p>Launch is a single one-month engagement. Core runs in 3-month blocks. Studio is built around a 6-month-plus relationship, since that&rsquo;s what a dedicated team and creative strategy actually need to pay off.</p></div>
+        </div>
+      </div>
+
+      <div class="faq-item" data-open="false">
+        <button class="faq-q" id="faq-q-4" aria-expanded="false" aria-controls="faq-a-4">
+          <span>How is this different from a ghostwriter?</span>
+          <i class="ph-bold ph-plus faq-icon" aria-hidden="true"></i>
+        </button>
+        <div class="faq-a-wrap" id="faq-a-4" role="region" aria-labelledby="faq-q-4">
+          <div class="faq-a"><p>A ghostwriter hands you drafts. We run the whole system, extraction, production, repurposing, scheduling, and we adjust the next batch based on what actually performed, not just what&rsquo;s next on a calendar.</p></div>
+        </div>
+      </div>
+
+      <div class="faq-item" data-open="false">
+        <button class="faq-q" id="faq-q-5" aria-expanded="false" aria-controls="faq-a-5">
+          <span>Will it actually sound like me?</span>
+          <i class="ph-bold ph-plus faq-icon" aria-hidden="true"></i>
+        </button>
+        <div class="faq-a-wrap" id="faq-a-5" role="region" aria-labelledby="faq-q-5">
+          <div class="faq-a"><p>That&rsquo;s the whole premise. The intellectual capital is already yours, built into how you think and sell. We&rsquo;re just the ones who get it out and into a shape that performs.</p></div>
+        </div>
+      </div>
+
+      <div class="faq-item" data-open="false">
+        <button class="faq-q" id="faq-q-6" aria-expanded="false" aria-controls="faq-a-6">
+          <span>What if I don&rsquo;t like a piece of content?</span>
+          <i class="ph-bold ph-plus faq-icon" aria-hidden="true"></i>
+        </button>
+        <div class="faq-a-wrap" id="faq-a-6" role="region" aria-labelledby="faq-q-6">
+          <div class="faq-a"><p>Tell us and we revise it. Performance reviews and checkins are built into every plan specifically so nothing goes out that you&rsquo;re not comfortable putting your name on.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ================= FINAL CTA =================
      Deliberate dark bookend with the hero: the light body sits between one
      dark moment at the top and one at the bottom (CTA + footer together),
@@ -2895,6 +2999,28 @@ void main() {
     }
 
     setTimeout(startCycle, 600 + i * 500 + Math.random() * 1200);
+  });
+})();
+
+// FAQ accordion — one panel open at a time. Toggles a `data-open`
+// attribute (styled via CSS, see `.faq-item[data-open="true"]`) and
+// keeps `aria-expanded` in sync for screen readers.
+(function () {
+  document.querySelectorAll('.faq-item').forEach(function (item) {
+    var btn = item.querySelector('.faq-q');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var willOpen = item.getAttribute('data-open') !== 'true';
+      document.querySelectorAll('.faq-item[data-open="true"]').forEach(function (open) {
+        if (open !== item) {
+          open.setAttribute('data-open', 'false');
+          var openBtn = open.querySelector('.faq-q');
+          if (openBtn) openBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+      item.setAttribute('data-open', String(willOpen));
+      btn.setAttribute('aria-expanded', String(willOpen));
+    });
   });
 })();
 
