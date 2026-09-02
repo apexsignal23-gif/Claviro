@@ -644,7 +644,15 @@
   .rp-grid{ display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
   @media (min-width: 768px){ .rp-grid{ grid-template-columns: repeat(2, 1fr); } }
   .rp-card{ max-width: 26rem; margin: 0 auto; }
-  .rp-visual{ align-items: center; justify-content: center; }
+  /* Top-to-bottom gradient behind the Repurposing/Publishing animation
+     boxes, from the user's own reference image (dark near-black at the
+     top, lighting to a charcoal gray at the bottom) — overrides
+     `.mirror-visual`'s flat `background: var(--ink-900)` for just these
+     two boxes, not every `.mirror-visual` on the page. */
+  .rp-visual, .pub-visual{
+    align-items: center; justify-content: center;
+    background: linear-gradient(180deg, var(--ink-950) 0%, #2e2e30 100%);
+  }
   .rp-src{
     position: absolute; top: 16%; transform: translate(-50%,-50%) scale(1);
     width: 46px; height: 40px; border-radius: 10px;
@@ -771,8 +779,10 @@
      card's own bead-travel technique, since the spec explicitly describes
      lines "drawing" and "lighting up" — a drawn line, not a traveling dot.
      Class prefix `.pub-` (distinct from this section's own `.rp-`) so the
-     two cards' CSS never collides despite sitting in the same section. */
-  .pub-visual{ align-items: center; justify-content: center; }
+     two cards' CSS never collides despite sitting in the same section.
+     (`.pub-visual`'s base styling, including the gradient background,
+     now lives with `.rp-visual`'s rule up above — merged since both
+     boxes share the exact same look.) */
   .pub-post{
     position: absolute; left: 50%; top: 14%; transform: translate(-50%,-50%);
     width: 64px; height: 34px; border-radius: 8px;
@@ -947,7 +957,7 @@
   .fl-stage{ position: relative; width: 100%; height: 100%; }
   .fl-src{
     position: absolute; top: 16%; transform: translate(-50%,-50%) scale(1);
-    width: 68px; height: 58px; border-radius: 14px;
+    width: 68px; height: 58px; border-radius: 0;
     background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.16);
     display: grid; place-items: center; color: var(--cream-dim); font-size: 1.5rem;
     box-shadow: 0 8px 18px rgba(0,0,0,.28);
@@ -988,7 +998,7 @@
   }
   .fl-hub{
     position: absolute; left: 50%; top: 58%; transform: translate(-50%,-50%) scale(1);
-    width: 84px; height: 76px; border-radius: 22px;
+    width: 84px; height: 76px; border-radius: 0;
     background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
     display: grid; place-items: center; color: var(--accent-hot); font-size: 2rem;
     box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 9px rgba(76,110,245,.12);
@@ -997,7 +1007,7 @@
   .fl-hub i{ animation: rp-hub-spin 6.5s linear infinite; }
   .fl-final{
     position: absolute; left: 50%; top: 85%; transform: translate(-50%,-50%) scale(1);
-    width: 80px; height: 72px; border-radius: 22px;
+    width: 80px; height: 72px; border-radius: 0;
     background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
     display: grid; place-items: center; color: var(--accent-hot); font-size: 1.9rem;
     opacity: 1; box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 9px rgba(76,110,245,.12);
@@ -1027,16 +1037,27 @@
      works) renders in that same stretched space as the line itself, so
      it can't ever drift out of alignment like that. No `pathLength`
      normalization needed here since the offset target is just a clean
-     multiple of the dash pattern's own length (18+70=88 → -880, 10x) for
-     seamless infinite tiling, not a one-shot full-path traversal. */
+     multiple of the dash pattern's own length for seamless infinite
+     tiling, not a one-shot full-path traversal.
+     Gap widened a lot (was `18 70`, ~2-3 dashes visible on screen at
+     once and looking choppy) to `12 340` so only ONE short dash is ever
+     visible at a time — reads as a single smoothly traveling dot rather
+     than several disconnected chunks. The non-uniform stretch from
+     `preserveAspectRatio="none"` still makes that one dash's apparent
+     length breathe slightly as it crosses more-vertical vs. more-
+     horizontal parts of the curve (the same root cause as the stroke-
+     width taper fixed above, just for dash length instead of width —
+     `non-scaling-stroke` doesn't cover dash spacing), but with only one
+     dash on screen that's a minor wobble, not a "choppy" multi-segment
+     look. Slowed to 4s for a more graceful glide. */
   .fl-loop-bead{
     fill: none; stroke: #8fa4ff; stroke-width: 3; stroke-linecap: round;
-    stroke-dasharray: 18 70; stroke-dashoffset: 0;
+    stroke-dasharray: 12 340; stroke-dashoffset: 0;
     filter: drop-shadow(0 0 5px rgba(76,110,245,.75));
     vector-effect: non-scaling-stroke;
-    animation: fl-loop-bead-move 3s linear infinite;
+    animation: fl-loop-bead-move 4s linear infinite;
   }
-  @keyframes fl-loop-bead-move{ to{ stroke-dashoffset: -880; } }
+  @keyframes fl-loop-bead-move{ to{ stroke-dashoffset: -3520; } }
   @media (prefers-reduced-motion: reduce){
     .fl-src, .fl-current-in, .fl-current-out, .fl-hub, .fl-hub i, .fl-final, .fl-loopback{ animation: none; }
     .fl-loop-bead{ animation: none; opacity: 0; }
@@ -2259,8 +2280,8 @@
             <path class="fl-current-in" pathLength="454" d="M55 46 Q58 75 130 96" />
             <path class="fl-current-in fl-current-in-2" pathLength="454" d="M205 46 Q202 75 130 96" />
             <path class="fl-current-out" pathLength="454" d="M130 131 L130 150" />
-            <path class="fl-loopback" d="M100 160 C 15 150, 5 70, 42 40" />
-            <path class="fl-loop-bead" d="M100 160 C 15 150, 5 70, 42 40" />
+            <path class="fl-loopback" d="M130 166 C 40 155, 5 70, 42 40" />
+            <path class="fl-loop-bead" d="M130 166 C 40 155, 5 70, 42 40" />
           </svg>
           <div class="fl-hub"><i class="ph-bold ph-arrows-clockwise" aria-hidden="true"></i></div>
           <div class="fl-final"><i class="ph-fill ph-calendar-check" aria-hidden="true"></i></div>
@@ -2558,15 +2579,15 @@
      inside the section itself, matching that reference exactly instead
      of adapting it. ================= -->
 <section id="faq" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
-  <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
-    <div class="reveal max-w-[34rem]">
-      <p class="text-[0.72rem] font-semibold tracking-[0.22em] text-[var(--accent-text)] uppercase">FAQ</p>
-      <h2 class="text-shine inline-block text-balance mt-4 hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
+  <div class="max-w-[1280px] mx-auto px-6 lg:px-10 grid lg:grid-cols-[1fr_1.2fr] gap-14 items-start">
+    <div class="reveal">
+      <h2 class="text-shine inline-block text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
         FAQs
       </h2>
+      <a href="#cta" class="btn-primary mt-8">Book a Discovery Call</a>
     </div>
 
-    <div class="faq-list reveal mt-12 max-w-[34rem]">
+    <div class="faq-list reveal">
       <div class="faq-item" data-open="false">
         <button class="faq-q" id="faq-q-1" aria-expanded="false" aria-controls="faq-a-1">
           <span>Who is this for?</span>
@@ -2597,8 +2618,6 @@
         </div>
       </div>
     </div>
-
-    <a href="#cta" class="btn-primary mt-10">Book a Discovery Call</a>
   </div>
 </section>
 
@@ -2632,7 +2651,7 @@
           <span class="font-display font-bold text-[1.1rem] text-[var(--chrome-fg)]">Claviro</span>
         </a>
         <p class="mt-4 text-[0.9rem] text-[var(--chrome-fg-dim)] leading-[1.6] max-w-[20rem]">
-          Founder-led growth for B2B software companies.
+          Content production agency built for B2B tech companies.
         </p>
       </div>
 
