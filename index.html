@@ -644,21 +644,14 @@
   .rp-grid{ display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
   @media (min-width: 768px){ .rp-grid{ grid-template-columns: repeat(2, 1fr); } }
   .rp-card{ max-width: 26rem; margin: 0 auto; }
-  /* A separate rectangular "frame" now sits behind each animation box,
-     bigger than the box itself so its edges show all the way around —
-     the gradient (from the user's own reference image: dark near-black
-     at the top, lighting to a charcoal gray at the bottom) lives on
-     THIS frame, not on the animation box, which sits inside it. The
-     animation box (`.rp-visual`/`.pub-visual`) went back to a plain
-     flat background so it still reads as its own distinct box nested
-     inside the gradient frame, not just a repaint of the same box. */
-  .rp-frame{
-    border-radius: 14px; padding: .85rem; margin-bottom: 1.25rem;
-    background: linear-gradient(180deg, var(--ink-950) 0%, #2e2e30 100%);
-  }
+  /* Top-to-bottom gradient behind the Repurposing/Publishing animation
+     boxes, from the user's own reference image (dark near-black at the
+     top, lighting to a charcoal gray at the bottom) — overrides
+     `.mirror-visual`'s flat `background: var(--ink-900)` for just these
+     two boxes, not every `.mirror-visual` on the page. */
   .rp-visual, .pub-visual{
     align-items: center; justify-content: center;
-    margin-bottom: 0; background: var(--ink-900);
+    background: linear-gradient(180deg, var(--ink-950) 0%, #2e2e30 100%);
   }
   .rp-src{
     position: absolute; top: 16%; transform: translate(-50%,-50%) scale(1);
@@ -968,7 +961,7 @@
     background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.16);
     display: grid; place-items: center; color: var(--cream-dim); font-size: 1.5rem;
     box-shadow: 0 8px 18px rgba(0,0,0,.28);
-    animation: fl-src-pop 6.5s ease-in-out infinite;
+    animation: fl-src-pop 11s ease-in-out infinite;
   }
   .fl-src-analytics{ left: 21%; color: #34d399; }
   .fl-src-content{ left: 79%; color: var(--accent-hot); animation-delay: -.08s; }
@@ -993,15 +986,15 @@
     stroke-dasharray: 34 420; stroke-dashoffset: 0; opacity: 0;
     filter: drop-shadow(0 0 7px rgba(76,110,245,.6));
     vector-effect: non-scaling-stroke;
-    animation: rp-flow-in 6.5s linear infinite;
+    animation: rp-flow-in 11s linear infinite;
   }
-  .fl-current-in-2{ animation-delay: -.08s; }
+  .fl-current-in-2{ animation-delay: -.14s; }
   .fl-current-out{
     fill: none; stroke: var(--accent-hot); stroke-width: 2.9; stroke-linecap: round;
     stroke-dasharray: 34 420; stroke-dashoffset: 0; opacity: 0;
     filter: drop-shadow(0 0 7px rgba(76,110,245,.6));
     vector-effect: non-scaling-stroke;
-    animation: rp-flow-out 6.5s linear infinite;
+    animation: rp-flow-out 11s linear infinite;
   }
   .fl-hub{
     position: absolute; left: 50%; top: 58%; transform: translate(-50%,-50%) scale(1);
@@ -1009,16 +1002,16 @@
     background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
     display: grid; place-items: center; color: var(--accent-hot); font-size: 2rem;
     box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 9px rgba(76,110,245,.12);
-    animation: rp-hub-pulse 6.5s ease-in-out infinite;
+    animation: rp-hub-pulse 11s ease-in-out infinite;
   }
-  .fl-hub i{ animation: rp-hub-spin 6.5s linear infinite; }
+  .fl-hub i{ animation: rp-hub-spin 11s linear infinite; }
   .fl-final{
     position: absolute; left: 50%; top: 85%; transform: translate(-50%,-50%) scale(1);
     width: 80px; height: 72px; border-radius: 22px;
     background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
     display: grid; place-items: center; color: var(--accent-hot); font-size: 1.9rem;
     opacity: 1; box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 9px rgba(76,110,245,.12);
-    animation: rp-final-receive 6.5s ease-in-out infinite;
+    animation: rp-final-receive 11s ease-in-out infinite;
   }
   /* Faint dashed arrow, continuously traveling, never gated to the 6.5s
      beat above — an ambient "this repeats every month" cue rather than
@@ -1026,7 +1019,7 @@
   .fl-loopback{
     fill: none; stroke: rgba(76,110,245,.28); stroke-width: 1.6; stroke-linecap: round;
     stroke-dasharray: 8 20; vector-effect: non-scaling-stroke;
-    animation: fl-loop-travel 3s linear infinite;
+    animation: fl-loop-travel 6s linear infinite;
   }
   @keyframes fl-loop-travel{ to{ stroke-dashoffset: -560; } }
   /* A bright traveling bead riding the same curve, in the same direction
@@ -1056,13 +1049,14 @@
      width taper fixed above, just for dash length instead of width —
      `non-scaling-stroke` doesn't cover dash spacing), but with only one
      dash on screen that's a minor wobble, not a "choppy" multi-segment
-     look. Slowed to 4s for a more graceful glide. */
+     look. Slowed further (4s → 7s) per "the animations which are
+     happening on the lines are very fast, make it slow and smooth". */
   .fl-loop-bead{
     fill: none; stroke: #8fa4ff; stroke-width: 3; stroke-linecap: round;
     stroke-dasharray: 12 340; stroke-dashoffset: 0;
     filter: drop-shadow(0 0 5px rgba(76,110,245,.75));
     vector-effect: non-scaling-stroke;
-    animation: fl-loop-bead-move 4s linear infinite;
+    animation: fl-loop-bead-move 7s linear infinite;
   }
   @keyframes fl-loop-bead-move{ to{ stroke-dashoffset: -3520; } }
   @media (prefers-reduced-motion: reduce){
@@ -2204,54 +2198,50 @@
 
     <div class="rp-grid reveal mt-12">
       <div class="mirror-card rp-card">
-        <div class="rp-frame">
-          <div class="mirror-visual pub-visual" aria-hidden="true">
-            <div class="pub-bell"><i class="ph-bold ph-bell" aria-hidden="true"></i></div>
-            <div class="pub-post">
-              <i class="ph-fill ph-note" aria-hidden="true"></i>
-              <div class="pub-post-lines"><span></span><span></span></div>
-            </div>
-            <svg class="pub-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
-              <path class="pub-line" d="M130 44 L130 72" />
-              <path class="pub-line" d="M130 118 Q100 135 75 150" />
-              <path class="pub-line" d="M130 120 L130 157" />
-              <path class="pub-line" d="M130 118 Q160 135 185 150" />
-              <path class="pub-draw pub-draw-1" d="M130 44 L130 72" />
-              <path class="pub-draw pub-draw-2" d="M130 118 Q100 135 75 150" />
-              <path class="pub-draw pub-draw-3" d="M130 120 L130 157" />
-              <path class="pub-draw pub-draw-4" d="M130 118 Q160 135 185 150" />
-            </svg>
-            <div class="pub-cal"><i class="ph-fill ph-calendar-check" aria-hidden="true"></i></div>
-            <div class="pub-audience pub-audience-1"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
-            <div class="pub-audience pub-audience-2"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
-            <div class="pub-audience pub-audience-3"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
+        <div class="mirror-visual pub-visual" aria-hidden="true">
+          <div class="pub-bell"><i class="ph-bold ph-bell" aria-hidden="true"></i></div>
+          <div class="pub-post">
+            <i class="ph-fill ph-note" aria-hidden="true"></i>
+            <div class="pub-post-lines"><span></span><span></span></div>
           </div>
+          <svg class="pub-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
+            <path class="pub-line" d="M130 44 L130 72" />
+            <path class="pub-line" d="M130 118 Q100 135 75 150" />
+            <path class="pub-line" d="M130 120 L130 157" />
+            <path class="pub-line" d="M130 118 Q160 135 185 150" />
+            <path class="pub-draw pub-draw-1" d="M130 44 L130 72" />
+            <path class="pub-draw pub-draw-2" d="M130 118 Q100 135 75 150" />
+            <path class="pub-draw pub-draw-3" d="M130 120 L130 157" />
+            <path class="pub-draw pub-draw-4" d="M130 118 Q160 135 185 150" />
+          </svg>
+          <div class="pub-cal"><i class="ph-fill ph-calendar-check" aria-hidden="true"></i></div>
+          <div class="pub-audience pub-audience-1"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
+          <div class="pub-audience pub-audience-2"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
+          <div class="pub-audience pub-audience-3"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
         </div>
         <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Publishing</h3>
         <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">It goes out on a schedule built around your audience, modeled to get seen by the people who matter.</p>
       </div>
 
       <div class="mirror-card rp-card">
-        <div class="rp-frame">
-          <div class="mirror-visual rp-visual" aria-hidden="true">
-            <div class="rp-src rp-src-video"><i class="ph-fill ph-video-camera" aria-hidden="true"></i></div>
-            <div class="rp-src rp-src-audio"><i class="ph-fill ph-user-sound" aria-hidden="true"></i></div>
-            <div class="rp-src rp-src-notes"><i class="ph-fill ph-note-pencil" aria-hidden="true"></i></div>
-            <svg class="rp-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
-              <path class="rp-line" d="M55 46 Q58 75 130 96" />
-              <path class="rp-line" d="M130 46 L130 96" />
-              <path class="rp-line" d="M205 46 Q202 75 130 96" />
-              <path class="rp-line" d="M130 131 L130 150" />
-              <path class="rp-current-in" pathLength="454" d="M55 46 Q58 75 130 96" />
-              <path class="rp-current-in rp-current-in-2" pathLength="454" d="M130 46 L130 96" />
-              <path class="rp-current-in rp-current-in-3" pathLength="454" d="M205 46 Q202 75 130 96" />
-              <path class="rp-current-out" pathLength="454" d="M130 131 L130 150" />
-            </svg>
-            <div class="rp-hub"><i class="ph-bold ph-arrows-clockwise" aria-hidden="true"></i></div>
-            <div class="rp-final">
-              <i class="ph-fill ph-linkedin-logo" aria-hidden="true"></i>
-              <div class="rp-final-lines"><span></span><span></span></div>
-            </div>
+        <div class="mirror-visual rp-visual" aria-hidden="true">
+          <div class="rp-src rp-src-video"><i class="ph-fill ph-video-camera" aria-hidden="true"></i></div>
+          <div class="rp-src rp-src-audio"><i class="ph-fill ph-user-sound" aria-hidden="true"></i></div>
+          <div class="rp-src rp-src-notes"><i class="ph-fill ph-note-pencil" aria-hidden="true"></i></div>
+          <svg class="rp-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
+            <path class="rp-line" d="M55 46 Q58 75 130 96" />
+            <path class="rp-line" d="M130 46 L130 96" />
+            <path class="rp-line" d="M205 46 Q202 75 130 96" />
+            <path class="rp-line" d="M130 131 L130 150" />
+            <path class="rp-current-in" pathLength="454" d="M55 46 Q58 75 130 96" />
+            <path class="rp-current-in rp-current-in-2" pathLength="454" d="M130 46 L130 96" />
+            <path class="rp-current-in rp-current-in-3" pathLength="454" d="M205 46 Q202 75 130 96" />
+            <path class="rp-current-out" pathLength="454" d="M130 131 L130 150" />
+          </svg>
+          <div class="rp-hub"><i class="ph-bold ph-arrows-clockwise" aria-hidden="true"></i></div>
+          <div class="rp-final">
+            <i class="ph-fill ph-linkedin-logo" aria-hidden="true"></i>
+            <div class="rp-final-lines"><span></span><span></span></div>
           </div>
         </div>
         <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Repurposing</h3>
