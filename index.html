@@ -616,6 +616,67 @@
     .day90-line, .day90-fill, .day90-dot{ animation: none; }
   }
 
+  /* "What Changes By Day 90" card EXTENDED into a 3-section vertical
+     scrollytelling sequence, 2026-09-02, per a spec doc: Section 1 (the
+     existing chart above, untouched) → a connector line → Section 2 (a
+     3-bar breakdown) → a second connector line → Section 3 (two
+     "momentum" blocks). A small glowing white dot travels each connector
+     line in sync with actual scroll position (not a timer, not an
+     IntersectionObserver one-shot) — genuinely scroll-LINKED, which is
+     why this is JS (a scroll/resize listener computing progress per
+     connector, same "JS beats a CSS-only trick when something must
+     track real state" reasoning as the LinkedIn like-counter), not
+     another CSS `@keyframes` loop like every other diagram on this page.
+     Each connector computes its OWN progress from its own actual
+     `getBoundingClientRect()` against the viewport's vertical center —
+     deliberately not hardcoded percentages of the card — so it stays
+     correct regardless of how tall the chart/bars/blocks actually
+     render. Crossing 100% on a connector permanently reveals the
+     section below it (bars draw in / momentum blocks fade+scale in) —
+     "permanently" because once revealed it's marked with a
+     `data-revealed` attribute and never un-reveals on scroll-back-up
+     (the pointer itself still freely reverses either way — only the
+     reveal is one-shot, chosen over spec's "or stays lit" allowance for
+     a calmer, non-flickery feel matching this page's `.reveal` one-shot
+     convention elsewhere). */
+  .d90-card{ display: flex; flex-direction: column; }
+  .d90-connector{ position: relative; height: 46px; margin: 0 auto; width: 2px; }
+  .d90-track{ position: absolute; inset: 0; width: 2px; background: var(--ink-border); }
+  .d90-track-lit{
+    position: absolute; top: 0; left: 0; width: 2px; height: 0%;
+    background: linear-gradient(180deg, transparent, rgba(255,255,255,.65));
+  }
+  .d90-pointer{
+    position: absolute; left: 50%; top: 0%; transform: translate(-50%,-50%);
+    width: 9px; height: 9px; border-radius: 50%;
+    background: #fff; box-shadow: 0 0 0 4px rgba(255,255,255,.18), 0 0 10px 2px rgba(255,255,255,.55);
+  }
+  .d90-bars{ display: grid; gap: .85rem; }
+  .d90-bar-row{ display: grid; gap: .35rem; }
+  .d90-bar-label{ font-size: .78rem; color: var(--cream-dim); }
+  .d90-bar-track{ height: 6px; border-radius: 20px; background: var(--ink-border); overflow: hidden; }
+  .d90-bar-fill{
+    height: 100%; border-radius: 20px; background: var(--accent);
+    width: 0%; transition: width 1.1s var(--ease-spring);
+  }
+  .d90-bars[data-revealed="true"] .d90-bar-fill{ width: var(--d90-bar-w); }
+  .d90-momentum{ display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; }
+  .d90-block{
+    padding: 1rem .9rem; border-radius: 12px;
+    background: var(--ink-950); border: 1px solid var(--ink-border);
+    opacity: 0; transform: translateY(10px) scale(.94);
+    transition: opacity .7s var(--ease-spring), transform .7s var(--ease-spring);
+  }
+  .d90-momentum[data-revealed="true"] .d90-block{ opacity: 1; transform: translateY(0) scale(1); }
+  .d90-momentum[data-revealed="true"] .d90-block:nth-child(2){ transition-delay: .12s; }
+  .d90-block i{ font-size: 1.15rem; color: var(--accent); }
+  .d90-block p{ margin-top: .5rem; font-size: .8rem; line-height: 1.5; color: var(--cream-dim); }
+  @media (prefers-reduced-motion: reduce){
+    .d90-pointer, .d90-track-lit{ display: none; }
+    .d90-bar-fill{ width: var(--d90-bar-w); transition: none; }
+    .d90-block{ opacity: 1; transform: none; transition: none; }
+  }
+
   /* Repurpose section (replaced "The People Behind Your Feed" / Team) —
      single .mirror-card reused as a standalone centered card instead of
      Mirror's 3-up grid.
@@ -2313,7 +2374,8 @@
       </div>
     </div>
 
-    <div class="reveal card p-7 sm:p-9">
+    <div class="reveal card p-7 sm:p-9 d90-card" id="d90-card">
+      <!-- Section 1: Profile Activity — unchanged existing chart -->
       <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">Profile activity, first 90 days</p>
       <svg viewBox="0 0 400 180" class="w-full h-auto mt-6" aria-hidden="true">
         <line x1="0" y1="150" x2="400" y2="150" stroke="var(--ink-border)" stroke-width="1"/>
@@ -2325,7 +2387,56 @@
               d="M0,150 C40,148 60,145 90,138 C130,128 150,110 190,95 C230,80 250,60 290,42 C325,26 360,18 400,10 L400,170 L0,170 Z"/>
         <circle class="day90-dot" cx="400" cy="10" r="4.5"/>
       </svg>
-      <p class="mt-4 text-[0.78rem] text-[var(--cream-dimmer)]">Illustrative curve. Individual results vary by market, offer, and consistency.</p>
+
+      <!-- Connector 1: Section 1 → Section 2, scroll-linked pointer -->
+      <div class="d90-connector" data-d90-connector aria-hidden="true">
+        <div class="d90-track"></div>
+        <div class="d90-track-lit"></div>
+        <div class="d90-pointer"></div>
+      </div>
+
+      <!-- Section 2: Who's Showing Up (new) -->
+      <div>
+        <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">Who&rsquo;s showing up</p>
+        <div class="d90-bars mt-5" id="d90-bars">
+          <div class="d90-bar-row">
+            <span class="d90-bar-label">Existing customers</span>
+            <div class="d90-bar-track"><div class="d90-bar-fill" style="--d90-bar-w: 82%"></div></div>
+          </div>
+          <div class="d90-bar-row">
+            <span class="d90-bar-label">Comparing alternatives</span>
+            <div class="d90-bar-track"><div class="d90-bar-fill" style="--d90-bar-w: 56%"></div></div>
+          </div>
+          <div class="d90-bar-row">
+            <span class="d90-bar-label">New profile visitors</span>
+            <div class="d90-bar-track"><div class="d90-bar-fill" style="--d90-bar-w: 38%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connector 2: Section 2 → Section 3, scroll-linked pointer -->
+      <div class="d90-connector" data-d90-connector aria-hidden="true">
+        <div class="d90-track"></div>
+        <div class="d90-track-lit"></div>
+        <div class="d90-pointer"></div>
+      </div>
+
+      <!-- Section 3: The Momentum (new) -->
+      <div>
+        <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">The momentum</p>
+        <div class="d90-momentum mt-5" id="d90-momentum">
+          <div class="d90-block">
+            <i class="ph-bold ph-trend-up" aria-hidden="true"></i>
+            <p>Momentum that builds on itself</p>
+          </div>
+          <div class="d90-block">
+            <i class="ph-bold ph-clock-clockwise" aria-hidden="true"></i>
+            <p>Consistency that doesn&rsquo;t reset</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="mt-6 text-[0.78rem] text-[var(--cream-dimmer)]">Illustrative. Individual results vary by market, offer, and consistency.</p>
     </div>
   </div>
 </section>
@@ -3005,6 +3116,56 @@ void main() {
       btn.setAttribute('aria-expanded', String(willOpen));
     });
   });
+})();
+
+// "What Changes By Day 90" — Section 2 (bars) / Section 3 (momentum)
+// reveal is driven by a genuinely scroll-linked pointer on each of the
+// two connector lines, not a timer or a one-shot IntersectionObserver.
+// Each connector's own progress (0-1) comes from its own live
+// getBoundingClientRect() against the viewport's vertical center, so it
+// stays correct no matter how tall the chart/bars/blocks render. The
+// pointer position always reflects current scroll (reverses freely on
+// scroll-up); only the section reveal below each connector is one-shot,
+// latched via `data-revealed` once its connector reaches 100%.
+(function () {
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var connectors = document.querySelectorAll('[data-d90-connector]');
+  if (reduceMotion || !connectors.length) return; // CSS already shows the complete static state
+
+  var bars = document.getElementById('d90-bars');
+  var momentum = document.getElementById('d90-momentum');
+  var revealTargets = [bars, momentum]; // connector 0 -> bars, connector 1 -> momentum
+  var ticking = false;
+
+  function update() {
+    ticking = false;
+    var centerY = window.innerHeight * 0.5;
+    connectors.forEach(function (el, i) {
+      var rect = el.getBoundingClientRect();
+      var progress = rect.height ? (centerY - rect.top) / rect.height : 0;
+      progress = Math.max(0, Math.min(1, progress));
+      el.style.setProperty('--d90-progress', progress);
+      var lit = el.querySelector('.d90-track-lit');
+      var pointer = el.querySelector('.d90-pointer');
+      if (lit) lit.style.height = (progress * 100) + '%';
+      if (pointer) pointer.style.top = (progress * 100) + '%';
+      var target = revealTargets[i];
+      if (target && progress >= 0.98 && target.getAttribute('data-revealed') !== 'true') {
+        target.setAttribute('data-revealed', 'true');
+      }
+    });
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  update();
 })();
 
 </script>
