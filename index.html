@@ -641,7 +641,6 @@
      convention elsewhere). */
   .d90-card{ display: flex; flex-direction: column; }
   .d90-connector{ position: relative; height: 46px; margin: 0 auto; width: 2px; }
-  .d90-track{ position: absolute; inset: 0; width: 2px; background: var(--ink-border); }
   .d90-bars{ display: grid; gap: .85rem; }
   .d90-bar-row{ display: grid; gap: .35rem; }
   .d90-bar-label{ font-size: .78rem; color: var(--cream-dim); }
@@ -1051,7 +1050,7 @@
     position: absolute; left: 50%; top: 58%; transform: translate(-50%,-50%) scale(1);
     width: 84px; height: 76px; border-radius: 22px;
     background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
-    display: grid; place-items: center; color: var(--accent-hot); font-size: 2rem;
+    display: grid; place-items: center; color: var(--accent-hot); font-size: 1.6rem;
     box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 9px rgba(76,110,245,.12);
     animation: rp-hub-pulse 11s ease-in-out infinite;
   }
@@ -1060,7 +1059,7 @@
     position: absolute; left: 50%; top: 85%; transform: translate(-50%,-50%) scale(1);
     width: 80px; height: 72px; border-radius: 22px;
     background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
-    display: grid; place-items: center; color: var(--accent-hot); font-size: 1.9rem;
+    display: grid; place-items: center; color: var(--accent-hot); font-size: 1.5rem;
     opacity: 1; box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 9px rgba(76,110,245,.12);
     animation: rp-final-receive 11s ease-in-out infinite;
   }
@@ -2379,9 +2378,7 @@
       </svg>
 
       <!-- Connector 1: Section 1 → Section 2, scroll-linked pointer -->
-      <div class="d90-connector" data-d90-connector aria-hidden="true">
-        <div class="d90-track"></div>
-      </div>
+      <div class="d90-connector" data-d90-connector aria-hidden="true"></div>
 
       <!-- Section 2: Who's Showing Up (new) -->
       <div>
@@ -2403,9 +2400,7 @@
       </div>
 
       <!-- Connector 2: Section 2 → Section 3, scroll-linked pointer -->
-      <div class="d90-connector" data-d90-connector aria-hidden="true">
-        <div class="d90-track"></div>
-      </div>
+      <div class="d90-connector" data-d90-connector aria-hidden="true"></div>
 
       <!-- Section 3: The Momentum (new) -->
       <div>
