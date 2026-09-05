@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Claviro</title>
 <meta name="description" content="Claviro turns your LinkedIn presence into a B2B SaaS growth channel, built on a system, not guesswork." />
-<meta name="theme-color" content="#0a0a0a" />
+<meta name="theme-color" content="#000000" />
 <link rel="icon" type="image/png" href="logos/claviro-favicon.png" />
 
 <!-- Fonts: Cabinet Grotesk (display) + Inter Tight (body) + Cormorant Garamond (hero headline serif) -->
@@ -58,7 +58,7 @@
        instead of standing out, so these two stay derived (darker tints of
        the new accent) rather than a literal copy. Everything else is a
        direct value swap. */
-    --ink-950:#0e0f11;
+    --ink-950:#000000;
     --ink-900:#222222;
     --ink-850:#2c2c2c;
     --ink-800:#383838;
@@ -278,7 +278,7 @@
     .cs-grid{ grid-template-columns: repeat(3, 1fr); }
   }
   .cs-card{
-    background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
+    background-image: linear-gradient(135deg, #000000 0%, #000000 32%, #0a0a0a 58%, #000000 84%, #000000 100%);
     border: 1px solid rgba(255,255,255,.12);
     border-radius: 16px;
     padding: 1.5rem 1.25rem;
@@ -327,7 +327,7 @@
     .mirror-grid{ grid-template-columns: repeat(3, 1fr); }
   }
   .mirror-card{
-    background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
+    background-image: linear-gradient(135deg, #000000 0%, #000000 32%, #0a0a0a 58%, #000000 84%, #000000 100%);
     border: 1px solid rgba(255,255,255,.12);
     border-radius: 18px;
     padding: 1.4rem 1.4rem 1.6rem;
@@ -1233,7 +1233,7 @@
     position: relative;
     max-width: 34rem; margin: 0 auto;
     border-radius: 18px;
-    background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
+    background-image: linear-gradient(135deg, #000000 0%, #000000 32%, #0a0a0a 58%, #000000 84%, #000000 100%);
     border: 1px solid rgba(255,255,255,.12);
     padding: .6rem .6rem 2.6rem;
   }
@@ -1317,7 +1317,7 @@
     .pricing-cards{ grid-template-columns: repeat(3, 1fr); align-items: stretch; }
   }
   .pricing-card{
-    background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
+    background-image: linear-gradient(135deg, #000000 0%, #000000 32%, #0a0a0a 58%, #000000 84%, #000000 100%);
     border: 1px solid var(--ink-border);
     border-radius: 24px;
     box-shadow: var(--shadow-card);
@@ -1414,7 +1414,7 @@
   .iv-card{
     position: sticky;
     top: 7rem;
-    background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
+    background-image: linear-gradient(135deg, #000000 0%, #000000 32%, #0a0a0a 58%, #000000 84%, #000000 100%);
     border: 1px solid rgba(255,255,255,.12);
     border-radius: 20px;
     padding: 1rem;
@@ -1482,7 +1482,7 @@
     aspect-ratio: 9 / 16;
     border-radius: .75rem;
     overflow: hidden;
-    background: linear-gradient(160deg, #1c1c1c 0%, #0a0a0a 100%);
+    background: linear-gradient(160deg, #000000 0%, #000000 100%);
     display: flex; align-items: center; justify-content: center;
   }
   .iv-video video, .iv-video img, .iv-video iframe{
@@ -1854,9 +1854,9 @@
 </div>
 
 <!-- ================= HERO ================= -->
-<section id="top" class="relative min-h-[100dvh] w-full overflow-hidden bg-black">
+<section id="top" class="relative min-h-[100dvh] w-full overflow-hidden bg-[var(--ink-950)]">
   <span id="top-content" class="sr-only"></span>
-  <div id="velaris-host" class="absolute inset-0" style="background: #0a0a0a;">
+  <div id="velaris-host" class="absolute inset-0" style="background: #000000;">
     <canvas id="velaris-canvas" aria-hidden="true" class="absolute inset-0 h-full w-full"></canvas>
   </div>
   <!-- Centered scrim so the copy stays readable wherever the moving gradient drifts. -->
@@ -1973,7 +1973,7 @@
      2 cards: (1) a grid of raw LinkedIn post screenshots, (2) all 4
      vertical clips together. A 3rd card (one full-width video) was
      removed per explicit request — don't re-add it without being asked. -->
-<section id="industry-standard" class="relative bg-[var(--ink-900)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="industry-standard" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="iv-scroll-stack">
       <div class="iv-scroll-head reveal max-w-[34rem] self-start">
@@ -2237,7 +2237,7 @@
 <!-- ================= REPURPOSE (replaced "The People Behind Your Feed" /
      Team) — single mirror-style card, "Learns from every demo" hub visual
      curled from repixa.io ================= -->
-<section id="repurpose" class="relative bg-[var(--ink-900)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="repurpose" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="reveal max-w-[34rem]">
       <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
@@ -2340,7 +2340,7 @@
      Process"'s old slot — the Process section itself was removed
      entirely; kept id="process" so the nav's existing Process link still
      resolves to whatever now sits in that position) ================= -->
-<section id="process" class="relative bg-[var(--ink-900)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="process" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10 grid lg:grid-cols-[1.1fr_1fr] gap-14 items-center">
     <div class="reveal">
       <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em] max-w-[28rem]">
@@ -2465,7 +2465,7 @@
 <!-- ================= RETENTION (new) — single mirror-style card,
      "Private, regional delivery" network diagram curled from repixa.io
      ================= -->
-<section id="retention" class="relative bg-[var(--ink-900)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="retention" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="reveal max-w-[34rem] mx-auto text-center">
       <h2 class="text-shine inline-block text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
@@ -2538,7 +2538,7 @@
      accent-tinted border); Launch/Studio use the outline CTA. Single
      responsive grid — no separate desktop/mobile markup needed anymore.
      Launch's price is $999 (bumped up from $3500 per request). ================= -->
-<section class="relative bg-[var(--ink-900)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
 
     <div class="pricing-cards reveal">
@@ -3012,7 +3012,7 @@ void main() {
     const canvas = document.getElementById('velaris-canvas');
     if (!host || !canvas) return;
     createVelaris(host, canvas, {
-      bg: '#0a0a0a',
+      bg: '#000000',
       colors: ['#ffffff', '#b8b8b8', '#4a4a4a', '#000000'],
       speed: 1.1,
       grain: 0.3,
