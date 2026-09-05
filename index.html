@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Claviro</title>
 <meta name="description" content="Claviro turns your LinkedIn presence into a B2B SaaS growth channel, built on a system, not guesswork." />
-<meta name="theme-color" content="#000000" />
+<meta name="theme-color" content="#0e0f11" />
 <link rel="icon" type="image/png" href="logos/claviro-favicon.png" />
 
 <!-- Fonts: Cabinet Grotesk (display) + Inter Tight (body) + Cormorant Garamond (hero headline serif) -->
@@ -58,7 +58,7 @@
        instead of standing out, so these two stay derived (darker tints of
        the new accent) rather than a literal copy. Everything else is a
        direct value swap. */
-    --ink-950:#000000;
+    --ink-950:#0e0f11;
     --ink-900:#222222;
     --ink-850:#2c2c2c;
     --ink-800:#383838;
@@ -115,8 +115,19 @@
   html { scroll-behavior: smooth; color-scheme: dark; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
+  /* One continuous backdrop for the whole page instead of 14 identical
+     flat fills repeated per-section (which is where "pure black, zero
+     depth" reads as generic/AI-flat). A single faint ambient glow,
+     anchored to the viewport rather than the document, sits behind
+     every section — bg-attachment:fixed means it never repeats or
+     seams as sections scroll past, and it reads as one deliberate light
+     source (top-center) rather than a flat void. Individual <section>
+     elements no longer paint their own background over this. */
   body{
-    background: var(--ink-950);
+    background:
+      radial-gradient(120% 60% at 50% 0%, rgba(76,110,245,.07), transparent 60%),
+      var(--ink-950);
+    background-attachment: fixed;
     color: var(--cream);
     font-family: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -193,7 +204,7 @@
   /* fixed grain overlay, applied once, not on scrolling containers */
   .grain-overlay{
     position: fixed; inset: 0; z-index: 60; pointer-events: none;
-    opacity: .035; mix-blend-mode: overlay;
+    opacity: .05; mix-blend-mode: overlay;
   }
 
   /* buttons */
@@ -1854,9 +1865,9 @@
 </div>
 
 <!-- ================= HERO ================= -->
-<section id="top" class="relative min-h-[100dvh] w-full overflow-hidden bg-[var(--ink-950)]">
+<section id="top" class="relative min-h-[100dvh] w-full overflow-hidden">
   <span id="top-content" class="sr-only"></span>
-  <div id="velaris-host" class="absolute inset-0" style="background: #000000;">
+  <div id="velaris-host" class="absolute inset-0" style="background: #0e0f11;">
     <canvas id="velaris-canvas" aria-hidden="true" class="absolute inset-0 h-full w-full"></canvas>
   </div>
   <!-- Centered scrim so the copy stays readable wherever the moving gradient drifts. -->
@@ -1884,7 +1895,7 @@
 </section>
 
 <!-- ================= PRESS BAR (reveals on scroll) ================= -->
-<section class="relative bg-[var(--ink-950)] border-t border-[var(--ink-border)] py-14 sm:py-16">
+<section class="relative border-t border-[var(--ink-border)] py-14 sm:py-16">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10 reveal">
     <div class="flex items-center justify-between gap-4">
       <p class="text-[0.72rem] font-semibold tracking-[0.22em] text-[var(--cream-dimmer)] uppercase">Founders Seen In</p>
@@ -1917,7 +1928,7 @@
      throughout (site-unified, no light color-block here anymore), three
      smaller cards side by side on desktop — matching contentfloww.com's
      card layout — stacking to one column on mobile. -->
-<section id="case-studies" class="relative bg-[var(--ink-950)] py-24 sm:py-28">
+<section id="case-studies" class="relative py-24 sm:py-28">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10 reveal">
     <div class="max-w-[34rem]">
       <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.15] tracking-[-0.02em]">
@@ -1973,7 +1984,7 @@
      2 cards: (1) a grid of raw LinkedIn post screenshots, (2) all 4
      vertical clips together. A 3rd card (one full-width video) was
      removed per explicit request — don't re-add it without being asked. -->
-<section id="industry-standard" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="industry-standard" class="relative py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="iv-scroll-stack">
       <div class="iv-scroll-head reveal max-w-[34rem] self-start">
@@ -2146,7 +2157,7 @@
 </section>
 
 <!-- ================= MIRROR ================= -->
-<section id="mirror" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="mirror" class="relative py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="reveal max-w-[34rem]">
       <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
@@ -2237,7 +2248,7 @@
 <!-- ================= REPURPOSE (replaced "The People Behind Your Feed" /
      Team) — single mirror-style card, "Learns from every demo" hub visual
      curled from repixa.io ================= -->
-<section id="repurpose" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="repurpose" class="relative py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="reveal max-w-[34rem]">
       <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
@@ -2302,7 +2313,7 @@
 </section>
 
 <!-- ================= THE FEEDBACK LOOP ================= -->
-<section id="feedback-loop" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="feedback-loop" class="relative py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="reveal max-w-[34rem]">
       <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
@@ -2340,7 +2351,7 @@
      Process"'s old slot — the Process section itself was removed
      entirely; kept id="process" so the nav's existing Process link still
      resolves to whatever now sits in that position) ================= -->
-<section id="process" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="process" class="relative py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10 grid lg:grid-cols-[1.1fr_1fr] gap-14 items-center">
     <div class="reveal">
       <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em] max-w-[28rem]">
@@ -2426,7 +2437,7 @@
      single mirror-style card, dark-recolored rebuild of repixa.io's own
      hero product mockup (donut chart, line-chart panel with cursor label,
      floating "Live Signal" callout) ================= -->
-<section id="enablement" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="enablement" class="relative py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="reveal max-w-[34rem] mx-auto text-center">
       <h2 class="text-shine inline-block text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
@@ -2465,7 +2476,7 @@
 <!-- ================= RETENTION (new) — single mirror-style card,
      "Private, regional delivery" network diagram curled from repixa.io
      ================= -->
-<section id="retention" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="retention" class="relative py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="reveal max-w-[34rem] mx-auto text-center">
       <h2 class="text-shine inline-block text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
@@ -2497,7 +2508,7 @@
 <!-- ================= OUR EDGE (restored — was removed earlier this
      project and saved verbatim for reuse; the user asked for it back
      here) ================= -->
-<section class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)] overflow-hidden">
+<section class="relative py-24 sm:py-28 border-t border-[var(--ink-border)] overflow-hidden">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10 grid lg:grid-cols-2 gap-14 items-center">
     <div class="reveal">
       <h2 class="text-shine inline-block text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
@@ -2538,7 +2549,7 @@
      accent-tinted border); Launch/Studio use the outline CTA. Single
      responsive grid — no separate desktop/mobile markup needed anymore.
      Launch's price is $999 (bumped up from $3500 per request). ================= -->
-<section class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section class="relative py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
 
     <div class="pricing-cards reveal">
@@ -2630,7 +2641,7 @@
 </section>
 
 <!-- ================= BUILT FOR ================= -->
-<section class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section class="relative py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[720px] mx-auto px-6 lg:px-10 text-center">
     <h2 class="reveal text-shine inline-block text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
       Built For Founders Who
@@ -2659,7 +2670,7 @@
      of this section), eyebrow label above the heading, and a CTA button
      inside the section itself, matching that reference exactly instead
      of adapting it. ================= -->
-<section id="faq" class="relative bg-[var(--ink-950)] py-24 sm:py-28 border-t border-[var(--ink-border)]">
+<section id="faq" class="relative py-24 sm:py-28 border-t border-[var(--ink-border)]">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10 grid lg:grid-cols-[1fr_1.2fr] gap-14 items-start">
     <div class="reveal">
       <h2 class="text-shine inline-block text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
@@ -3012,7 +3023,7 @@ void main() {
     const canvas = document.getElementById('velaris-canvas');
     if (!host || !canvas) return;
     createVelaris(host, canvas, {
-      bg: '#000000',
+      bg: '#0e0f11',
       colors: ['#ffffff', '#b8b8b8', '#4a4a4a', '#000000'],
       speed: 1.1,
       grain: 0.3,
