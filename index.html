@@ -692,8 +692,8 @@
      mic at top fanning out to LinkedIn-post/carousel/video chips,
      replaced per this sketch's opposite (many-to-one) topology instead. */
   .rp-grid{ display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
-  @media (min-width: 768px){ .rp-grid{ grid-template-columns: repeat(2, 1fr); } }
-  .rp-card{ max-width: 26rem; margin: 0 auto; border-radius: 0; }
+  @media (min-width: 768px){ .rp-grid{ grid-template-columns: repeat(2, 1fr); gap: .75rem; } }
+  .rp-card{ max-width: none; margin: 0; border-radius: 0; }
   /* Top-to-bottom gradient behind the Repurposing/Publishing animation
      boxes, from the user's own reference image (dark near-black at the
      top, lighting to a charcoal gray at the bottom) — overrides
