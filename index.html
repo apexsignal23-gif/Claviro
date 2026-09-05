@@ -117,22 +117,49 @@
 
   /* One continuous backdrop for the whole page instead of 14 identical
      flat fills repeated per-section (which is where "pure black, zero
-     depth" reads as generic/AI-flat). Three layers, all anchored to the
+     depth" reads as generic/AI-flat). Four layers, all anchored to the
      viewport via background-attachment:fixed so nothing repeats or
-     seams as sections scroll past: a fine dot-grid for structure (a
-     SaaS-dashboard texture, not a flashy effect), a primary ambient
-     glow top-center, and a second, softer glow bottom-right for
-     asymmetry — both the same accent hue (one accent color, not a
-     multi-color "AI gradient"). Individual <section> elements no
-     longer paint their own background over this. */
+     seams as sections scroll past:
+       1. a confident primary glow top-center
+       2. a softer secondary glow bottom-right, same accent hue, for
+          asymmetric depth (one accent color, not a multi-color "AI
+          gradient")
+       3-4. two 1px vertical rules tracking the exact left/right edges
+          of the site's own 1280px content container (an "engineered,
+          intentional grid" motif, the kind dev-tool marketing sites
+          like Linear/Vercel use, rather than a decorative texture).
+          Deliberately baked into body's own background rather than a
+          separate overlay element: body's background is the root
+          stacking context's own background, painted before literally
+          everything else on the page, so it's the only way to
+          guarantee the lines stay behind ALL content (most of this
+          page's cards and text are plain position:static, which
+          paints ahead of any *positioned* overlay div regardless of
+          DOM order — a separate fixed div would have drawn on top of
+          them in places). The calc()/min() pair reproduces the
+          container's own centering math (edge sticks to the viewport
+          side below 1280px, to a fixed offset from center above it),
+          so the lines track it exactly at every width. Individual
+          <section> elements no longer paint their own background over
+          this. */
   body{
-    background:
-      radial-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
-      radial-gradient(120% 55% at 50% 0%, rgba(76,110,245,.08), transparent 62%),
-      radial-gradient(70% 45% at 88% 105%, rgba(76,110,245,.05), transparent 60%),
-      var(--ink-950);
-    background-size: 28px 28px, auto, auto;
-    background-repeat: repeat, no-repeat, no-repeat;
+    background-color: var(--ink-950);
+    background-image:
+      radial-gradient(120% 55% at 50% 0%, rgba(76,110,245,.16), transparent 62%),
+      radial-gradient(70% 45% at 88% 105%, rgba(76,110,245,.09), transparent 60%),
+      linear-gradient(rgba(255,255,255,.07), rgba(255,255,255,.07)),
+      linear-gradient(rgba(255,255,255,.07), rgba(255,255,255,.07));
+    background-position:
+      0 0,
+      0 0,
+      calc((100vw - min(100vw, 1280px)) / 2) 0,
+      calc((100vw + min(100vw, 1280px)) / 2) 0;
+    background-size:
+      auto,
+      auto,
+      1px 100%,
+      1px 100%;
+    background-repeat: no-repeat;
     background-attachment: fixed;
     color: var(--cream);
     font-family: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
