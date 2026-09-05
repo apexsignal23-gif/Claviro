@@ -1000,7 +1000,7 @@
      color half of `rp-src-send` so each source icon can hold a fixed
      accent color (green / blue) instead of an animation fighting it back
      to gray every cycle. Class prefix `.fl-`. */
-  .fl-card{ max-width: none; border-radius: 0; }
+  .fl-card{ max-width: none; }
   /* .mirror-visual's base `aspect-ratio: 4/3` is what was quietly
      shrinking this box back down to a narrow column even after the card
      itself went full-width — with a wide, fixed-height box, the browser
@@ -1010,11 +1010,11 @@
      diagram then lives in `.fl-stage` below, a fixed-size, centered
      "stage" inside this now-wide box, so the icons/lines stay a compact
      cluster in the middle instead of stretching edge-to-edge with it. */
-  /* This card's copy sits ABOVE the diagram (every other `.mirror-card`
-     puts its `<h3>`/`<p>` after the visual) — `.mirror-visual`'s base
-     `margin-bottom` doesn't make sense once the visual is the last
-     child, so it's swapped for a `margin-top` here instead. */
-  .fl-visual{ align-items: center; justify-content: center; aspect-ratio: auto; height: 24rem; margin-bottom: 0; margin-top: 1.4rem; }
+  /* Copy now sits BELOW the diagram, matching every other `.mirror-card`
+     (was above until the diagram became the first child; margin lives
+     on the visual itself since it's the standard `margin-bottom`
+     pattern again, not the `margin-top` swap the old order needed). */
+  .fl-visual{ align-items: center; justify-content: center; aspect-ratio: auto; height: 24rem; margin-bottom: 1.4rem; margin-top: 0; }
   .fl-stage{ position: relative; width: 100%; height: 100%; }
   .fl-src{
     position: absolute; top: 16%; transform: translate(-50%,-50%) scale(1);
@@ -2323,8 +2323,6 @@
     </div>
 
     <div class="mirror-card fl-card reveal mt-12">
-      <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">The Feedback Loop</h3>
-      <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Every post we publish feeds back in. What actually landed shapes next month&rsquo;s production, so the system gets sharper instead of repeating itself.</p>
       <div class="mirror-visual fl-visual" aria-hidden="true">
         <div class="fl-stage">
           <div class="fl-src fl-src-analytics"><i class="ph-fill ph-chart-line-up" aria-hidden="true"></i></div>
@@ -2343,6 +2341,8 @@
           <div class="fl-final"><i class="ph-fill ph-calendar-check" aria-hidden="true"></i></div>
         </div>
       </div>
+      <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">The Feedback Loop</h3>
+      <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Every post we publish feeds back in. What actually landed shapes next month&rsquo;s production, so the system gets sharper instead of repeating itself.</p>
     </div>
   </div>
 </section>
