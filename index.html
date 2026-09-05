@@ -117,16 +117,22 @@
 
   /* One continuous backdrop for the whole page instead of 14 identical
      flat fills repeated per-section (which is where "pure black, zero
-     depth" reads as generic/AI-flat). A single faint ambient glow,
-     anchored to the viewport rather than the document, sits behind
-     every section — bg-attachment:fixed means it never repeats or
-     seams as sections scroll past, and it reads as one deliberate light
-     source (top-center) rather than a flat void. Individual <section>
-     elements no longer paint their own background over this. */
+     depth" reads as generic/AI-flat). Three layers, all anchored to the
+     viewport via background-attachment:fixed so nothing repeats or
+     seams as sections scroll past: a fine dot-grid for structure (a
+     SaaS-dashboard texture, not a flashy effect), a primary ambient
+     glow top-center, and a second, softer glow bottom-right for
+     asymmetry — both the same accent hue (one accent color, not a
+     multi-color "AI gradient"). Individual <section> elements no
+     longer paint their own background over this. */
   body{
     background:
-      radial-gradient(120% 60% at 50% 0%, rgba(76,110,245,.07), transparent 60%),
+      radial-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+      radial-gradient(120% 55% at 50% 0%, rgba(76,110,245,.08), transparent 62%),
+      radial-gradient(70% 45% at 88% 105%, rgba(76,110,245,.05), transparent 60%),
       var(--ink-950);
+    background-size: 28px 28px, auto, auto;
+    background-repeat: repeat, no-repeat, no-repeat;
     background-attachment: fixed;
     color: var(--cream);
     font-family: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
