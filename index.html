@@ -1080,54 +1080,51 @@
     opacity: 1; box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 9px rgba(76,110,245,.12);
     animation: rp-final-receive 11s ease-in-out infinite;
   }
-  /* Faint dashed arrow, continuously traveling, never gated to the 6.5s
-     beat above — an ambient "this repeats every month" cue rather than
-     one more synced step, so it just always drifts. */
+  /* Redesigned per "the animation here is very vague": the old version
+     ran two independent, unsynced motions — a constantly-drifting dash
+     pattern on the guide track (11s) and a small traveling bead on the
+     same curve (13s), both decoupled from the main 11s beat above. A
+     tiny dot occasionally passing on its own clock never reads as "the
+     result feeds back into the source" — there's no causal link for
+     the eye to follow. Now: the guide track is a static, always-visible
+     dashed line (so the closed-loop SHAPE itself is legible even at
+     rest), and the one animated element is a bright stroke that DRAWS
+     ITSELF along that track, gated to the same 11s cycle as the
+     forward flow — it only fires right after `.fl-final` lights up
+     (74%), sweeping the full return path back to the analytics source
+     by 92%. That makes the whole diagram one readable causal chain —
+     sources feed the hub, hub delivers to `.fl-final`, `.fl-final`'s
+     result sweeps back to `.fl-src-analytics` — instead of two things
+     happening for unrelated reasons. */
   .fl-loopback{
-    fill: none; stroke: rgba(76,110,245,.28); stroke-width: 1.6; stroke-linecap: round;
-    stroke-dasharray: 8 20; vector-effect: non-scaling-stroke;
-    animation: fl-loop-travel 11s linear infinite;
+    fill: none; stroke: rgba(76,110,245,.32); stroke-width: 1.6; stroke-linecap: round;
+    stroke-dasharray: 5 7; vector-effect: non-scaling-stroke;
   }
-  @keyframes fl-loop-travel{ to{ stroke-dashoffset: -560; } }
-  /* A bright traveling bead riding the same curve, in the same direction
-     (path is drawn bottom-first/top-last, so a decreasing dashoffset
-     moves it from `.fl-final` up toward `.fl-src-analytics` — the same
-     "decreasing offset = moves toward the drawn end" rule every bead on
-     this page follows). First tried an actual arrow shape moved via
-     `offset-path`, but that broke badly: this SVG's `preserveAspectRatio
-     ="none"` stretches its coordinate space non-uniformly to fill a box
-     far wider than its own viewBox ratio, and `offset-path` resolved the
-     shape's position/scale against a DIFFERENT effective coordinate
-     space than the one `<path>` shapes actually render in — the shape
-     ended up oversized and nowhere near the line. A plain dasharray/
-     dashoffset bead (exactly how every other flow-line on this page
-     works) renders in that same stretched space as the line itself, so
-     it can't ever drift out of alignment like that. No `pathLength`
-     normalization needed here since the offset target is just a clean
-     multiple of the dash pattern's own length for seamless infinite
-     tiling, not a one-shot full-path traversal.
-     Gap widened a lot (was `18 70`, ~2-3 dashes visible on screen at
-     once and looking choppy) to `12 340` so only ONE short dash is ever
-     visible at a time — reads as a single smoothly traveling dot rather
-     than several disconnected chunks. The non-uniform stretch from
-     `preserveAspectRatio="none"` still makes that one dash's apparent
-     length breathe slightly as it crosses more-vertical vs. more-
-     horizontal parts of the curve (the same root cause as the stroke-
-     width taper fixed above, just for dash length instead of width —
-     `non-scaling-stroke` doesn't cover dash spacing), but with only one
-     dash on screen that's a minor wobble, not a "choppy" multi-segment
-     look. Slowed further (4s → 7s) per "the animations which are
-     happening on the lines are very fast, make it slow and smooth". */
+  /* `pathLength="100"` (set on the <path> in the markup) normalizes
+     dasharray/dashoffset to a 0-100 scale regardless of the curve's
+     actual geometric length — the same convention this page already
+     uses elsewhere (e.g. the 34/420 flow beads' `pathLength="454"`) —
+     so `stroke-dasharray:100 100` + dashoffset 100->0 is a clean,
+     reliable "draw the full path" reveal: dashoffset 100 hides the
+     entire dash behind the gap, dashoffset 0 reveals all of it. Path
+     is drawn bottom-first/top-last (`.fl-final`'s end to
+     `.fl-src-analytics`'s end), so the reveal grows in that same
+     direction — final's result sweeping back to the source. */
   .fl-loop-bead{
-    fill: none; stroke: #8fa4ff; stroke-width: 3; stroke-linecap: round;
-    stroke-dasharray: 12 340; stroke-dashoffset: 0;
-    filter: drop-shadow(0 0 5px rgba(76,110,245,.75));
+    fill: none; stroke: #8fa4ff; stroke-width: 2.6; stroke-linecap: round;
+    stroke-dasharray: 100 100; stroke-dashoffset: 100; opacity: 0;
+    filter: drop-shadow(0 0 6px rgba(76,110,245,.8));
     vector-effect: non-scaling-stroke;
-    animation: fl-loop-bead-move 13s linear infinite;
+    animation: fl-loop-bead-move 11s ease-in-out infinite;
   }
-  @keyframes fl-loop-bead-move{ to{ stroke-dashoffset: -3520; } }
+  @keyframes fl-loop-bead-move{
+    0%, 74%{ stroke-dashoffset: 100; opacity: 0; }
+    78%{ opacity: 1; }
+    92%{ stroke-dashoffset: 0; opacity: 1; }
+    97%, 100%{ stroke-dashoffset: 0; opacity: 0; }
+  }
   @media (prefers-reduced-motion: reduce){
-    .fl-src, .fl-current-in, .fl-current-out, .fl-hub, .fl-hub i, .fl-final, .fl-loopback{ animation: none; }
+    .fl-src, .fl-current-in, .fl-current-out, .fl-hub, .fl-hub i, .fl-final{ animation: none; }
     .fl-loop-bead{ animation: none; opacity: 0; }
   }
 
@@ -2341,7 +2338,7 @@
             <path class="fl-current-in fl-current-in-2" pathLength="454" d="M205 46 Q202 75 130 96" />
             <path class="fl-current-out" pathLength="454" d="M130 131 L130 150" />
             <path class="fl-loopback" d="M130 166 C 40 155, 5 70, 42 40" />
-            <path class="fl-loop-bead" d="M130 166 C 40 155, 5 70, 42 40" />
+            <path class="fl-loop-bead" pathLength="100" d="M130 166 C 40 155, 5 70, 42 40" />
           </svg>
           <div class="fl-hub"><i class="ph-bold ph-arrows-clockwise" aria-hidden="true"></i></div>
           <div class="fl-final"><i class="ph-fill ph-calendar-check" aria-hidden="true"></i></div>
