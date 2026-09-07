@@ -989,143 +989,91 @@
     .pub-audience-1, .pub-audience-2, .pub-audience-3{ animation: none; }
   }
 
-  /* "The Feedback Loop" card — NEW section added right after Repurpose,
-     2026-08-31, from a detailed spec: an analytics/engagement icon
-     (top-left, green) and a "content produced" icon (top-right, blue)
-     both feed into the same center loop icon (visually identical to the
-     Repurposing card's `.rp-hub`), which dispatches down to a calendar
-     "next month" node — plus a faint dashed arrow that continuously
-     travels from that bottom node back up to the analytics icon, never
-     synced to the main beat, implying the whole thing repeats monthly.
-     Topologically this is the exact same choreography as the Repurposing
-     card (N sources → hub → one final node), so it intentionally reuses
-     that card's `rp-flow-in`/`rp-flow-out`/`rp-hub-pulse`/`rp-hub-spin`/
-     `rp-final-receive` keyframes by name rather than duplicating identical
-     percentage keyframes under new ones — only the source "pop" is its
-     own new keyframe (`fl-src-pop`), because it deliberately drops the
-     color half of `rp-src-send` so each source icon can hold a fixed
-     accent color (green / blue) instead of an animation fighting it back
-     to gray every cycle. Class prefix `.fl-`. */
+  /* "The Feedback Loop" card — completely re-animated (2026-09-07),
+     replacing the icon hub-and-spoke diagram entirely (per explicit
+     "completely change the animation, make it a whole different
+     animation" — not a retiming of the old one). The old shape was
+     topologically identical to the Repurposing card right next to it
+     (N sources -> hub -> one final node, just re-skinned), which is
+     likely why it read as generic/vague regardless of how its timing
+     was tuned. This card is specifically about performance data
+     shaping next month's output, so the new diagram drops icons/hub
+     entirely for a small analytics chart that dramatizes the copy
+     directly: a flat, choppy "before" line (running on guesswork, no
+     net progress) crossfades into a smooth, clearly-rising "after"
+     line (the loop's own output, sharpened) — the same visual language
+     as the site's other real chart (`.day90-line`) but its own
+     narrative (a repeating before/after comparison, not a one-time
+     90-day reveal). Class prefix `.fl-`, diagram parts `.fl-chart-*`. */
   .fl-card{ max-width: none; }
   /* .mirror-visual's base `aspect-ratio: 4/3` is what was quietly
      shrinking this box back down to a narrow column even after the card
      itself went full-width — with a wide, fixed-height box, the browser
      was solving the ratio by narrowing the box instead of just letting
      it be a wide rectangle. Overridden to `auto` + an explicit height so
-     width and height stop trading off against each other. The actual
-     diagram then lives in `.fl-stage` below, a fixed-size, centered
-     "stage" inside this now-wide box, so the icons/lines stay a compact
-     cluster in the middle instead of stretching edge-to-edge with it. */
-  /* Copy now sits BELOW the diagram, matching every other `.mirror-card`
-     (was above until the diagram became the first child; margin lives
-     on the visual itself since it's the standard `margin-bottom`
-     pattern again, not the `margin-top` swap the old order needed). */
+     width and height stop trading off against each other. */
+  /* Copy sits BELOW the diagram, matching every other `.mirror-card`
+     (margin lives on the visual itself, the standard `margin-bottom`
+     pattern, since the visual isn't the last child). */
   .fl-visual{ align-items: center; justify-content: center; aspect-ratio: auto; height: 24rem; margin-bottom: 1.4rem; margin-top: 0; }
-  .fl-stage{ position: relative; width: 100%; height: 100%; }
-  .fl-src{
-    position: absolute; top: 16%; transform: translate(-50%,-50%) scale(1);
-    width: 68px; height: 58px; border-radius: 14px;
-    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.16);
-    display: grid; place-items: center; color: var(--cream-dim); font-size: 1.5rem;
-    box-shadow: 0 8px 18px rgba(0,0,0,.28);
-    animation: fl-src-pop 11s ease-in-out infinite;
-  }
-  .fl-src-analytics{ left: 21%; color: #34d399; }
-  .fl-src-content{ left: 79%; color: var(--accent-hot); animation-delay: -.08s; }
-  @keyframes fl-src-pop{
-    0%, 12%, 100%{ transform: translate(-50%,-50%) scale(1); }
-    17%{ transform: translate(-50%,-50%) scale(1.14); }
-    24%, 96%{ transform: translate(-50%,-50%) scale(1); }
-  }
-  /* `preserveAspectRatio="none"` above stretches this SVG's 260x195
-     coordinate space non-uniformly to fill a box far wider than that
-     ratio — fine for straight lines, but it scales a curved path's
-     stroke width differently depending on which way the curve is
-     pointing at each point (more "vertical" stretches thicker, more
-     "horizontal" stretches thinner), which is exactly what was making
-     these lines look fat-to-thin instead of a constant width.
-     `vector-effect: non-scaling-stroke` renders the stroke in constant
-     screen pixels regardless of that coordinate stretch, fixing it. */
-  .fl-wires{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-  .fl-line{ fill: none; stroke: rgba(255,255,255,.14); stroke-width: 1.7; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-  .fl-current-in{
-    fill: none; stroke: var(--accent-hot); stroke-width: 2.9; stroke-linecap: round;
-    stroke-dasharray: 34 420; stroke-dashoffset: 0; opacity: 0;
-    filter: drop-shadow(0 0 7px rgba(76,110,245,.6));
-    vector-effect: non-scaling-stroke;
-    animation: rp-flow-in 11s linear infinite;
-  }
-  .fl-current-in-2{ animation-delay: -.14s; }
-  .fl-current-out{
-    fill: none; stroke: var(--accent-hot); stroke-width: 2.9; stroke-linecap: round;
-    stroke-dasharray: 34 420; stroke-dashoffset: 0; opacity: 0;
-    filter: drop-shadow(0 0 7px rgba(76,110,245,.6));
-    vector-effect: non-scaling-stroke;
-    animation: rp-flow-out 11s linear infinite;
-  }
-  .fl-hub{
-    position: absolute; left: 50%; top: 58%; transform: translate(-50%,-50%) scale(1);
-    width: 84px; height: 76px; border-radius: 22px;
-    background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
-    display: grid; place-items: center; color: var(--accent-hot); font-size: 1.6rem;
-    box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 9px rgba(76,110,245,.12);
-    animation: rp-hub-pulse 11s ease-in-out infinite;
-  }
-  .fl-hub i{ animation: rp-hub-spin 11s linear infinite; }
-  .fl-final{
-    position: absolute; left: 50%; top: 85%; transform: translate(-50%,-50%) scale(1);
-    width: 80px; height: 72px; border-radius: 22px;
-    background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
-    display: grid; place-items: center; color: var(--accent-hot); font-size: 1.5rem;
-    opacity: 1; box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 9px rgba(76,110,245,.12);
-    animation: rp-final-receive 11s ease-in-out infinite;
-  }
-  /* Redesigned per "the animation here is very vague": the old version
-     ran two independent, unsynced motions — a constantly-drifting dash
-     pattern on the guide track (11s) and a small traveling bead on the
-     same curve (13s), both decoupled from the main 11s beat above. A
-     tiny dot occasionally passing on its own clock never reads as "the
-     result feeds back into the source" — there's no causal link for
-     the eye to follow. Now: the guide track is a static, always-visible
-     dashed line (so the closed-loop SHAPE itself is legible even at
-     rest), and the one animated element is a bright stroke that DRAWS
-     ITSELF along that track, gated to the same 11s cycle as the
-     forward flow — it only fires right after `.fl-final` lights up
-     (74%), sweeping the full return path back to the analytics source
-     by 92%. That makes the whole diagram one readable causal chain —
-     sources feed the hub, hub delivers to `.fl-final`, `.fl-final`'s
-     result sweeps back to `.fl-src-analytics` — instead of two things
-     happening for unrelated reasons. */
-  .fl-loopback{
-    fill: none; stroke: rgba(76,110,245,.32); stroke-width: 1.6; stroke-linecap: round;
-    stroke-dasharray: 5 7; vector-effect: non-scaling-stroke;
-  }
-  /* `pathLength="100"` (set on the <path> in the markup) normalizes
-     dasharray/dashoffset to a 0-100 scale regardless of the curve's
+  .fl-chart{ width: 100%; height: 100%; overflow: visible; }
+  .fl-chart-grid{ stroke: var(--ink-border); stroke-width: 1; }
+  /* Both lines start at the same point (0,150) so the crossfade reads
+     as "the same starting effort, two different outcomes," not two
+     unrelated shapes. `pathLength="100"` (set in the markup) normalizes
+     dasharray/dashoffset to a 0-100 scale regardless of each curve's
      actual geometric length — the same convention this page already
-     uses elsewhere (e.g. the 34/420 flow beads' `pathLength="454"`) —
-     so `stroke-dasharray:100 100` + dashoffset 100->0 is a clean,
-     reliable "draw the full path" reveal: dashoffset 100 hides the
-     entire dash behind the gap, dashoffset 0 reveals all of it. Path
-     is drawn bottom-first/top-last (`.fl-final`'s end to
-     `.fl-src-analytics`'s end), so the reveal grows in that same
-     direction — final's result sweeping back to the source. */
-  .fl-loop-bead{
-    fill: none; stroke: #8fa4ff; stroke-width: 2.6; stroke-linecap: round;
-    stroke-dasharray: 100 100; stroke-dashoffset: 100; opacity: 0;
-    filter: drop-shadow(0 0 6px rgba(76,110,245,.8));
-    vector-effect: non-scaling-stroke;
-    animation: fl-loop-bead-move 11s ease-in-out infinite;
+     uses elsewhere (e.g. the flow beads' `pathLength="454"`) — so both
+     lines share one simple "draw from 0 to 100" reveal. */
+  .fl-chart-before{
+    fill: none; stroke: rgba(255,255,255,.4); stroke-width: 2.5; stroke-linecap: round;
+    stroke-dasharray: 100; stroke-dashoffset: 100;
+    animation: fl-before-draw 9s ease-in-out infinite;
   }
-  @keyframes fl-loop-bead-move{
-    0%, 74%{ stroke-dashoffset: 100; opacity: 0; }
-    78%{ opacity: 1; }
-    92%{ stroke-dashoffset: 0; opacity: 1; }
-    97%, 100%{ stroke-dashoffset: 0; opacity: 0; }
+  .fl-chart-after{
+    fill: none; stroke: #8fa4ff; stroke-width: 3; stroke-linecap: round;
+    stroke-dasharray: 100; stroke-dashoffset: 100; opacity: 0;
+    filter: drop-shadow(0 0 8px rgba(76,110,245,.55));
+    animation: fl-after-draw 9s ease-in-out infinite;
   }
+  .fl-chart-dot-before{ fill: #cfd2d9; animation: fl-before-dot 9s ease-in-out infinite; }
+  .fl-chart-dot-after{ fill: #8fa4ff; filter: drop-shadow(0 0 6px rgba(76,110,245,.8)); animation: fl-after-dot 9s ease-in-out infinite; }
+  /* Timeline (9s, one full before->after->reset cycle): before-line
+     draws in (0-10%), holds as the "running on guesswork" resting beat
+     (10-36%), fades out right as the after-line starts drawing over it
+     (36-44%, a genuine crossfade rather than a hard cut), after-line's
+     dot lands at 58% and holds as the payoff state through 90% (the
+     longest beat, since it's the point), then both fade out together
+     for a clean reset at 0%/100%. */
+  @keyframes fl-before-draw{
+    0%{ stroke-dashoffset: 100; opacity: 1; }
+    10%, 36%{ stroke-dashoffset: 0; opacity: 1; }
+    44%, 100%{ stroke-dashoffset: 0; opacity: 0; }
+  }
+  @keyframes fl-before-dot{
+    0%, 8%{ opacity: 0; }
+    12%, 36%{ opacity: 1; }
+    44%, 100%{ opacity: 0; }
+  }
+  @keyframes fl-after-draw{
+    0%, 40%{ stroke-dashoffset: 100; opacity: 0; }
+    44%{ opacity: 1; }
+    58%, 90%{ stroke-dashoffset: 0; opacity: 1; }
+    98%, 100%{ stroke-dashoffset: 0; opacity: 0; }
+  }
+  @keyframes fl-after-dot{
+    0%, 54%{ opacity: 0; }
+    60%, 90%{ opacity: 1; }
+    98%, 100%{ opacity: 0; }
+  }
+  /* Reduced motion rests on the "after" line fully drawn — the
+     finished, sharpened result — same reasoning as `.rp-final` resting
+     at its bright/delivered look elsewhere on this page: one complete
+     answer beats a permanently-blank or half-faded placeholder. */
   @media (prefers-reduced-motion: reduce){
-    .fl-src, .fl-current-in, .fl-current-out, .fl-hub, .fl-hub i, .fl-final{ animation: none; }
-    .fl-loop-bead{ animation: none; opacity: 0; }
+    .fl-chart-before, .fl-chart-dot-before{ animation: none; opacity: 0; }
+    .fl-chart-after{ animation: none; stroke-dashoffset: 0; opacity: 1; }
+    .fl-chart-dot-after{ animation: none; opacity: 1; }
   }
 
   /* Retention section — REBUILT FROM SCRATCH 2026-08-28, replacing the
@@ -2327,22 +2275,17 @@
 
     <div class="mirror-card fl-card reveal mt-12">
       <div class="mirror-visual fl-visual" aria-hidden="true">
-        <div class="fl-stage">
-          <div class="fl-src fl-src-analytics"><i class="ph-fill ph-chart-line-up" aria-hidden="true"></i></div>
-          <div class="fl-src fl-src-content"><i class="ph-fill ph-note" aria-hidden="true"></i></div>
-          <svg class="fl-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
-            <path class="fl-line" d="M55 46 Q58 75 130 96" />
-            <path class="fl-line" d="M205 46 Q202 75 130 96" />
-            <path class="fl-line" d="M130 131 L130 150" />
-            <path class="fl-current-in" pathLength="454" d="M55 46 Q58 75 130 96" />
-            <path class="fl-current-in fl-current-in-2" pathLength="454" d="M205 46 Q202 75 130 96" />
-            <path class="fl-current-out" pathLength="454" d="M130 131 L130 150" />
-            <path class="fl-loopback" d="M130 166 C 40 155, 5 70, 42 40" />
-            <path class="fl-loop-bead" pathLength="100" d="M130 166 C 40 155, 5 70, 42 40" />
-          </svg>
-          <div class="fl-hub"><i class="ph-bold ph-arrows-clockwise" aria-hidden="true"></i></div>
-          <div class="fl-final"><i class="ph-fill ph-calendar-check" aria-hidden="true"></i></div>
-        </div>
+        <svg class="fl-chart" viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet">
+          <line class="fl-chart-grid" x1="0" y1="190" x2="600" y2="190" />
+          <line class="fl-chart-grid" x1="0" y1="115" x2="600" y2="115" />
+          <line class="fl-chart-grid" x1="0" y1="40" x2="600" y2="40" />
+          <path class="fl-chart-before" pathLength="100"
+                d="M0,150 C50,154 50,158 100,158 C150,158 150,140 200,140 C250,140 250,155 300,155 C350,155 350,145 400,145 C450,145 450,160 500,160 C550,160 550,150 600,150" />
+          <path class="fl-chart-after" pathLength="100"
+                d="M0,150 C50,142 50,134 100,130 C150,126 150,112 200,105 C250,98 250,90 300,85 C350,80 350,70 400,65 C450,60 450,50 500,45 C550,40 550,30 600,25" />
+          <circle class="fl-chart-dot fl-chart-dot-before" cx="600" cy="150" r="6" />
+          <circle class="fl-chart-dot fl-chart-dot-after" cx="600" cy="25" r="6" />
+        </svg>
       </div>
       <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">The Feedback Loop</h3>
       <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Every post we publish feeds back in. What actually landed shapes next month&rsquo;s production, so the system gets sharper instead of repeating itself.</p>
