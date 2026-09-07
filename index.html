@@ -989,23 +989,26 @@
     .pub-audience-1, .pub-audience-2, .pub-audience-3{ animation: none; }
   }
 
-  /* "The Feedback Loop" card — NEW section added right after Repurpose,
-     2026-08-31, from a detailed spec: an analytics/engagement icon
-     (top-left, green) and a "content produced" icon (top-right, blue)
-     both feed into the same center loop icon (visually identical to the
+  /* "The Feedback Loop" card — an analytics/engagement icon (top-left,
+     green) and a "content produced" icon (top-right, blue) both feed
+     into the same center loop icon (visually identical to the
      Repurposing card's `.rp-hub`), which dispatches down to a calendar
      "next month" node — plus a faint dashed arrow that continuously
      travels from that bottom node back up to the analytics icon, never
      synced to the main beat, implying the whole thing repeats monthly.
-     Topologically this is the exact same choreography as the Repurposing
-     card (N sources → hub → one final node), so it intentionally reuses
-     that card's `rp-flow-in`/`rp-flow-out`/`rp-hub-pulse`/`rp-hub-spin`/
-     `rp-final-receive` keyframes by name rather than duplicating identical
-     percentage keyframes under new ones — only the source "pop" is its
-     own new keyframe (`fl-src-pop`), because it deliberately drops the
-     color half of `rp-src-send` so each source icon can hold a fixed
-     accent color (green / blue) instead of an animation fighting it back
-     to gray every cycle. Class prefix `.fl-`. */
+     Topologically this is the same choreography as the Repurposing card
+     (N sources → hub → one final node), and still reuses that card's
+     `rp-hub-spin` for the hub icon's constant rotation, but the flow
+     dots (`fl-flow-in`/`fl-flow-out`), the hub's scale pulse
+     (`fl-hub-breathe`), and the source pop (`fl-src-pop`) are all this
+     card's own dedicated keyframes rather than the shared `rp-*` ones —
+     retimed (2026-09-07) to loop continuously/frequently rather than
+     once per ~11s cycle, and changing the SHARED `rp-*` keyframes would
+     have also retimed the Repurposing card next to this one. `.fl-final`
+     (the calendar node) has no animation at all: it just rests at its
+     bright base look permanently, since dots now arrive every ~2s
+     rather than every ~11s — a periodic dim would read as flickering
+     rather than "continuously fed." Class prefix `.fl-`. */
   .fl-card{ max-width: none; }
   /* .mirror-visual's base `aspect-ratio: 4/3` is what was quietly
      shrinking this box back down to a narrow column even after the card
@@ -1020,7 +1023,14 @@
      (was above until the diagram became the first child; margin lives
      on the visual itself since it's the standard `margin-bottom`
      pattern again, not the `margin-top` swap the old order needed). */
-  .fl-visual{ align-items: center; justify-content: center; aspect-ratio: auto; height: 24rem; margin-bottom: 1.4rem; margin-top: 0; }
+  /* Soft indigo glow behind the whole diagram (~14% opacity, one
+     focal gradient, no grid/rings/particles) — layered over
+     `.mirror-visual`'s own flat `background: var(--ink-900)` rather
+     than replacing it, and scoped to this card only. */
+  .fl-visual{
+    align-items: center; justify-content: center; aspect-ratio: auto; height: 24rem; margin-bottom: 1.4rem; margin-top: 0;
+    background: radial-gradient(60% 65% at 50% 40%, rgba(76,110,245,.14), transparent 70%), var(--ink-900);
+  }
   .fl-stage{ position: relative; width: 100%; height: 100%; }
   .fl-src{
     position: absolute; top: 16%; transform: translate(-50%,-50%) scale(1);
@@ -1048,20 +1058,37 @@
      screen pixels regardless of that coordinate stretch, fixing it. */
   .fl-wires{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   .fl-line{ fill: none; stroke: rgba(255,255,255,.14); stroke-width: 1.7; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  /* Dedicated fast-looping keyframes (not the shared rp-flow-in/out —
+     changing those would also retime the Repurposing card next to this
+     one) so the dots read as CONTINUOUSLY traveling rather than one
+     burst per long cycle: a short ~2s pass with only a brief fade
+     between repeats, instead of the ~11s cycle's long idle stretch. */
   .fl-current-in{
     fill: none; stroke: var(--accent-hot); stroke-width: 2.9; stroke-linecap: round;
     stroke-dasharray: 34 420; stroke-dashoffset: 0; opacity: 0;
     filter: drop-shadow(0 0 7px rgba(76,110,245,.6));
     vector-effect: non-scaling-stroke;
-    animation: rp-flow-in 11s linear infinite;
+    animation: fl-flow-in 2.4s linear infinite;
   }
-  .fl-current-in-2{ animation-delay: -.14s; }
+  .fl-current-in-2{ animation-delay: -.9s; }
   .fl-current-out{
     fill: none; stroke: var(--accent-hot); stroke-width: 2.9; stroke-linecap: round;
     stroke-dasharray: 34 420; stroke-dashoffset: 0; opacity: 0;
     filter: drop-shadow(0 0 7px rgba(76,110,245,.6));
     vector-effect: non-scaling-stroke;
-    animation: rp-flow-out 11s linear infinite;
+    animation: fl-flow-out 2s linear infinite;
+  }
+  @keyframes fl-flow-in{
+    0%{ stroke-dashoffset: 0; opacity: 0; }
+    6%{ opacity: 1; }
+    82%{ stroke-dashoffset: -454; opacity: 1; }
+    90%, 100%{ stroke-dashoffset: -454; opacity: 0; }
+  }
+  @keyframes fl-flow-out{
+    0%{ stroke-dashoffset: 0; opacity: 0; }
+    8%{ opacity: 1; }
+    82%{ stroke-dashoffset: -454; opacity: 1; }
+    90%, 100%{ stroke-dashoffset: -454; opacity: 0; }
   }
   .fl-hub{
     position: absolute; left: 50%; top: 58%; transform: translate(-50%,-50%) scale(1);
@@ -1069,16 +1096,26 @@
     background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
     display: grid; place-items: center; color: var(--accent-hot); font-size: 1.6rem;
     box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 9px rgba(76,110,245,.12);
-    animation: rp-hub-pulse 11s ease-in-out infinite;
+    animation: fl-hub-breathe 2.8s ease-in-out infinite;
+  }
+  /* Gentle, continuous, and deliberately NOT tied to when a dot arrives
+     — an ambient "idle engine" pulse rather than a one-shot reaction,
+     per "gently pulses ... to feel like an active engine". */
+  @keyframes fl-hub-breathe{
+    0%, 100%{ transform: translate(-50%,-50%) scale(1); box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 7px rgba(76,110,245,.12); }
+    50%{ transform: translate(-50%,-50%) scale(1.05); box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 12px rgba(76,110,245,.22); }
   }
   .fl-hub i{ animation: rp-hub-spin 11s linear infinite; }
+  /* Rests permanently at its bright/delivered look (the base, non-
+     animated state below) rather than dimming between arrivals — now
+     that dots reach it every ~2s instead of every ~11s, a periodic dim
+     would read as flickering rather than "continuously fed." */
   .fl-final{
     position: absolute; left: 50%; top: 85%; transform: translate(-50%,-50%) scale(1);
     width: 80px; height: 72px; border-radius: 22px;
     background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
     display: grid; place-items: center; color: var(--accent-hot); font-size: 1.5rem;
     opacity: 1; box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 9px rgba(76,110,245,.12);
-    animation: rp-final-receive 11s ease-in-out infinite;
   }
   /* Faint dashed arrow, continuously traveling, never gated to the 6.5s
      beat above — an ambient "this repeats every month" cue rather than
@@ -1127,7 +1164,7 @@
   }
   @keyframes fl-loop-bead-move{ to{ stroke-dashoffset: -3520; } }
   @media (prefers-reduced-motion: reduce){
-    .fl-src, .fl-current-in, .fl-current-out, .fl-hub, .fl-hub i, .fl-final, .fl-loopback{ animation: none; }
+    .fl-src, .fl-current-in, .fl-current-out, .fl-hub, .fl-hub i, .fl-loopback{ animation: none; }
     .fl-loop-bead{ animation: none; opacity: 0; }
   }
 
