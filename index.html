@@ -989,101 +989,146 @@
     .pub-audience-1, .pub-audience-2, .pub-audience-3{ animation: none; }
   }
 
-  /* "The Feedback Loop" card — re-animated a second time (2026-09-07):
-     the chart crossfade replaced the old hub-and-spoke diagram, but a
-     line-chart animation already exists two sections down (`.day90-line`
-     in "What changes by day 90"), so per explicit "the graph style
-     animation is already on the next page after this, do something
-     different" this drops charts entirely too. Third distinct idiom:
-     a tightening orbit. A dot spirals inward around a glowing core
-     across several laps, the core pulses once the spiral reaches its
-     tightest point, then both reset outward and repeat — "loop" is the
-     literal shape (an orbit), "gets sharper instead of repeating
-     itself" is the spiral (each lap is tighter/more precise than the
-     last, not an identical repeated circle) landing on a visible
-     payoff (the core reacting), not a data visualization at all. Class
-     prefix `.fl-`, diagram parts `.fl-orbit-*`. */
+  /* "The Feedback Loop" card — NEW section added right after Repurpose,
+     2026-08-31, from a detailed spec: an analytics/engagement icon
+     (top-left, green) and a "content produced" icon (top-right, blue)
+     both feed into the same center loop icon (visually identical to the
+     Repurposing card's `.rp-hub`), which dispatches down to a calendar
+     "next month" node — plus a faint dashed arrow that continuously
+     travels from that bottom node back up to the analytics icon, never
+     synced to the main beat, implying the whole thing repeats monthly.
+     Topologically this is the exact same choreography as the Repurposing
+     card (N sources → hub → one final node), so it intentionally reuses
+     that card's `rp-flow-in`/`rp-flow-out`/`rp-hub-pulse`/`rp-hub-spin`/
+     `rp-final-receive` keyframes by name rather than duplicating identical
+     percentage keyframes under new ones — only the source "pop" is its
+     own new keyframe (`fl-src-pop`), because it deliberately drops the
+     color half of `rp-src-send` so each source icon can hold a fixed
+     accent color (green / blue) instead of an animation fighting it back
+     to gray every cycle. Class prefix `.fl-`. */
   .fl-card{ max-width: none; }
   /* .mirror-visual's base `aspect-ratio: 4/3` is what was quietly
      shrinking this box back down to a narrow column even after the card
      itself went full-width — with a wide, fixed-height box, the browser
      was solving the ratio by narrowing the box instead of just letting
      it be a wide rectangle. Overridden to `auto` + an explicit height so
-     width and height stop trading off against each other. */
-  /* Copy sits BELOW the diagram, matching every other `.mirror-card`
-     (margin lives on the visual itself, the standard `margin-bottom`
-     pattern, since the visual isn't the last child). */
+     width and height stop trading off against each other. The actual
+     diagram then lives in `.fl-stage` below, a fixed-size, centered
+     "stage" inside this now-wide box, so the icons/lines stay a compact
+     cluster in the middle instead of stretching edge-to-edge with it. */
+  /* Copy now sits BELOW the diagram, matching every other `.mirror-card`
+     (was above until the diagram became the first child; margin lives
+     on the visual itself since it's the standard `margin-bottom`
+     pattern again, not the `margin-top` swap the old order needed). */
   .fl-visual{ align-items: center; justify-content: center; aspect-ratio: auto; height: 24rem; margin-bottom: 1.4rem; margin-top: 0; }
-  .fl-orbit-stage{ position: relative; width: 260px; height: 260px; }
-  .fl-orbit-ring{
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-    border: 1px dashed rgba(255,255,255,.14); border-radius: 50%;
+  .fl-stage{ position: relative; width: 100%; height: 100%; }
+  .fl-src{
+    position: absolute; top: 16%; transform: translate(-50%,-50%) scale(1);
+    width: 68px; height: 58px; border-radius: 14px;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.16);
+    display: grid; place-items: center; color: var(--cream-dim); font-size: 1.5rem;
+    box-shadow: 0 8px 18px rgba(0,0,0,.28);
+    animation: fl-src-pop 11s ease-in-out infinite;
   }
-  .fl-orbit-ring-1{ width: 220px; height: 220px; }
-  .fl-orbit-ring-2{ width: 150px; height: 150px; }
-  .fl-orbit-ring-3{ width: 80px; height: 80px; }
-  /* The rings are static reference marks (like an atom/orbit diagram)
-     so the spiral has something fixed to read its tightening against —
-     a lone moving dot with nothing to compare it to wouldn't visibly
-     communicate "closer than last time." */
-  .fl-orbit-core{
-    position: absolute; top: 50%; left: 50%; width: 18px; height: 18px; border-radius: 50%;
-    background: var(--accent-hot);
-    transform: translate(-50%,-50%) scale(1);
-    box-shadow: 0 0 0 8px rgba(76,110,245,.15), 0 0 18px rgba(76,110,245,.45);
-    animation: fl-orbit-core-pulse 9s ease-in-out infinite;
+  .fl-src-analytics{ left: 21%; color: #34d399; }
+  .fl-src-content{ left: 79%; color: var(--accent-hot); animation-delay: -.08s; }
+  @keyframes fl-src-pop{
+    0%, 12%, 100%{ transform: translate(-50%,-50%) scale(1); }
+    17%{ transform: translate(-50%,-50%) scale(1.14); }
+    24%, 96%{ transform: translate(-50%,-50%) scale(1); }
   }
-  /* Standard nested rotate-then-translate orbit technique: `.fl-orbit-
-     spin` is a zero-size point at dead center that just rotates,
-     constantly and independently of everything else (its own 3s clock,
-     unrelated to the 9s radius cycle — 3 clean laps per radius cycle).
-     `.fl-orbit-track` (also zero-size, a child of the rotating point)
-     holds the actual orbit radius as a `translateX`, which — because
-     `transform` composes with the ancestor's rotation — sweeps that
-     distance around in a circle as the rotation progresses. Animating
-     `.fl-orbit-track`'s own translateX distance on a SEPARATE 9s timer
-     is what turns a plain circular orbit into a inward spiral: the
-     radius itself shrinks over the 9s cycle while the 3s spin keeps
-     turning underneath it. `.fl-orbit-dot` is the only element with
-     real size, centered on that computed point via translate(-50%,-50%)
-     since (unlike its zero-size ancestors) it actually has dimensions
-     to offset by. */
-  .fl-orbit-spin{ position: absolute; top: 50%; left: 50%; width: 0; height: 0; animation: fl-orbit-spin 3s linear infinite; }
-  .fl-orbit-track{ position: absolute; top: 0; left: 0; width: 0; height: 0; animation: fl-orbit-radius 9s ease-in-out infinite; }
-  .fl-orbit-dot{
-    position: absolute; top: 0; left: 0; width: 12px; height: 12px; border-radius: 50%;
-    transform: translate(-50%,-50%);
-    background: #8fa4ff;
-    filter: drop-shadow(0 0 6px rgba(76,110,245,.8));
+  /* `preserveAspectRatio="none"` above stretches this SVG's 260x195
+     coordinate space non-uniformly to fill a box far wider than that
+     ratio — fine for straight lines, but it scales a curved path's
+     stroke width differently depending on which way the curve is
+     pointing at each point (more "vertical" stretches thicker, more
+     "horizontal" stretches thinner), which is exactly what was making
+     these lines look fat-to-thin instead of a constant width.
+     `vector-effect: non-scaling-stroke` renders the stroke in constant
+     screen pixels regardless of that coordinate stretch, fixing it. */
+  .fl-wires{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .fl-line{ fill: none; stroke: rgba(255,255,255,.14); stroke-width: 1.7; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .fl-current-in{
+    fill: none; stroke: var(--accent-hot); stroke-width: 2.9; stroke-linecap: round;
+    stroke-dasharray: 34 420; stroke-dashoffset: 0; opacity: 0;
+    filter: drop-shadow(0 0 7px rgba(76,110,245,.6));
+    vector-effect: non-scaling-stroke;
+    animation: rp-flow-in 11s linear infinite;
   }
-  @keyframes fl-orbit-spin{ to{ transform: rotate(360deg); } }
-  /* Radius shrinks from just inside the outer ring to just inside the
-     inner one over the whole 9s cycle (3 spiraling laps, since the
-     spin above is 3s/lap), then snaps back out with a fade — same
-     "opacity:0 then reset" pattern this page uses everywhere else for
-     a clean loop point (e.g. `rp-flow-in`'s 48%,100%{opacity:0}). */
-  @keyframes fl-orbit-radius{
-    0%{ transform: translateX(103px); opacity: 1; }
-    88%{ transform: translateX(28px); opacity: 1; }
-    92%, 100%{ transform: translateX(103px); opacity: 0; }
+  .fl-current-in-2{ animation-delay: -.14s; }
+  .fl-current-out{
+    fill: none; stroke: var(--accent-hot); stroke-width: 2.9; stroke-linecap: round;
+    stroke-dasharray: 34 420; stroke-dashoffset: 0; opacity: 0;
+    filter: drop-shadow(0 0 7px rgba(76,110,245,.6));
+    vector-effect: non-scaling-stroke;
+    animation: rp-flow-out 11s linear infinite;
   }
-  /* Core reacts right as the spiral lands at its tightest (88-90%) —
-     the one visible payoff beat tying the whole cycle together, same
-     "brighten right as the thing arrives" language as `.rp-hub-pulse`
-     elsewhere on this page. */
-  @keyframes fl-orbit-core-pulse{
-    0%, 84%, 100%{ transform: translate(-50%,-50%) scale(1); box-shadow: 0 0 0 8px rgba(76,110,245,.15), 0 0 18px rgba(76,110,245,.45); }
-    90%{ transform: translate(-50%,-50%) scale(1.3); box-shadow: 0 0 0 14px rgba(76,110,245,.28), 0 0 30px rgba(76,110,245,.75); }
-    96%{ transform: translate(-50%,-50%) scale(1); box-shadow: 0 0 0 8px rgba(76,110,245,.15), 0 0 18px rgba(76,110,245,.45); }
+  .fl-hub{
+    position: absolute; left: 50%; top: 58%; transform: translate(-50%,-50%) scale(1);
+    width: 84px; height: 76px; border-radius: 22px;
+    background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
+    display: grid; place-items: center; color: var(--accent-hot); font-size: 1.6rem;
+    box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 9px rgba(76,110,245,.12);
+    animation: rp-hub-pulse 11s ease-in-out infinite;
   }
-  /* Reduced motion rests on the resolved, tightest-orbit moment (dot
-     in close, core mid-glow) rather than the wide starting radius —
-     same "show the finished state, not a blank start" reasoning as
-     `.rp-final` resting at its bright/delivered look elsewhere. */
+  .fl-hub i{ animation: rp-hub-spin 11s linear infinite; }
+  .fl-final{
+    position: absolute; left: 50%; top: 85%; transform: translate(-50%,-50%) scale(1);
+    width: 80px; height: 72px; border-radius: 22px;
+    background: var(--ink-900); border: 1px solid rgba(255,255,255,.16);
+    display: grid; place-items: center; color: var(--accent-hot); font-size: 1.5rem;
+    opacity: 1; box-shadow: 0 14px 30px rgba(0,0,0,.4), 0 0 0 9px rgba(76,110,245,.12);
+    animation: rp-final-receive 11s ease-in-out infinite;
+  }
+  /* Faint dashed arrow, continuously traveling, never gated to the 6.5s
+     beat above — an ambient "this repeats every month" cue rather than
+     one more synced step, so it just always drifts. */
+  .fl-loopback{
+    fill: none; stroke: rgba(76,110,245,.28); stroke-width: 1.6; stroke-linecap: round;
+    stroke-dasharray: 8 20; vector-effect: non-scaling-stroke;
+    animation: fl-loop-travel 11s linear infinite;
+  }
+  @keyframes fl-loop-travel{ to{ stroke-dashoffset: -560; } }
+  /* A bright traveling bead riding the same curve, in the same direction
+     (path is drawn bottom-first/top-last, so a decreasing dashoffset
+     moves it from `.fl-final` up toward `.fl-src-analytics` — the same
+     "decreasing offset = moves toward the drawn end" rule every bead on
+     this page follows). First tried an actual arrow shape moved via
+     `offset-path`, but that broke badly: this SVG's `preserveAspectRatio
+     ="none"` stretches its coordinate space non-uniformly to fill a box
+     far wider than its own viewBox ratio, and `offset-path` resolved the
+     shape's position/scale against a DIFFERENT effective coordinate
+     space than the one `<path>` shapes actually render in — the shape
+     ended up oversized and nowhere near the line. A plain dasharray/
+     dashoffset bead (exactly how every other flow-line on this page
+     works) renders in that same stretched space as the line itself, so
+     it can't ever drift out of alignment like that. No `pathLength`
+     normalization needed here since the offset target is just a clean
+     multiple of the dash pattern's own length for seamless infinite
+     tiling, not a one-shot full-path traversal.
+     Gap widened a lot (was `18 70`, ~2-3 dashes visible on screen at
+     once and looking choppy) to `12 340` so only ONE short dash is ever
+     visible at a time — reads as a single smoothly traveling dot rather
+     than several disconnected chunks. The non-uniform stretch from
+     `preserveAspectRatio="none"` still makes that one dash's apparent
+     length breathe slightly as it crosses more-vertical vs. more-
+     horizontal parts of the curve (the same root cause as the stroke-
+     width taper fixed above, just for dash length instead of width —
+     `non-scaling-stroke` doesn't cover dash spacing), but with only one
+     dash on screen that's a minor wobble, not a "choppy" multi-segment
+     look. Slowed further (4s → 7s) per "the animations which are
+     happening on the lines are very fast, make it slow and smooth". */
+  .fl-loop-bead{
+    fill: none; stroke: #8fa4ff; stroke-width: 3; stroke-linecap: round;
+    stroke-dasharray: 12 340; stroke-dashoffset: 0;
+    filter: drop-shadow(0 0 5px rgba(76,110,245,.75));
+    vector-effect: non-scaling-stroke;
+    animation: fl-loop-bead-move 13s linear infinite;
+  }
+  @keyframes fl-loop-bead-move{ to{ stroke-dashoffset: -3520; } }
   @media (prefers-reduced-motion: reduce){
-    .fl-orbit-spin, .fl-orbit-track, .fl-orbit-core{ animation: none; }
-    .fl-orbit-track{ transform: translateX(28px); }
-    .fl-orbit-core{ box-shadow: 0 0 0 12px rgba(76,110,245,.22), 0 0 24px rgba(76,110,245,.6); }
+    .fl-src, .fl-current-in, .fl-current-out, .fl-hub, .fl-hub i, .fl-final, .fl-loopback{ animation: none; }
+    .fl-loop-bead{ animation: none; opacity: 0; }
   }
 
   /* Retention section — REBUILT FROM SCRATCH 2026-08-28, replacing the
@@ -2285,16 +2330,21 @@
 
     <div class="mirror-card fl-card reveal mt-12">
       <div class="mirror-visual fl-visual" aria-hidden="true">
-        <div class="fl-orbit-stage">
-          <div class="fl-orbit-ring fl-orbit-ring-1"></div>
-          <div class="fl-orbit-ring fl-orbit-ring-2"></div>
-          <div class="fl-orbit-ring fl-orbit-ring-3"></div>
-          <div class="fl-orbit-core"></div>
-          <div class="fl-orbit-spin">
-            <div class="fl-orbit-track">
-              <div class="fl-orbit-dot"></div>
-            </div>
-          </div>
+        <div class="fl-stage">
+          <div class="fl-src fl-src-analytics"><i class="ph-fill ph-chart-line-up" aria-hidden="true"></i></div>
+          <div class="fl-src fl-src-content"><i class="ph-fill ph-note" aria-hidden="true"></i></div>
+          <svg class="fl-wires" viewBox="0 0 260 195" preserveAspectRatio="none">
+            <path class="fl-line" d="M55 46 Q58 75 130 96" />
+            <path class="fl-line" d="M205 46 Q202 75 130 96" />
+            <path class="fl-line" d="M130 131 L130 150" />
+            <path class="fl-current-in" pathLength="454" d="M55 46 Q58 75 130 96" />
+            <path class="fl-current-in fl-current-in-2" pathLength="454" d="M205 46 Q202 75 130 96" />
+            <path class="fl-current-out" pathLength="454" d="M130 131 L130 150" />
+            <path class="fl-loopback" d="M130 166 C 40 155, 5 70, 42 40" />
+            <path class="fl-loop-bead" d="M130 166 C 40 155, 5 70, 42 40" />
+          </svg>
+          <div class="fl-hub"><i class="ph-bold ph-arrows-clockwise" aria-hidden="true"></i></div>
+          <div class="fl-final"><i class="ph-fill ph-calendar-check" aria-hidden="true"></i></div>
         </div>
       </div>
       <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">The Feedback Loop</h3>
