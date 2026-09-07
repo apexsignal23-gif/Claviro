@@ -989,22 +989,20 @@
     .pub-audience-1, .pub-audience-2, .pub-audience-3{ animation: none; }
   }
 
-  /* "The Feedback Loop" card — completely re-animated (2026-09-07),
-     replacing the icon hub-and-spoke diagram entirely (per explicit
-     "completely change the animation, make it a whole different
-     animation" — not a retiming of the old one). The old shape was
-     topologically identical to the Repurposing card right next to it
-     (N sources -> hub -> one final node, just re-skinned), which is
-     likely why it read as generic/vague regardless of how its timing
-     was tuned. This card is specifically about performance data
-     shaping next month's output, so the new diagram drops icons/hub
-     entirely for a small analytics chart that dramatizes the copy
-     directly: a flat, choppy "before" line (running on guesswork, no
-     net progress) crossfades into a smooth, clearly-rising "after"
-     line (the loop's own output, sharpened) — the same visual language
-     as the site's other real chart (`.day90-line`) but its own
-     narrative (a repeating before/after comparison, not a one-time
-     90-day reveal). Class prefix `.fl-`, diagram parts `.fl-chart-*`. */
+  /* "The Feedback Loop" card — re-animated a second time (2026-09-07):
+     the chart crossfade replaced the old hub-and-spoke diagram, but a
+     line-chart animation already exists two sections down (`.day90-line`
+     in "What changes by day 90"), so per explicit "the graph style
+     animation is already on the next page after this, do something
+     different" this drops charts entirely too. Third distinct idiom:
+     a tightening orbit. A dot spirals inward around a glowing core
+     across several laps, the core pulses once the spiral reaches its
+     tightest point, then both reset outward and repeat — "loop" is the
+     literal shape (an orbit), "gets sharper instead of repeating
+     itself" is the spiral (each lap is tighter/more precise than the
+     last, not an identical repeated circle) landing on a visible
+     payoff (the core reacting), not a data visualization at all. Class
+     prefix `.fl-`, diagram parts `.fl-orbit-*`. */
   .fl-card{ max-width: none; }
   /* .mirror-visual's base `aspect-ratio: 4/3` is what was quietly
      shrinking this box back down to a narrow column even after the card
@@ -1016,64 +1014,76 @@
      (margin lives on the visual itself, the standard `margin-bottom`
      pattern, since the visual isn't the last child). */
   .fl-visual{ align-items: center; justify-content: center; aspect-ratio: auto; height: 24rem; margin-bottom: 1.4rem; margin-top: 0; }
-  .fl-chart{ width: 100%; height: 100%; overflow: visible; }
-  .fl-chart-grid{ stroke: var(--ink-border); stroke-width: 1; }
-  /* Both lines start at the same point (0,150) so the crossfade reads
-     as "the same starting effort, two different outcomes," not two
-     unrelated shapes. `pathLength="100"` (set in the markup) normalizes
-     dasharray/dashoffset to a 0-100 scale regardless of each curve's
-     actual geometric length — the same convention this page already
-     uses elsewhere (e.g. the flow beads' `pathLength="454"`) — so both
-     lines share one simple "draw from 0 to 100" reveal. */
-  .fl-chart-before{
-    fill: none; stroke: rgba(255,255,255,.4); stroke-width: 2.5; stroke-linecap: round;
-    stroke-dasharray: 100; stroke-dashoffset: 100;
-    animation: fl-before-draw 9s ease-in-out infinite;
+  .fl-orbit-stage{ position: relative; width: 260px; height: 260px; }
+  .fl-orbit-ring{
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    border: 1px dashed rgba(255,255,255,.14); border-radius: 50%;
   }
-  .fl-chart-after{
-    fill: none; stroke: #8fa4ff; stroke-width: 3; stroke-linecap: round;
-    stroke-dasharray: 100; stroke-dashoffset: 100; opacity: 0;
-    filter: drop-shadow(0 0 8px rgba(76,110,245,.55));
-    animation: fl-after-draw 9s ease-in-out infinite;
+  .fl-orbit-ring-1{ width: 220px; height: 220px; }
+  .fl-orbit-ring-2{ width: 150px; height: 150px; }
+  .fl-orbit-ring-3{ width: 80px; height: 80px; }
+  /* The rings are static reference marks (like an atom/orbit diagram)
+     so the spiral has something fixed to read its tightening against —
+     a lone moving dot with nothing to compare it to wouldn't visibly
+     communicate "closer than last time." */
+  .fl-orbit-core{
+    position: absolute; top: 50%; left: 50%; width: 18px; height: 18px; border-radius: 50%;
+    background: var(--accent-hot);
+    transform: translate(-50%,-50%) scale(1);
+    box-shadow: 0 0 0 8px rgba(76,110,245,.15), 0 0 18px rgba(76,110,245,.45);
+    animation: fl-orbit-core-pulse 9s ease-in-out infinite;
   }
-  .fl-chart-dot-before{ fill: #cfd2d9; animation: fl-before-dot 9s ease-in-out infinite; }
-  .fl-chart-dot-after{ fill: #8fa4ff; filter: drop-shadow(0 0 6px rgba(76,110,245,.8)); animation: fl-after-dot 9s ease-in-out infinite; }
-  /* Timeline (9s, one full before->after->reset cycle): before-line
-     draws in (0-10%), holds as the "running on guesswork" resting beat
-     (10-36%), fades out right as the after-line starts drawing over it
-     (36-44%, a genuine crossfade rather than a hard cut), after-line's
-     dot lands at 58% and holds as the payoff state through 90% (the
-     longest beat, since it's the point), then both fade out together
-     for a clean reset at 0%/100%. */
-  @keyframes fl-before-draw{
-    0%{ stroke-dashoffset: 100; opacity: 1; }
-    10%, 36%{ stroke-dashoffset: 0; opacity: 1; }
-    44%, 100%{ stroke-dashoffset: 0; opacity: 0; }
+  /* Standard nested rotate-then-translate orbit technique: `.fl-orbit-
+     spin` is a zero-size point at dead center that just rotates,
+     constantly and independently of everything else (its own 3s clock,
+     unrelated to the 9s radius cycle — 3 clean laps per radius cycle).
+     `.fl-orbit-track` (also zero-size, a child of the rotating point)
+     holds the actual orbit radius as a `translateX`, which — because
+     `transform` composes with the ancestor's rotation — sweeps that
+     distance around in a circle as the rotation progresses. Animating
+     `.fl-orbit-track`'s own translateX distance on a SEPARATE 9s timer
+     is what turns a plain circular orbit into a inward spiral: the
+     radius itself shrinks over the 9s cycle while the 3s spin keeps
+     turning underneath it. `.fl-orbit-dot` is the only element with
+     real size, centered on that computed point via translate(-50%,-50%)
+     since (unlike its zero-size ancestors) it actually has dimensions
+     to offset by. */
+  .fl-orbit-spin{ position: absolute; top: 50%; left: 50%; width: 0; height: 0; animation: fl-orbit-spin 3s linear infinite; }
+  .fl-orbit-track{ position: absolute; top: 0; left: 0; width: 0; height: 0; animation: fl-orbit-radius 9s ease-in-out infinite; }
+  .fl-orbit-dot{
+    position: absolute; top: 0; left: 0; width: 12px; height: 12px; border-radius: 50%;
+    transform: translate(-50%,-50%);
+    background: #8fa4ff;
+    filter: drop-shadow(0 0 6px rgba(76,110,245,.8));
   }
-  @keyframes fl-before-dot{
-    0%, 8%{ opacity: 0; }
-    12%, 36%{ opacity: 1; }
-    44%, 100%{ opacity: 0; }
+  @keyframes fl-orbit-spin{ to{ transform: rotate(360deg); } }
+  /* Radius shrinks from just inside the outer ring to just inside the
+     inner one over the whole 9s cycle (3 spiraling laps, since the
+     spin above is 3s/lap), then snaps back out with a fade — same
+     "opacity:0 then reset" pattern this page uses everywhere else for
+     a clean loop point (e.g. `rp-flow-in`'s 48%,100%{opacity:0}). */
+  @keyframes fl-orbit-radius{
+    0%{ transform: translateX(103px); opacity: 1; }
+    88%{ transform: translateX(28px); opacity: 1; }
+    92%, 100%{ transform: translateX(103px); opacity: 0; }
   }
-  @keyframes fl-after-draw{
-    0%, 40%{ stroke-dashoffset: 100; opacity: 0; }
-    44%{ opacity: 1; }
-    58%, 90%{ stroke-dashoffset: 0; opacity: 1; }
-    98%, 100%{ stroke-dashoffset: 0; opacity: 0; }
+  /* Core reacts right as the spiral lands at its tightest (88-90%) —
+     the one visible payoff beat tying the whole cycle together, same
+     "brighten right as the thing arrives" language as `.rp-hub-pulse`
+     elsewhere on this page. */
+  @keyframes fl-orbit-core-pulse{
+    0%, 84%, 100%{ transform: translate(-50%,-50%) scale(1); box-shadow: 0 0 0 8px rgba(76,110,245,.15), 0 0 18px rgba(76,110,245,.45); }
+    90%{ transform: translate(-50%,-50%) scale(1.3); box-shadow: 0 0 0 14px rgba(76,110,245,.28), 0 0 30px rgba(76,110,245,.75); }
+    96%{ transform: translate(-50%,-50%) scale(1); box-shadow: 0 0 0 8px rgba(76,110,245,.15), 0 0 18px rgba(76,110,245,.45); }
   }
-  @keyframes fl-after-dot{
-    0%, 54%{ opacity: 0; }
-    60%, 90%{ opacity: 1; }
-    98%, 100%{ opacity: 0; }
-  }
-  /* Reduced motion rests on the "after" line fully drawn — the
-     finished, sharpened result — same reasoning as `.rp-final` resting
-     at its bright/delivered look elsewhere on this page: one complete
-     answer beats a permanently-blank or half-faded placeholder. */
+  /* Reduced motion rests on the resolved, tightest-orbit moment (dot
+     in close, core mid-glow) rather than the wide starting radius —
+     same "show the finished state, not a blank start" reasoning as
+     `.rp-final` resting at its bright/delivered look elsewhere. */
   @media (prefers-reduced-motion: reduce){
-    .fl-chart-before, .fl-chart-dot-before{ animation: none; opacity: 0; }
-    .fl-chart-after{ animation: none; stroke-dashoffset: 0; opacity: 1; }
-    .fl-chart-dot-after{ animation: none; opacity: 1; }
+    .fl-orbit-spin, .fl-orbit-track, .fl-orbit-core{ animation: none; }
+    .fl-orbit-track{ transform: translateX(28px); }
+    .fl-orbit-core{ box-shadow: 0 0 0 12px rgba(76,110,245,.22), 0 0 24px rgba(76,110,245,.6); }
   }
 
   /* Retention section — REBUILT FROM SCRATCH 2026-08-28, replacing the
@@ -2275,17 +2285,17 @@
 
     <div class="mirror-card fl-card reveal mt-12">
       <div class="mirror-visual fl-visual" aria-hidden="true">
-        <svg class="fl-chart" viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet">
-          <line class="fl-chart-grid" x1="0" y1="190" x2="600" y2="190" />
-          <line class="fl-chart-grid" x1="0" y1="115" x2="600" y2="115" />
-          <line class="fl-chart-grid" x1="0" y1="40" x2="600" y2="40" />
-          <path class="fl-chart-before" pathLength="100"
-                d="M0,150 C50,154 50,158 100,158 C150,158 150,140 200,140 C250,140 250,155 300,155 C350,155 350,145 400,145 C450,145 450,160 500,160 C550,160 550,150 600,150" />
-          <path class="fl-chart-after" pathLength="100"
-                d="M0,150 C50,142 50,134 100,130 C150,126 150,112 200,105 C250,98 250,90 300,85 C350,80 350,70 400,65 C450,60 450,50 500,45 C550,40 550,30 600,25" />
-          <circle class="fl-chart-dot fl-chart-dot-before" cx="600" cy="150" r="6" />
-          <circle class="fl-chart-dot fl-chart-dot-after" cx="600" cy="25" r="6" />
-        </svg>
+        <div class="fl-orbit-stage">
+          <div class="fl-orbit-ring fl-orbit-ring-1"></div>
+          <div class="fl-orbit-ring fl-orbit-ring-2"></div>
+          <div class="fl-orbit-ring fl-orbit-ring-3"></div>
+          <div class="fl-orbit-core"></div>
+          <div class="fl-orbit-spin">
+            <div class="fl-orbit-track">
+              <div class="fl-orbit-dot"></div>
+            </div>
+          </div>
+        </div>
       </div>
       <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">The Feedback Loop</h3>
       <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Every post we publish feeds back in. What actually landed shapes next month&rsquo;s production, so the system gets sharper instead of repeating itself.</p>
