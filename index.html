@@ -658,6 +658,15 @@
      must track real scroll state), independent of whatever reveals the
      boxes around it. */
   .d90-stack{ display: flex; flex-direction: column; }
+  /* All 3 boxes share one min-height so they read as the same size —
+     the chart box naturally wanted to be much taller than the other
+     two once the stack got wider (its SVG scales height with width to
+     keep its aspect ratio; see the max-h cap on that svg too), while
+     bars/momentum's content-driven height barely grows. Centering each
+     box's content vertically means the shorter boxes (mainly bars)
+     gain breathing room evenly top and bottom instead of one big gap
+     stuck at the bottom. */
+  .d90-box{ min-height: 19rem; display: flex; flex-direction: column; justify-content: center; }
   .d90-connector{ position: relative; height: 64px; margin: 0 auto; width: 3px; }
   .d90-connector-line{ position: absolute; inset: 0; width: 100%; background: var(--ink-border); }
   /* Fills in white behind the dot as it travels — same `progress`
@@ -2458,12 +2467,12 @@
       </h2>
     </div>
 
-    <div class="d90-stack mt-12">
+    <div class="d90-stack mt-12 max-w-[40rem] mx-auto">
       <!-- Box 1: Profile Activity — unchanged existing chart, just its
            own card now instead of the first section of a shared one. -->
-      <div class="reveal card p-7 sm:p-9" id="d90-box-1">
+      <div class="reveal card p-7 sm:p-9 d90-box" id="d90-box-1">
         <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">Profile activity, first 90 days</p>
-        <svg viewBox="0 0 400 180" class="w-full h-auto mt-6" aria-hidden="true">
+        <svg viewBox="0 0 400 180" class="w-full h-auto max-h-[170px] mt-6" aria-hidden="true">
           <line x1="0" y1="150" x2="400" y2="150" stroke="var(--ink-border)" stroke-width="1"/>
           <line x1="0" y1="90" x2="400" y2="90" stroke="var(--ink-border)" stroke-width="1"/>
           <line x1="0" y1="30" x2="400" y2="30" stroke="var(--ink-border)" stroke-width="1"/>
@@ -2489,7 +2498,7 @@
       </div>
 
       <!-- Box 2: Who's Showing Up -->
-      <div class="reveal card p-7 sm:p-9" id="d90-box-2">
+      <div class="reveal card p-7 sm:p-9 d90-box" id="d90-box-2">
         <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">Who&rsquo;s showing up</p>
         <div class="d90-bars mt-5" id="d90-bars">
           <div class="d90-bar-row">
@@ -2515,7 +2524,7 @@
       </div>
 
       <!-- Box 3: The Momentum -->
-      <div class="reveal card p-7 sm:p-9" id="d90-box-3">
+      <div class="reveal card p-7 sm:p-9 d90-box" id="d90-box-3">
         <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">The momentum</p>
         <div class="d90-momentum mt-5" id="d90-momentum">
           <div class="d90-block">
