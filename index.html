@@ -1709,6 +1709,19 @@
     transition: transform .35s var(--ease-spring);
   }
   .nav-link:hover::after{ transform: scaleX(1); }
+  /* Footer social icon buttons (LinkedIn today, sized for more if
+     added later) — small bordered squares rather than plain glyphs, so
+     they read as clickable targets on their own next to the plain-text
+     nav links beside them. */
+  .footer-social-btn{
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: 10px;
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1);
+    color: var(--chrome-fg-dim); font-size: 1.05rem;
+    transition: transform .3s var(--ease-spring), border-color .3s var(--ease-spring), color .3s var(--ease-spring), background-color .3s var(--ease-spring);
+  }
+  .footer-social-btn:hover{ color: var(--chrome-fg); border-color: rgba(255,255,255,.24); background: rgba(255,255,255,.07); transform: translateY(-2px); }
+  .footer-social-btn:active{ transform: translateY(0) scale(.96); }
   /* Desktop pill nav links (Case Studies/Process/Team/Results) — full
      white, not the dimmed .nav-link default (that stays as-is for the
      mobile takeover panel and footer). Scoped by #nav-chrome id so
@@ -2408,13 +2421,13 @@
      entirely; kept id="process" so the nav's existing Process link still
      resolves to whatever now sits in that position) ================= -->
 <section id="process" class="relative py-24 sm:py-28 border-t border-[var(--ink-border)]">
-  <div class="max-w-[1280px] mx-auto px-6 lg:px-10 grid lg:grid-cols-[1.1fr_1fr] gap-14 items-center">
-    <div class="reveal">
-      <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em] max-w-[28rem]">
+  <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
+    <div class="reveal max-w-[34rem]">
+      <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
         What Changes By <span class="text-shine inline-block">Day 90</span>
       </h2>
 
-      <div class="mt-8 flex flex-col gap-5 max-w-[30rem]">
+      <div class="mt-8 flex flex-col gap-5">
         <div class="flex gap-4 items-start">
           <i class="ph-bold ph-check-circle text-[1.3rem] text-[var(--accent)] mt-0.5" aria-hidden="true"></i>
           <p class="text-[var(--cream-dim)] leading-[1.6]">A content engine that does not depend on you having a good week.</p>
@@ -2430,7 +2443,7 @@
       </div>
     </div>
 
-    <div class="d90-stack">
+    <div class="d90-stack mt-12 max-w-[32rem]">
       <!-- Box 1: Profile Activity — unchanged existing chart, just its
            own card now instead of the first section of a shared one. -->
       <div class="reveal card p-7 sm:p-9" id="d90-box-1">
@@ -2802,38 +2815,40 @@
   </div>
 </section>
 
-<!-- ================= FOOTER ================= -->
-<footer class="relative bg-[var(--chrome-bg)] border-t border-[var(--chrome-border)] pt-16 pb-10">
+<!-- ================= FOOTER — rebuilt to a single-row layout (logo /
+     nav links / social icons) over a divider over a copyright row, per
+     a reference screenshot. Only real Claviro links are used: the nav
+     items match the site's own header sections, and LinkedIn is the
+     only social profile currently in the footer above, so it's the
+     only icon here too — no Instagram/X/YouTube fabricated to fill out
+     the row. The reference's "Made with ♥ by [agency]" credit is
+     dropped rather than copied (that's the reference SITE's own
+     agency crediting itself, not applicable here); the results
+     disclaimer that already lived in this bottom row is kept in that
+     same slot instead. ================= -->
+<footer class="relative bg-[var(--chrome-bg)] border-t border-[var(--chrome-border)] pt-10 pb-8">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
-    <div class="grid sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr] gap-10">
-      <div>
-        <a href="#top" class="flex items-center gap-2.5">
-          <img src="logos/claviro-icon.png" alt="" width="26" height="26" />
-          <span class="font-display font-bold text-[1.1rem] text-[var(--chrome-fg)]">Claviro</span>
+    <div class="flex flex-wrap items-center justify-between gap-x-8 gap-y-6">
+      <a href="#top" class="flex items-center gap-2.5">
+        <img src="logos/claviro-icon.png" alt="" width="26" height="26" />
+        <span class="font-display font-bold text-[1.1rem] text-[var(--chrome-fg)]">Claviro</span>
+      </a>
+
+      <nav class="flex flex-wrap items-center gap-x-7 gap-y-2 text-[0.92rem] font-medium" aria-label="Footer">
+        <a href="#case-studies" class="nav-link w-fit">Case Studies</a>
+        <a href="#process" class="nav-link w-fit">Process</a>
+        <a href="#repurpose" class="nav-link w-fit">Repurpose</a>
+        <a href="#enablement" class="nav-link w-fit">Enablement</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="https://www.linkedin.com/in/hamim-mahi/" target="_blank" rel="noopener" aria-label="Claviro on LinkedIn" class="footer-social-btn">
+          <i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i>
         </a>
-        <p class="mt-4 text-[0.9rem] text-[var(--chrome-fg-dim)] leading-[1.6] max-w-[20rem]">
-          Content production agency built for B2B tech companies.
-        </p>
-      </div>
-
-      <div>
-        <p class="text-[0.78rem] font-semibold tracking-[0.14em] text-[var(--chrome-fg-dimmer)] uppercase mb-4">Company</p>
-        <div class="flex flex-col gap-3 text-[0.92rem]">
-          <a href="#industry-standard" class="nav-link w-fit">Industry Standard</a>
-          <a href="#process" class="nav-link w-fit">Our Process</a>
-          <a href="#repurpose" class="nav-link w-fit">Repurpose</a>
-        </div>
-      </div>
-
-      <div>
-        <p class="text-[0.78rem] font-semibold tracking-[0.14em] text-[var(--chrome-fg-dimmer)] uppercase mb-4">Connect</p>
-        <div class="flex flex-col gap-3 text-[0.92rem]">
-          <a href="https://www.linkedin.com/in/hamim-mahi/" target="_blank" rel="noopener" class="nav-link w-fit flex items-center gap-2"><i class="ph-bold ph-linkedin-logo" aria-hidden="true"></i> LinkedIn</a>
-        </div>
       </div>
     </div>
 
-    <div class="mt-14 pt-7 border-t border-[var(--chrome-border)] flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+    <div class="mt-9 pt-7 border-t border-[var(--chrome-border)] flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
       <p class="text-[0.8rem] text-[var(--chrome-fg-dimmer)]">© 2026 Claviro. All rights reserved.</p>
       <p class="text-[0.78rem] text-[var(--chrome-fg-dimmer)] max-w-[30rem]">Results described are illustrative and vary by company, market, and execution.</p>
     </div>
