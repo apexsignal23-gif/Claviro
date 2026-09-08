@@ -698,7 +698,7 @@
      gain breathing room evenly top and bottom instead of one big gap
      stuck at the bottom. */
   .d90-box{ min-height: 19rem; display: flex; flex-direction: column; justify-content: center; }
-  .d90-connector{ position: relative; height: 84px; margin: 0 auto; width: 3px; }
+  .d90-connector{ position: relative; height: 84px; margin: 0 auto; width: 2px; }
   .d90-connector-line{ position: absolute; inset: 0; width: 100%; background: var(--ink-border); }
   /* Fills in white behind the dot as it travels — same `progress`
      value the dot's own translateY uses, just applied as a `scaleY`
@@ -720,7 +720,7 @@
      deliberately never runs) just sees the plain line, not a dot stuck
      motionless at one end for no visible reason. */
   .d90-connector-dot{
-    position: absolute; left: 50%; top: 0; width: 10px; height: 10px; border-radius: 50%;
+    position: absolute; left: 50%; top: 0; width: 8px; height: 8px; border-radius: 50%;
     background: #fff; box-shadow: 0 0 8px 2px rgba(255,255,255,.7), 0 0 16px 4px rgba(255,255,255,.35);
     transform: translate(-50%, 0);
     opacity: 0;
@@ -2494,7 +2494,7 @@
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="reveal max-w-[34rem]">
       <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
-        What Changes By <span class="text-shine inline-block">Day 90</span>
+        What Changes<br>By <span class="text-shine inline-block">Day 90</span>
       </h2>
     </div>
 
@@ -3318,7 +3318,7 @@ void main() {
       var rect = item.el.getBoundingClientRect();
       var height = rect.height || 1;
       var progress = Math.max(0, Math.min(1, (center - rect.top) / height));
-      var travel = height - 10; // dot diameter
+      var travel = height - 8; // dot diameter
       item.dot.style.transform = 'translate(-50%, ' + (progress * travel) + 'px)';
       // Same progress value, applied as the fill's scaleY — the line
       // fills in behind the dot going down, empties back out going up.
