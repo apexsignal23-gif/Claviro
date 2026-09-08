@@ -633,31 +633,44 @@
     .day90-line, .day90-fill, .day90-dot{ animation: none; }
   }
 
-  /* "What Changes By Day 90" card EXTENDED into a 3-section vertical
-     scrollytelling sequence, 2026-09-02, per a spec doc: Section 1 (the
-     existing chart above, untouched) → a connector line → Section 2 (a
-     3-bar breakdown) → a second connector line → Section 3 (two
-     "momentum" blocks). A small glowing white dot travels each connector
-     line in sync with actual scroll position (not a timer, not an
-     IntersectionObserver one-shot) — genuinely scroll-LINKED, which is
-     why this is JS (a scroll/resize listener computing progress per
-     connector, same "JS beats a CSS-only trick when something must
-     track real state" reasoning as the LinkedIn like-counter), not
-     another CSS `@keyframes` loop like every other diagram on this page.
-     Each connector computes its OWN progress from its own actual
-     `getBoundingClientRect()` against the viewport's vertical center —
-     deliberately not hardcoded percentages of the card — so it stays
-     correct regardless of how tall the chart/bars/blocks actually
-     render. Crossing 100% on a connector permanently reveals the
-     section below it (bars draw in / momentum blocks fade+scale in) —
-     "permanently" because once revealed it's marked with a
-     `data-revealed` attribute and never un-reveals on scroll-back-up
-     (the pointer itself still freely reverses either way — only the
-     reveal is one-shot, chosen over spec's "or stays lit" allowance for
-     a calmer, non-flickery feel matching this page's `.reveal` one-shot
-     convention elsewhere). */
-  .d90-card{ display: flex; flex-direction: column; }
-  .d90-connector{ position: relative; height: 46px; margin: 0 auto; width: 2px; }
+  /* "What Changes By Day 90" — 2026-09-08, split from one shared card
+     into 3 separate boxes (chart / bars / momentum), per an explicit
+     reference wireframe: stacked cards connected by plain vertical
+     lines. Each box is its own `.reveal card`, so each fades in
+     independently as it scrolls into view — the older single-card
+     version's per-section reveal is unaffected content-wise, just now
+     triggered per-box instead of all three at once (see the reveal
+     script further down).
+     An earlier iteration of this SAME card (2026-09-02) had a small
+     glowing white dot travel each connector line in sync with actual
+     scroll position, but with each connector crossing 100% ALSO
+     permanently revealing the section below it — that got removed
+     because gating content reveal on scroll-position math (rather than
+     the simple "card enters viewport" `.reveal` used everywhere else)
+     looked broken next to the rest of the page. The dot is back now,
+     per a direct request for "a line with a glowing dot that moves as
+     you scroll" between the (now-separated) boxes, but deliberately
+     NOT wired to revealing anything this time — see the connector-dot
+     script near the bottom of the page: it's a scroll-linked visual
+     only, computed from each connector's own `getBoundingClientRect()`
+     against the viewport's vertical center (same reasoning as the
+     LinkedIn like-counter: JS beats a CSS-only trick when something
+     must track real scroll state), independent of whatever reveals the
+     boxes around it. */
+  .d90-stack{ display: flex; flex-direction: column; }
+  .d90-connector{ position: relative; height: 64px; margin: 0 auto; width: 2px; }
+  .d90-connector-line{ position: absolute; inset: 0; width: 100%; background: var(--ink-border); }
+  /* Resting state is invisible (opacity:0) rather than pinned at the
+     top — the connector-dot script sets opacity:1 once it starts
+     tracking scroll, so a reduced-motion visitor (where that script
+     deliberately never runs) just sees the plain line, not a dot stuck
+     motionless at one end for no visible reason. */
+  .d90-connector-dot{
+    position: absolute; left: 50%; top: 0; width: 10px; height: 10px; border-radius: 50%;
+    background: #fff; box-shadow: 0 0 8px 2px rgba(255,255,255,.7), 0 0 16px 4px rgba(255,255,255,.35);
+    transform: translate(-50%, 0);
+    opacity: 0;
+  }
   .d90-bars{ display: grid; gap: .85rem; }
   .d90-bar-row{ display: grid; gap: .35rem; }
   .d90-bar-label{ font-size: .78rem; color: var(--cream-dim); }
@@ -2417,25 +2430,37 @@
       </div>
     </div>
 
-    <div class="reveal card p-7 sm:p-9 d90-card" id="d90-card">
-      <!-- Section 1: Profile Activity — unchanged existing chart -->
-      <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">Profile activity, first 90 days</p>
-      <svg viewBox="0 0 400 180" class="w-full h-auto mt-6" aria-hidden="true">
-        <line x1="0" y1="150" x2="400" y2="150" stroke="var(--ink-border)" stroke-width="1"/>
-        <line x1="0" y1="90" x2="400" y2="90" stroke="var(--ink-border)" stroke-width="1"/>
-        <line x1="0" y1="30" x2="400" y2="30" stroke="var(--ink-border)" stroke-width="1"/>
-        <path class="day90-line" pathLength="1000"
-              d="M0,150 C40,148 60,145 90,138 C130,128 150,110 190,95 C230,80 250,60 290,42 C325,26 360,18 400,10"/>
-        <path class="day90-fill"
-              d="M0,150 C40,148 60,145 90,138 C130,128 150,110 190,95 C230,80 250,60 290,42 C325,26 360,18 400,10 L400,170 L0,170 Z"/>
-        <circle class="day90-dot" cx="400" cy="10" r="4.5"/>
-      </svg>
+    <div class="d90-stack">
+      <!-- Box 1: Profile Activity — unchanged existing chart, just its
+           own card now instead of the first section of a shared one. -->
+      <div class="reveal card p-7 sm:p-9" id="d90-box-1">
+        <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">Profile activity, first 90 days</p>
+        <svg viewBox="0 0 400 180" class="w-full h-auto mt-6" aria-hidden="true">
+          <line x1="0" y1="150" x2="400" y2="150" stroke="var(--ink-border)" stroke-width="1"/>
+          <line x1="0" y1="90" x2="400" y2="90" stroke="var(--ink-border)" stroke-width="1"/>
+          <line x1="0" y1="30" x2="400" y2="30" stroke="var(--ink-border)" stroke-width="1"/>
+          <path class="day90-line" pathLength="1000"
+                d="M0,150 C40,148 60,145 90,138 C130,128 150,110 190,95 C230,80 250,60 290,42 C325,26 360,18 400,10"/>
+          <path class="day90-fill"
+                d="M0,150 C40,148 60,145 90,138 C130,128 150,110 190,95 C230,80 250,60 290,42 C325,26 360,18 400,10 L400,170 L0,170 Z"/>
+          <circle class="day90-dot" cx="400" cy="10" r="4.5"/>
+        </svg>
+      </div>
 
-      <!-- Connector 1: Section 1 → Section 2, scroll-linked pointer -->
-      <div class="d90-connector" aria-hidden="true"></div>
+      <!-- Connector 1: Box 1 → Box 2 — a visible line with a small
+           glowing dot that tracks real scroll position (see the script
+           near the bottom of the page), purely decorative: it doesn't
+           gate anything below it (an earlier version of this card tied
+           section reveals to this same kind of scroll math and had to
+           be simplified back to a plain one-shot per-card reveal — see
+           the note further down — so this stays purely visual). -->
+      <div class="d90-connector" aria-hidden="true">
+        <div class="d90-connector-line"></div>
+        <div class="d90-connector-dot"></div>
+      </div>
 
-      <!-- Section 2: Who's Showing Up (new) -->
-      <div>
+      <!-- Box 2: Who's Showing Up -->
+      <div class="reveal card p-7 sm:p-9" id="d90-box-2">
         <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">Who&rsquo;s showing up</p>
         <div class="d90-bars mt-5" id="d90-bars">
           <div class="d90-bar-row">
@@ -2453,11 +2478,14 @@
         </div>
       </div>
 
-      <!-- Connector 2: Section 2 → Section 3, scroll-linked pointer -->
-      <div class="d90-connector" aria-hidden="true"></div>
+      <!-- Connector 2: Box 2 → Box 3, same as Connector 1 above. -->
+      <div class="d90-connector" aria-hidden="true">
+        <div class="d90-connector-line"></div>
+        <div class="d90-connector-dot"></div>
+      </div>
 
-      <!-- Section 3: The Momentum (new) -->
-      <div>
+      <!-- Box 3: The Momentum -->
+      <div class="reveal card p-7 sm:p-9" id="d90-box-3">
         <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">The momentum</p>
         <div class="d90-momentum mt-5" id="d90-momentum">
           <div class="d90-block">
@@ -2469,9 +2497,8 @@
             <p>Consistency that doesn&rsquo;t reset</p>
           </div>
         </div>
+        <p class="mt-6 text-[0.78rem] text-[var(--cream-dimmer)]">Illustrative. Individual results vary by market, offer, and consistency.</p>
       </div>
-
-      <p class="mt-6 text-[0.78rem] text-[var(--cream-dimmer)]">Illustrative. Individual results vary by market, offer, and consistency.</p>
     </div>
   </div>
 </section>
@@ -3152,44 +3179,75 @@ void main() {
   });
 })();
 
-// "What Changes By Day 90" — Section 2 (bars) / Section 3 (momentum) used
-// to reveal on their own separate scroll-position trigger (each one only
+// "What Changes By Day 90" — Box 2 (bars) / Box 3 (momentum) used to
+// reveal on their own separate scroll-position trigger (each one only
 // popping in once you'd scrolled further down PAST the card), which
 // looked broken next to the rest of the page: everywhere else, a card's
 // whole contents fade in together the moment the card itself scrolls
 // into view via `.reveal`. Fixed by dropping the connector-position
-// tracking and instead latching both `data-revealed` the instant
-// `#d90-card` gets `.is-visible` from the shared `.reveal` observer above
-// — same one-shot moment as everything else, so bars/blocks now animate
-// in alongside the card instead of lagging behind it.
+// tracking and instead latching each `data-revealed` the instant that
+// SPECIFIC box gets `.is-visible` from the shared `.reveal` observer
+// above — same one-shot moment as everything else, so a box's bars/
+// blocks animate in alongside that box instead of lagging behind it.
+// (Now two independent watchers, one per box, since the chart/bars/
+// momentum split into 3 separate cards — each box reveals on its own
+// schedule as it individually scrolls into view, not all three at once.)
 (function () {
-  var card = document.getElementById('d90-card');
-  var bars = document.getElementById('d90-bars');
-  var momentum = document.getElementById('d90-momentum');
-  if (!card || (!bars && !momentum)) return;
+  function watchReveal(boxId, target, attr) {
+    var box = document.getElementById(boxId);
+    var el = document.getElementById(target);
+    if (!box || !el) return;
 
-  function reveal() {
-    if (bars) bars.setAttribute('data-revealed', 'true');
-    if (momentum) momentum.setAttribute('data-revealed', 'true');
+    function reveal() { el.setAttribute(attr, 'true'); }
+
+    if (box.classList.contains('is-visible')) { reveal(); return; }
+    if (!('IntersectionObserver' in window)) { reveal(); return; }
+
+    var mo = new MutationObserver(function () {
+      if (box.classList.contains('is-visible')) {
+        reveal();
+        mo.disconnect();
+      }
+    });
+    mo.observe(box, { attributes: true, attributeFilter: ['class'] });
   }
 
-  if (card.classList.contains('is-visible')) {
-    reveal();
-    return;
-  }
+  watchReveal('d90-box-2', 'd90-bars', 'data-revealed');
+  watchReveal('d90-box-3', 'd90-momentum', 'data-revealed');
+})();
 
-  if (!('IntersectionObserver' in window)) {
-    reveal();
-    return;
-  }
+// Connector dots between the 3 Day-90 boxes — purely decorative, see
+// the CSS comment above `.d90-stack`. Skipped entirely under reduced
+// motion, which is why the dot's resting CSS state is opacity:0 rather
+// than pinned visible at one end.
+(function () {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  var mo = new MutationObserver(function () {
-    if (card.classList.contains('is-visible')) {
-      reveal();
-      mo.disconnect();
-    }
-  });
-  mo.observe(card, { attributes: true, attributeFilter: ['class'] });
+  var items = Array.prototype.slice.call(document.querySelectorAll('.d90-connector'))
+    .map(function (el) { return { el: el, dot: el.querySelector('.d90-connector-dot') }; })
+    .filter(function (item) { return item.dot; });
+  if (!items.length) return;
+
+  items.forEach(function (item) { item.dot.style.opacity = '1'; });
+
+  var ticking = false;
+  function update() {
+    ticking = false;
+    var center = window.innerHeight / 2;
+    items.forEach(function (item) {
+      var rect = item.el.getBoundingClientRect();
+      var height = rect.height || 1;
+      var progress = Math.max(0, Math.min(1, (center - rect.top) / height));
+      var travel = height - 10; // dot diameter
+      item.dot.style.transform = 'translate(-50%, ' + (progress * travel) + 'px)';
+    });
+  }
+  function onScroll() {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  update();
 })();
 
 </script>
