@@ -771,11 +771,26 @@
   }
   .d90-momentum[data-revealed="true"] .d90-block{ opacity: 1; transform: translateY(0) scale(1); }
   .d90-momentum[data-revealed="true"] .d90-block:nth-child(2){ transition-delay: .12s; }
-  .d90-block i{ font-size: 1.15rem; color: var(--accent); }
+  .d90-block i{ display: inline-block; font-size: 1.15rem; color: var(--accent); }
   .d90-block p{ margin-top: .5rem; font-size: .8rem; line-height: 1.5; color: var(--cream-dim); }
+  /* Box 3 was the only one of the 3 with no ongoing motion once
+     revealed (box 1's chart draws in, box 2's bars breathe) — gave
+     each icon a small continuous animation matching its own meaning
+     instead: the trend arrow gently bounces upward ("builds on
+     itself"), the clock icon slowly spins ("doesn't reset"). Gated to
+     [data-revealed="true"] like the rest of this card's motion, so
+     they start/stop in sync with the box's own repeat-reveal. */
+  .d90-momentum[data-revealed="true"] .ph-trend-up{ animation: d90-trend-bounce 2.4s ease-in-out infinite; }
+  .d90-momentum[data-revealed="true"] .ph-clock-clockwise{ animation: d90-clock-spin 6s linear infinite; }
+  @keyframes d90-trend-bounce{
+    0%, 100%{ transform: translateY(0); }
+    50%{ transform: translateY(-3px); }
+  }
+  @keyframes d90-clock-spin{ to{ transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce){
     .d90-bar-fill{ width: var(--d90-bar-w); transition: none; animation: none; }
     .d90-block{ opacity: 1; transform: none; transition: none; }
+    .ph-trend-up, .ph-clock-clockwise{ animation: none; }
   }
 
   /* Repurpose section (replaced "The People Behind Your Feed" / Team) —
