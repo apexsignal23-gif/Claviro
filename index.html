@@ -591,17 +591,32 @@
      not just once, so this needs the same toggle rather than a one-
      shot reveal). */
   .d90-hist{ display: flex; align-items: flex-end; gap: .5rem; height: 170px; }
+  /* Reveal (0 -> --h) uses `height`, the breathing that follows uses
+     `transform: scaleY` — different properties on purpose, exactly
+     the same split .d90-bar-fill/.d90-bar-breathe use for the "Who's
+     showing up" bars (transition on the real dimension for the
+     one-time grow-in, animation via transform layered on top for the
+     ongoing motion), since transform and transition can't both drive
+     the SAME property without one clobbering the other every frame. */
   .d90-hist-bar{
-    flex: 1 1 0; height: var(--h); min-width: 0;
+    flex: 1 1 0; height: 0; min-width: 0;
     border-radius: 4px 4px 0 0;
     background: linear-gradient(180deg, var(--accent-hot), var(--accent));
-    transform: scaleY(0); transform-origin: bottom;
-    transition: transform .8s var(--ease-spring);
+    transform-origin: bottom;
+    transition: height .8s var(--ease-spring);
     transition-delay: calc(var(--i) * 0.05s);
   }
-  #d90-box-1.is-visible .d90-hist-bar{ transform: scaleY(1); }
+  #d90-box-1.is-visible .d90-hist-bar{
+    height: var(--h);
+    animation: d90-hist-breathe 2.2s ease-in-out infinite alternate;
+    animation-delay: calc(var(--i) * 0.05s + .85s);
+  }
+  @keyframes d90-hist-breathe{
+    0%{ transform: scaleY(1); }
+    100%{ transform: scaleY(.86); }
+  }
   @media (prefers-reduced-motion: reduce){
-    .d90-hist-bar{ transform: scaleY(1); transition: none; }
+    .d90-hist-bar{ height: var(--h); transition: none; animation: none; }
   }
 
   /* "What Changes By Day 90" — 2026-09-08, split from one shared card
@@ -2537,7 +2552,10 @@
            height (--h per bar) and in when each one grows in
            (--i * a fixed delay, see .d90-hist-bar below) — the second
            axis reinforces "gradually increasing" as much as the
-           heights themselves do. -->
+           heights themselves do. Per "make it dynamic," each bar also
+           keeps a small continuous breathing motion after it grows in,
+           matching box 2's bars instead of sitting static once
+           revealed. -->
       <div class="d90-reveal card p-7 sm:p-9 d90-box" id="d90-box-1">
         <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">Profile activity, first 90 days</p>
         <div class="d90-hist mt-6" aria-hidden="true">
