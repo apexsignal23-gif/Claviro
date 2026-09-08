@@ -612,8 +612,10 @@
     animation-play-state: paused;
   }
   /* Paused by default and only set running once its box has actually
-     scrolled into view (the same `.is-visible` the reveal observer
-     adds for the box's own fade+translateY) — otherwise this was an
+     scrolled into view (the same `.is-visible` the .d90-reveal
+     observer adds for the box's own fade+translateY, toggled off
+     again on scroll-out and back on on re-entry — see that observer's
+     comment further down) — otherwise this was an
      unconditional infinite loop from page load, completely untethered
      from scroll position, so the chart could be mid-cycle in any state
      by the time you actually scrolled to it instead of visibly
@@ -651,11 +653,12 @@
   /* "What Changes By Day 90" — 2026-09-08, split from one shared card
      into 3 separate boxes (chart / bars / momentum), per an explicit
      reference wireframe: stacked cards connected by plain vertical
-     lines. Each box is its own `.reveal card`, so each fades in
+     lines. Each box is its own `.d90-reveal card`, so each fades in
      independently as it scrolls into view — the older single-card
      version's per-section reveal is unaffected content-wise, just now
      triggered per-box instead of all three at once (see the reveal
-     script further down).
+     script further down; `.d90-reveal` rather than the shared `.reveal`
+     because these 3 replay their fade every time, not once).
      An earlier iteration of this SAME card (2026-09-02) had a small
      glowing white dot travel each connector line in sync with actual
      scroll position, but with each connector crossing 100% ALSO
@@ -672,6 +675,19 @@
      LinkedIn like-counter: JS beats a CSS-only trick when something
      must track real scroll state), independent of whatever reveals the
      boxes around it. */
+  /* A repeatable duplicate of the shared `.reveal`/`.is-visible` pair
+     (same values, different class name) — per explicit request, these
+     3 boxes should fade in and out EVERY time they cross into/out of
+     view while scrolling, not just once like every other `.reveal`
+     element on the page. Using a separate class keeps them off the
+     shared one-shot observer entirely (which unobserves after the
+     first hit) so they can run their own observer below that toggles
+     `.is-visible` both ways instead. */
+  .d90-reveal{ opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease-spring), transform .8s var(--ease-spring); }
+  .d90-reveal.is-visible{ opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce){
+    .d90-reveal{ opacity: 1; transform: none; transition: none; }
+  }
   .d90-stack{ display: flex; flex-direction: column; }
   /* All 3 boxes share one min-height so they read as the same size —
      the chart box naturally wanted to be much taller than the other
@@ -2485,7 +2501,7 @@
     <div class="d90-stack mt-12 max-w-[40rem] mx-auto">
       <!-- Box 1: Profile Activity — unchanged existing chart, just its
            own card now instead of the first section of a shared one. -->
-      <div class="reveal card p-7 sm:p-9 d90-box" id="d90-box-1">
+      <div class="d90-reveal card p-7 sm:p-9 d90-box" id="d90-box-1">
         <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">Profile activity, first 90 days</p>
         <svg viewBox="0 0 400 180" class="w-full h-auto max-h-[170px] mt-6" aria-hidden="true">
           <line x1="0" y1="150" x2="400" y2="150" stroke="var(--ink-border)" stroke-width="1"/>
@@ -2513,7 +2529,7 @@
       </div>
 
       <!-- Box 2: Who's Showing Up -->
-      <div class="reveal card p-7 sm:p-9 d90-box" id="d90-box-2">
+      <div class="d90-reveal card p-7 sm:p-9 d90-box" id="d90-box-2">
         <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">Who&rsquo;s showing up</p>
         <div class="d90-bars mt-5" id="d90-bars">
           <div class="d90-bar-row">
@@ -2539,7 +2555,7 @@
       </div>
 
       <!-- Box 3: The Momentum -->
-      <div class="reveal card p-7 sm:p-9 d90-box" id="d90-box-3">
+      <div class="d90-reveal card p-7 sm:p-9 d90-box" id="d90-box-3">
         <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">The momentum</p>
         <div class="d90-momentum mt-5" id="d90-momentum">
           <div class="d90-block">
@@ -3235,41 +3251,46 @@ void main() {
   });
 })();
 
-// "What Changes By Day 90" — Box 2 (bars) / Box 3 (momentum) used to
-// reveal on their own separate scroll-position trigger (each one only
-// popping in once you'd scrolled further down PAST the card), which
-// looked broken next to the rest of the page: everywhere else, a card's
-// whole contents fade in together the moment the card itself scrolls
-// into view via `.reveal`. Fixed by dropping the connector-position
-// tracking and instead latching each `data-revealed` the instant that
-// SPECIFIC box gets `.is-visible` from the shared `.reveal` observer
-// above — same one-shot moment as everything else, so a box's bars/
-// blocks animate in alongside that box instead of lagging behind it.
-// (Now two independent watchers, one per box, since the chart/bars/
-// momentum split into 3 separate cards — each box reveals on its own
-// schedule as it individually scrolls into view, not all three at once.)
+// "What Changes By Day 90" — the 3 boxes use their own `.d90-reveal`
+// class + observer (see the CSS comment above `.d90-reveal`) instead
+// of the shared one-shot `.reveal` observer, per explicit request:
+// "every time I go up and go down, the 3 animation boxes fade in
+// animation should play every time" — so this toggles `.is-visible`
+// BOTH ways (add on entering, remove on leaving) and never unobserves,
+// unlike the shared observer above. Box 2/3's bars/momentum reveal
+// (data-revealed) rides the same toggle, so a box's internal content
+// animates out and back in right along with its own fade each time —
+// otherwise the box would fade out/in repeatedly while its bars/blocks
+// stayed permanently in their already-revealed state from the first
+// pass, which would look broken. (Box 1's chart animation is gated
+// separately, via #d90-box-1.is-visible directly in CSS — see the
+// .day90-line comment above — so it already replays the same way.)
 (function () {
-  function watchReveal(boxId, target, attr) {
-    var box = document.getElementById(boxId);
-    var el = document.getElementById(target);
-    if (!box || !el) return;
+  var items = Array.prototype.slice.call(document.querySelectorAll('.d90-reveal'));
+  if (!items.length) return;
 
-    function reveal() { el.setAttribute(attr, 'true'); }
+  var revealTargets = {
+    'd90-box-2': { id: 'd90-bars', attr: 'data-revealed' },
+    'd90-box-3': { id: 'd90-momentum', attr: 'data-revealed' }
+  };
 
-    if (box.classList.contains('is-visible')) { reveal(); return; }
-    if (!('IntersectionObserver' in window)) { reveal(); return; }
-
-    var mo = new MutationObserver(function () {
-      if (box.classList.contains('is-visible')) {
-        reveal();
-        mo.disconnect();
-      }
-    });
-    mo.observe(box, { attributes: true, attributeFilter: ['class'] });
+  function setVisible(el, visible) {
+    el.classList.toggle('is-visible', visible);
+    var target = revealTargets[el.id];
+    if (!target) return;
+    var node = document.getElementById(target.id);
+    if (node) node.setAttribute(target.attr, visible ? 'true' : 'false');
   }
 
-  watchReveal('d90-box-2', 'd90-bars', 'data-revealed');
-  watchReveal('d90-box-3', 'd90-momentum', 'data-revealed');
+  if (!('IntersectionObserver' in window)) {
+    items.forEach(function (el) { setVisible(el, true); });
+    return;
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) { setVisible(entry.target, entry.isIntersecting); });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  items.forEach(function (el) { io.observe(el); });
 })();
 
 // Connector dots between the 3 Day-90 boxes — purely decorative, see
