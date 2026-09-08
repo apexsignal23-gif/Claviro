@@ -576,90 +576,32 @@
     }
   }
 
-  /* "What Changes By Day 90" section (id="process") — the "Profile
-     activity, first 90 days" line chart was static (no classes, no
-     animation at all) until 2026-08-28, per "animate the graph so that
-     it looks like it is increasing." Reuses the Retention section's
-     self-drawing-line technique (a `pathLength`-normalized path,
-     `stroke-dasharray` set to that same length, `stroke-dashoffset`
-     animating length→0) for the stroke, plus a synced `clip-path`
-     left-to-right wipe for the fill area beneath it — dasharray/
-     dashoffset can only progressively reveal a STROKED outline, not a
-     filled shape, so the fill needs a different mechanism; clip-path is
-     the standard, compositor-cheap tool for a reveal like this. The
-     endpoint dot pops in once the line finishes. Runs as its own
-     independent infinite loop, same as every other animated diagram on
-     this page — separate from and unrelated to `.reveal`'s one-time
-     scroll-in fade on the card that contains it; the two don't interact,
-     the chart just keeps looping on its own once the card has revealed. */
-  .day90-line{
-    fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round;
-    stroke-dasharray: 1000; stroke-dashoffset: 0;
-    animation: day90-draw 5s var(--ease-spring) infinite;
-    animation-play-state: paused;
+  /* "What Changes By Day 90" section (id="process") — Box 1's "Profile
+     activity, first 90 days" was a self-drawing line chart until
+     2026-09-08, when it was replaced with a histogram per explicit
+     request: box 3 ("The Momentum") had since become a line-chart-
+     style comparison graph too, and having two line charts in the
+     same 3-box sequence felt redundant. Bars step up gradually left to
+     right on TWO axes at once — height (--h, fixed per bar) and grow-
+     in timing (--i * a per-bar transition-delay) — so "gradually
+     increasing" reads in both the shape and the motion, not just the
+     final static heights. Gated to #d90-box-1.is-visible exactly like
+     the chart it replaced (see the `.d90-reveal` observer's comment
+     further down for why: this box's fade replays every scroll pass,
+     not just once, so this needs the same toggle rather than a one-
+     shot reveal). */
+  .d90-hist{ display: flex; align-items: flex-end; gap: .5rem; height: 170px; }
+  .d90-hist-bar{
+    flex: 1 1 0; height: var(--h); min-width: 0;
+    border-radius: 4px 4px 0 0;
+    background: linear-gradient(180deg, var(--accent-hot), var(--accent));
+    transform: scaleY(0); transform-origin: bottom;
+    transition: transform .8s var(--ease-spring);
+    transition-delay: calc(var(--i) * 0.05s);
   }
-  .day90-fill{
-    fill: var(--accent); opacity: .08;
-    clip-path: inset(0 0% 0 0);
-    animation: day90-reveal 5s var(--ease-spring) infinite;
-    animation-play-state: paused;
-  }
-  /* A plain HTML circle instead of an SVG <circle> — the chart's own
-     `preserveAspectRatio="none"` stretches x/y non-uniformly to fill
-     its box, which turned a real SVG circle into a visibly squashed
-     ellipse (and, sitting exactly on the viewBox's right edge, clipped
-     half of it too). Positioned by percentage against this wrapper
-     (100% left = the curve's endpoint x=400 of 400; 5.5556% top =
-     y=10 of 180) instead of viewBox units, so it tracks the curve's
-     actual endpoint regardless of the stretch while staying a real,
-     unstretched circle — immune to the SVG's internal scaling because
-     it isn't part of the SVG at all. */
-  .day90-dot{
-    position: absolute; left: 100%; top: 5.5556%;
-    width: 9px; height: 9px; border-radius: 50%;
-    background: var(--accent);
-    transform: translate(-50%, -50%) scale(1);
-    transform-origin: center;
-    animation: day90-dot-pop 5s var(--ease-spring) infinite;
-    animation-play-state: paused;
-  }
-  /* Paused by default and only set running once its box has actually
-     scrolled into view (the same `.is-visible` the .d90-reveal
-     observer adds for the box's own fade+translateY, toggled off
-     again on scroll-out and back on on re-entry — see that observer's
-     comment further down) — otherwise this was an
-     unconditional infinite loop from page load, completely untethered
-     from scroll position, so the chart could be mid-cycle in any state
-     by the time you actually scrolled to it instead of visibly
-     "drawing in" at that moment. */
-  #d90-box-1.is-visible .day90-line,
-  #d90-box-1.is-visible .day90-fill,
-  #d90-box-1.is-visible .day90-dot{
-    animation-play-state: running;
-  }
-  /* Line rests fully drawn (stroke-dashoffset:0 in the base .day90-line
-     rule above) and only un-draws briefly at the very start/end of each
-     loop — reduced-motion just leaves the original static, fully-drawn
-     chart, matching how this chart always looked before this change.
-     Fill's clip-path is kept in lockstep with the same 0-70%/70-88%/
-     96-100% timing so the shaded area's right edge always sits right
-     where the line currently ends, never ahead of or behind it. */
-  @keyframes day90-draw{
-    0%, 4%{ stroke-dashoffset: 1000; }
-    70%, 88%{ stroke-dashoffset: 0; }
-    96%, 100%{ stroke-dashoffset: 1000; }
-  }
-  @keyframes day90-reveal{
-    0%, 4%{ clip-path: inset(0 100% 0 0); }
-    70%, 88%{ clip-path: inset(0 0% 0 0); }
-    96%, 100%{ clip-path: inset(0 100% 0 0); }
-  }
-  @keyframes day90-dot-pop{
-    0%, 66%, 96%, 100%{ opacity: 0; transform: translate(-50%, -50%) scale(.4); }
-    74%, 88%{ opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  }
+  #d90-box-1.is-visible .d90-hist-bar{ transform: scaleY(1); }
   @media (prefers-reduced-motion: reduce){
-    .day90-line, .day90-fill, .day90-dot{ animation: none; }
+    .d90-hist-bar{ transform: scaleY(1); transition: none; }
   }
 
   /* "What Changes By Day 90" — 2026-09-08, split from one shared card
@@ -771,7 +713,7 @@
      hex (its --blue -> var(--accent), --gray-line -> a plain white-
      alpha muted gray matching how this codebase expresses every other
      muted line/border, --muted/--text -> --cream-dimmer/--cream). Gated
-     to #d90-box-3.is-visible exactly like .day90-line is gated to
+     to #d90-box-3.is-visible exactly like .d90-hist-bar is gated to
      #d90-box-1.is-visible above, rather than the reference's own
      unconditional infinite loop — same reasoning as that earlier fix:
      an always-running animation never looks like it "plays in" when
@@ -848,7 +790,7 @@
   }
   /* Reduced motion rests on the finished state (line fully drawn, dot
      at its end) rather than a blank chart — same convention as
-     .day90-line and every other gated animation on this page. */
+     .d90-hist-bar and every other gated animation on this page. */
   @media (prefers-reduced-motion: reduce){
     .d90-bar-fill{ width: var(--d90-bar-w); transition: none; animation: none; }
     .d90-path-consistent, .d90-path-sporadic{ animation: none; stroke-dashoffset: 0; opacity: 1; }
@@ -2588,21 +2530,29 @@
     </div>
 
     <div class="d90-stack mt-12">
-      <!-- Box 1: Profile Activity — unchanged existing chart, just its
-           own card now instead of the first section of a shared one. -->
+      <!-- Box 1: Profile Activity — a histogram now, not a line chart,
+           per explicit request: box 3 also ended up as a line-chart
+           style graph (the momentum comparison), so having two felt
+           redundant. Bars step up gradually left to right, both in
+           height (--h per bar) and in when each one grows in
+           (--i * a fixed delay, see .d90-hist-bar below) — the second
+           axis reinforces "gradually increasing" as much as the
+           heights themselves do. -->
       <div class="d90-reveal card p-7 sm:p-9 d90-box" id="d90-box-1">
         <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">Profile activity, first 90 days</p>
-        <div class="relative mt-6">
-          <svg viewBox="0 0 400 180" preserveAspectRatio="none" class="w-full h-auto max-h-[170px]" aria-hidden="true">
-            <line x1="0" y1="150" x2="400" y2="150" stroke="var(--ink-border)" stroke-width="1"/>
-            <line x1="0" y1="90" x2="400" y2="90" stroke="var(--ink-border)" stroke-width="1"/>
-            <line x1="0" y1="30" x2="400" y2="30" stroke="var(--ink-border)" stroke-width="1"/>
-            <path class="day90-line" pathLength="1000"
-                  d="M0,150 C40,148 60,145 90,138 C130,128 150,110 190,95 C230,80 250,60 290,42 C325,26 360,18 400,10"/>
-            <path class="day90-fill"
-                  d="M0,150 C40,148 60,145 90,138 C130,128 150,110 190,95 C230,80 250,60 290,42 C325,26 360,18 400,10 L400,170 L0,170 Z"/>
-          </svg>
-          <span class="day90-dot" aria-hidden="true"></span>
+        <div class="d90-hist mt-6" aria-hidden="true">
+          <div class="d90-hist-bar" style="--h: 14%; --i: 0"></div>
+          <div class="d90-hist-bar" style="--h: 20%; --i: 1"></div>
+          <div class="d90-hist-bar" style="--h: 27%; --i: 2"></div>
+          <div class="d90-hist-bar" style="--h: 35%; --i: 3"></div>
+          <div class="d90-hist-bar" style="--h: 44%; --i: 4"></div>
+          <div class="d90-hist-bar" style="--h: 53%; --i: 5"></div>
+          <div class="d90-hist-bar" style="--h: 62%; --i: 6"></div>
+          <div class="d90-hist-bar" style="--h: 71%; --i: 7"></div>
+          <div class="d90-hist-bar" style="--h: 80%; --i: 8"></div>
+          <div class="d90-hist-bar" style="--h: 88%; --i: 9"></div>
+          <div class="d90-hist-bar" style="--h: 95%; --i: 10"></div>
+          <div class="d90-hist-bar" style="--h: 100%; --i: 11"></div>
         </div>
         <p class="mt-4 text-[0.78rem] text-[var(--cream-dimmer)]">Illustrative. Individual results vary by market, offer, and consistency.</p>
       </div>
@@ -3374,9 +3324,9 @@ void main() {
 // in right along with the box's own fade each time — otherwise the box
 // would fade out/in repeatedly while its bars stayed stuck in their
 // already-revealed state from the first pass, which would look broken.
-// (Box 1's chart and box 3's momentum-comparison chart are both gated
-// separately, directly in CSS via #d90-box-1.is-visible /
-// #d90-box-3.is-visible — see the .day90-line and .d90-path-consistent
+// (Box 1's histogram and box 3's momentum-comparison chart are both
+// gated separately, directly in CSS via #d90-box-1.is-visible /
+// #d90-box-3.is-visible — see the .d90-hist-bar and .d90-path-consistent
 // comments above — so they already replay the same way with nothing
 // needed here.)
 (function () {
