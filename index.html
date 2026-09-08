@@ -762,35 +762,88 @@
     0%{ transform: scaleX(1); }
     100%{ transform: scaleX(.9); }
   }
-  .d90-momentum{ display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; }
-  .d90-block{
-    padding: 1rem .9rem; border-radius: 12px;
-    background: var(--ink-950); border: 1px solid var(--ink-border);
-    opacity: 0; transform: translateY(10px) scale(.94);
-    transition: opacity .7s var(--ease-spring), transform .7s var(--ease-spring);
+  /* Box 3 ("The Momentum") — ported from a reference file
+     (momentum-explainer.html), 2026-09-08: a "consistent vs sporadic"
+     posting comparison chart replacing the old 2-icon-block layout,
+     which had no ongoing motion once revealed (box 1's chart draws in,
+     box 2's bars breathe — box 3 was the odd one out). Colors swapped
+     for this site's own tokens instead of the reference's hardcoded
+     hex (its --blue -> var(--accent), --gray-line -> a plain white-
+     alpha muted gray matching how this codebase expresses every other
+     muted line/border, --muted/--text -> --cream-dimmer/--cream). Gated
+     to #d90-box-3.is-visible exactly like .day90-line is gated to
+     #d90-box-1.is-visible above, rather than the reference's own
+     unconditional infinite loop — same reasoning as that earlier fix:
+     an always-running animation never looks like it "plays in" when
+     you actually scroll to it. */
+  .d90-legend{ display: flex; gap: 1.25rem; }
+  .d90-legend-item{ display: inline-flex; align-items: center; gap: .45rem; font-size: .78rem; color: var(--cream-dimmer); }
+  .d90-swatch{ display: inline-block; width: 14px; height: 2px; border-radius: 2px; }
+  .d90-swatch-consistent{ background: var(--accent); }
+  .d90-swatch-sporadic{ background: rgba(255,255,255,.28); }
+  .d90-momentum-chart{ overflow: visible; }
+  .d90-gap-marker{ stroke: rgba(255,255,255,.28); stroke-width: 1; stroke-dasharray: 3 3; opacity: .5; }
+  .d90-axis-label{ font-size: 11px; fill: var(--cream-dimmer); }
+  /* Both paths and the dot share one draw-in timeline (pathLength="100"
+     on each path, same convention used throughout this page): fade in,
+     draw to completion by 92%, hold briefly, then fade out together for
+     a clean loop reset — matching the reference's own timing exactly,
+     just consolidated onto one shared keyframe since both paths used
+     the identical percentages already. */
+  .d90-path-consistent{
+    fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 100; stroke-dashoffset: 100;
+    animation: d90-momentum-draw 6s cubic-bezier(.3,.1,.3,1) infinite;
+    animation-play-state: paused;
   }
-  .d90-momentum[data-revealed="true"] .d90-block{ opacity: 1; transform: translateY(0) scale(1); }
-  .d90-momentum[data-revealed="true"] .d90-block:nth-child(2){ transition-delay: .12s; }
-  .d90-block i{ display: inline-block; font-size: 1.15rem; color: var(--accent); }
-  .d90-block p{ margin-top: .5rem; font-size: .8rem; line-height: 1.5; color: var(--cream-dim); }
-  /* Box 3 was the only one of the 3 with no ongoing motion once
-     revealed (box 1's chart draws in, box 2's bars breathe) — gave
-     each icon a small continuous animation matching its own meaning
-     instead: the trend arrow gently bounces upward ("builds on
-     itself"), the clock icon slowly spins ("doesn't reset"). Gated to
-     [data-revealed="true"] like the rest of this card's motion, so
-     they start/stop in sync with the box's own repeat-reveal. */
-  .d90-momentum[data-revealed="true"] .ph-trend-up{ animation: d90-trend-bounce 2.4s ease-in-out infinite; }
-  .d90-momentum[data-revealed="true"] .ph-clock-clockwise{ animation: d90-clock-spin 6s linear infinite; }
-  @keyframes d90-trend-bounce{
-    0%, 100%{ transform: translateY(0); }
-    50%{ transform: translateY(-3px); }
+  .d90-path-sporadic{
+    fill: none; stroke: rgba(255,255,255,.28); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 100; stroke-dashoffset: 100;
+    animation: d90-momentum-draw 6s linear infinite;
+    animation-play-state: paused;
   }
-  @keyframes d90-clock-spin{ to{ transform: rotate(360deg); } }
+  @keyframes d90-momentum-draw{
+    0%{ stroke-dashoffset: 100; opacity: 0; }
+    4%{ opacity: 1; }
+    92%{ stroke-dashoffset: 0; opacity: 1; }
+    100%{ stroke-dashoffset: 0; opacity: 0; }
+  }
+  /* Dot rides the exact same curve as .d90-path-consistent via
+     offset-path (not transform/translate — there's no straightforward
+     transform equivalent for "follow an arbitrary curve," and this
+     SVG isn't stretched non-uniformly the way the Profile Activity
+     chart is, so a plain SVG <circle> stays perfectly round here
+     without needing that chart's HTML-overlay workaround). */
+  .d90-momentum-dot{
+    fill: var(--accent);
+    offset-path: path("M20,196 C120,186 220,150 320,108 C420,78 520,52 616,38");
+    offset-rotate: 0deg;
+    animation: d90-momentum-travel 6s cubic-bezier(.3,.1,.3,1) infinite, d90-momentum-dotfade 6s linear infinite;
+    animation-play-state: paused;
+  }
+  @keyframes d90-momentum-travel{
+    0%{ offset-distance: 0%; }
+    92%{ offset-distance: 100%; }
+    100%{ offset-distance: 100%; }
+  }
+  @keyframes d90-momentum-dotfade{
+    0%{ opacity: 0; }
+    4%{ opacity: 1; }
+    92%{ opacity: 1; }
+    100%{ opacity: 0; }
+  }
+  #d90-box-3.is-visible .d90-path-consistent,
+  #d90-box-3.is-visible .d90-path-sporadic,
+  #d90-box-3.is-visible .d90-momentum-dot{
+    animation-play-state: running;
+  }
+  /* Reduced motion rests on the finished state (line fully drawn, dot
+     at its end) rather than a blank chart — same convention as
+     .day90-line and every other gated animation on this page. */
   @media (prefers-reduced-motion: reduce){
     .d90-bar-fill{ width: var(--d90-bar-w); transition: none; animation: none; }
-    .d90-block{ opacity: 1; transform: none; transition: none; }
-    .ph-trend-up, .ph-clock-clockwise{ animation: none; }
+    .d90-path-consistent, .d90-path-sporadic{ animation: none; stroke-dashoffset: 0; opacity: 1; }
+    .d90-momentum-dot{ animation: none; offset-distance: 100%; opacity: 1; }
   }
 
   /* Repurpose section (replaced "The People Behind Your Feed" / Team) —
@@ -2586,17 +2639,37 @@
       <!-- Box 3: The Momentum -->
       <div class="d90-reveal card p-7 sm:p-9 d90-box" id="d90-box-3">
         <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">The momentum</p>
-        <div class="d90-momentum mt-5" id="d90-momentum">
-          <div class="d90-block">
-            <i class="ph-bold ph-trend-up" aria-hidden="true"></i>
-            <p>Momentum that builds on itself</p>
-          </div>
-          <div class="d90-block">
-            <i class="ph-bold ph-clock-clockwise" aria-hidden="true"></i>
-            <p>Consistency that doesn&rsquo;t reset</p>
-          </div>
+        <p class="mt-2 text-[0.95rem] text-[var(--cream)]">Momentum that builds on itself</p>
+
+        <div class="d90-legend mt-5">
+          <span class="d90-legend-item"><span class="d90-swatch d90-swatch-consistent" aria-hidden="true"></span>Consistent</span>
+          <span class="d90-legend-item"><span class="d90-swatch d90-swatch-sporadic" aria-hidden="true"></span>Sporadic</span>
         </div>
-        <p class="mt-6 text-[0.78rem] text-[var(--cream-dimmer)]">Illustrative. Individual results vary by market, offer, and consistency.</p>
+
+        <svg viewBox="0 0 640 260" class="d90-momentum-chart w-full h-auto max-h-[210px] mt-4" aria-hidden="true">
+          <line x1="20" y1="220" x2="620" y2="220" stroke="var(--ink-border)" stroke-width="1"/>
+          <line x1="20" y1="130" x2="620" y2="130" stroke="var(--ink-border)" stroke-width="1"/>
+          <line x1="20" y1="40" x2="620" y2="40" stroke="var(--ink-border)" stroke-width="1"/>
+
+          <line class="d90-gap-marker" x1="160" y1="150" x2="160" y2="220"/>
+          <line class="d90-gap-marker" x1="300" y1="130" x2="300" y2="220"/>
+          <line class="d90-gap-marker" x1="440" y1="140" x2="440" y2="220"/>
+          <line class="d90-gap-marker" x1="580" y1="150" x2="580" y2="220"/>
+
+          <path class="d90-path-sporadic" pathLength="100"
+                d="M20,205 L140,150 L160,190 L280,130 L300,175 L420,140 L440,185 L560,150 L580,190 L616,175"/>
+
+          <path class="d90-path-consistent" pathLength="100"
+                d="M20,196 C120,186 220,150 320,108 C420,78 520,52 616,38"/>
+
+          <circle class="d90-momentum-dot" r="4"/>
+
+          <text class="d90-axis-label" x="20" y="240">Day 1</text>
+          <text class="d90-axis-label" x="580" y="240">Day 90</text>
+        </svg>
+
+        <p class="mt-4 text-[0.8rem] leading-[1.6] text-[var(--cream-dim)]">Same 90 days, same amount of content. One line compounds because it never stops. The other keeps resetting every time posting pauses, so the gains from before the gap are wasted.</p>
+        <p class="mt-4 text-[0.78rem] text-[var(--cream-dimmer)]">Illustrative. Individual results vary by market, offer, and consistency.</p>
       </div>
     </div>
   </div>
@@ -3286,21 +3359,22 @@ void main() {
 // "every time I go up and go down, the 3 animation boxes fade in
 // animation should play every time" — so this toggles `.is-visible`
 // BOTH ways (add on entering, remove on leaving) and never unobserves,
-// unlike the shared observer above. Box 2/3's bars/momentum reveal
-// (data-revealed) rides the same toggle, so a box's internal content
-// animates out and back in right along with its own fade each time —
-// otherwise the box would fade out/in repeatedly while its bars/blocks
-// stayed permanently in their already-revealed state from the first
-// pass, which would look broken. (Box 1's chart animation is gated
-// separately, via #d90-box-1.is-visible directly in CSS — see the
-// .day90-line comment above — so it already replays the same way.)
+// unlike the shared observer above. Box 2's bars reveal (data-revealed)
+// rides the same toggle, so its internal content animates out and back
+// in right along with the box's own fade each time — otherwise the box
+// would fade out/in repeatedly while its bars stayed stuck in their
+// already-revealed state from the first pass, which would look broken.
+// (Box 1's chart and box 3's momentum-comparison chart are both gated
+// separately, directly in CSS via #d90-box-1.is-visible /
+// #d90-box-3.is-visible — see the .day90-line and .d90-path-consistent
+// comments above — so they already replay the same way with nothing
+// needed here.)
 (function () {
   var items = Array.prototype.slice.call(document.querySelectorAll('.d90-reveal'));
   if (!items.length) return;
 
   var revealTargets = {
-    'd90-box-2': { id: 'd90-bars', attr: 'data-revealed' },
-    'd90-box-3': { id: 'd90-momentum', attr: 'data-revealed' }
+    'd90-box-2': { id: 'd90-bars', attr: 'data-revealed' }
   };
 
   function setVisible(el, visible) {
