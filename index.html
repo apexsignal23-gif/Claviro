@@ -1913,18 +1913,22 @@
     .orbit-spin, .orbit-spin-rev{ animation: none; }
   }
 
-  /* testimonial carousel */
+  /* testimonial carousel — revived 2026-09-08 (was built at some point,
+     never wired to any markup until now); only .t-dot's inactive color
+     needed changing, from a dark-on-dark tone made for a light card to
+     a light-on-dark one visible against this theme's actual dark
+     cards. */
   .t-slide{ display:none; }
   .t-slide.is-active{ display:block; }
   .t-dot{
-    width:8px; height:8px; border-radius:999px; background: rgba(16,20,28,.18);
+    width:8px; height:8px; border-radius:999px; background: rgba(255,255,255,.18); border: none; padding: 0; cursor: pointer;
     transition: background .3s var(--ease-spring), transform .3s var(--ease-spring);
   }
   .t-dot.is-active{ background: var(--accent); transform: scale(1.2); }
   .t-arrow{
     display:flex; align-items:center; justify-content:center;
-    width: 44px; height: 44px; border-radius: 999px;
-    background: #ffffff; color: var(--accent-deep);
+    width: 44px; height: 44px; border-radius: 999px; border: none; padding: 0; cursor: pointer;
+    background: #ffffff; color: var(--accent-deep); font-size: 1.1rem;
     box-shadow: 0 12px 24px -10px rgba(76,110,245,.35);
     touch-action: manipulation;
     transition: transform .3s var(--ease-spring), box-shadow .3s var(--ease-spring);
@@ -2024,7 +2028,7 @@
           <a href="#case-studies" class="nav-link px-4 py-2">Case Studies</a>
           <a href="#process" class="nav-link px-4 py-2">Process</a>
           <a href="#repurpose" class="nav-link px-4 py-2">Solutions</a>
-          <a href="#enablement" class="nav-link px-4 py-2">Testimonial</a>
+          <a href="#testimonials" class="nav-link px-4 py-2">Testimonial</a>
           <a href="#cta" class="btn-primary text-[0.9rem] ml-3">Book a Call</a>
         </div>
       </div>
@@ -2044,7 +2048,7 @@
     <a href="#case-studies" class="nav-link w-fit">Case Studies</a>
     <a href="#process" class="nav-link w-fit">Process</a>
     <a href="#repurpose" class="nav-link w-fit">Solutions</a>
-    <a href="#enablement" class="nav-link w-fit">Testimonial</a>
+    <a href="#testimonials" class="nav-link w-fit">Testimonial</a>
     <a href="#cta" class="btn-primary w-fit mt-2">Book a Call</a>
   </div>
 </div>
@@ -2860,25 +2864,75 @@
   </div>
 </section>
 
-<!-- ================= BUILT FOR ================= -->
-<section class="relative py-24 sm:py-28">
-  <div class="max-w-[720px] mx-auto px-6 lg:px-10 text-center">
-    <h2 class="reveal text-shine inline-block text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
-      Built For Founders Who
+<!-- ================= TESTIMONIALS (replaced "Built For") — layout
+     modeled on steadyrev.ca's own testimonial section per explicit
+     request: a centered card, bold client-company wordmark at top, a
+     quote, prev/next circular arrows either side, avatar+name+title at
+     the bottom. Reskinned to this site's dark theme instead of
+     steadyrev's light-blue-background/white-card look (this is still
+     the same dark `.card` used everywhere else on the page).
+     Revives `.t-slide`/`.t-dot`/`.t-arrow` (CSS already existed,
+     unused anywhere until now) rather than writing new classes.
+     CONTENT IS PLACEHOLDER — no real client testimonials were
+     supplied, so every quote/name/title/company/photo below is a
+     bracketed stand-in. Replace with actual client testimonials
+     before this goes live; do not ship these as real quotes. -->
+<section id="testimonials" class="relative py-24 sm:py-28">
+  <div class="max-w-[720px] mx-auto px-6 lg:px-10">
+    <h2 class="reveal text-center text-shine inline-block text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em] w-full">
+      What Clients Say
     </h2>
 
-    <div class="mt-11 flex flex-col gap-6 text-left">
-      <div class="reveal flex gap-4 items-start">
-        <i class="ph-bold ph-check-circle text-[1.4rem] text-[var(--accent)] mt-0.5 shrink-0" aria-hidden="true"></i>
-        <p class="text-[var(--cream-dim)] leading-[1.65]">Lead a B2B SaaS company past $1M in ARR, where the founder&rsquo;s voice still moves deals.</p>
+    <div class="reveal mt-11 relative">
+      <button type="button" class="t-arrow absolute left-[-6px] sm:left-[-56px] top-1/2 -translate-y-1/2 z-10" data-t-prev aria-label="Previous testimonial">
+        <i class="ph-bold ph-arrow-left" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="t-arrow absolute right-[-6px] sm:right-[-56px] top-1/2 -translate-y-1/2 z-10" data-t-next aria-label="Next testimonial">
+        <i class="ph-bold ph-arrow-right" aria-hidden="true"></i>
+      </button>
+
+      <div class="card p-8 sm:p-12 text-center">
+        <div class="t-slide is-active" data-t-slide>
+          <p class="font-display font-bold text-[1.05rem] tracking-[0.02em] text-[var(--cream)] uppercase">[Client Company]</p>
+          <p class="mt-6 text-[1rem] leading-[1.75] text-[var(--cream-dim)]">&ldquo;[Placeholder quote — replace with a real client testimonial describing a specific result: follower/impression growth, inbound replies, or pipeline Claviro created.]&rdquo;</p>
+          <div class="mt-8 flex items-center justify-center gap-3">
+            <img src="https://placehold.co/56x56" alt="" width="56" height="56" class="rounded-full" />
+            <div class="text-left">
+              <p class="font-semibold text-[0.92rem] text-[var(--cream)]">[Client Name]</p>
+              <p class="text-[0.82rem] text-[var(--cream-dimmer)]">[Title], [Company]</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="t-slide" data-t-slide>
+          <p class="font-display font-bold text-[1.05rem] tracking-[0.02em] text-[var(--cream)] uppercase">[Client Company]</p>
+          <p class="mt-6 text-[1rem] leading-[1.75] text-[var(--cream-dim)]">&ldquo;[Second placeholder quote — swap for a real testimonial.]&rdquo;</p>
+          <div class="mt-8 flex items-center justify-center gap-3">
+            <img src="https://placehold.co/56x56" alt="" width="56" height="56" class="rounded-full" />
+            <div class="text-left">
+              <p class="font-semibold text-[0.92rem] text-[var(--cream)]">[Client Name]</p>
+              <p class="text-[0.82rem] text-[var(--cream-dimmer)]">[Title], [Company]</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="t-slide" data-t-slide>
+          <p class="font-display font-bold text-[1.05rem] tracking-[0.02em] text-[var(--cream)] uppercase">[Client Company]</p>
+          <p class="mt-6 text-[1rem] leading-[1.75] text-[var(--cream-dim)]">&ldquo;[Third placeholder quote — swap for a real testimonial.]&rdquo;</p>
+          <div class="mt-8 flex items-center justify-center gap-3">
+            <img src="https://placehold.co/56x56" alt="" width="56" height="56" class="rounded-full" />
+            <div class="text-left">
+              <p class="font-semibold text-[0.92rem] text-[var(--cream)]">[Client Name]</p>
+              <p class="text-[0.82rem] text-[var(--cream-dimmer)]">[Title], [Company]</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="reveal flex gap-4 items-start">
-        <i class="ph-bold ph-check-circle text-[1.4rem] text-[var(--accent)] mt-0.5 shrink-0" aria-hidden="true"></i>
-        <p class="text-[var(--cream-dim)] leading-[1.65]">Already have a story worth telling, they just do not have three hours a week to write it.</p>
-      </div>
-      <div class="reveal flex gap-4 items-start">
-        <i class="ph-bold ph-check-circle text-[1.4rem] text-[var(--accent)] mt-0.5 shrink-0" aria-hidden="true"></i>
-        <p class="text-[var(--cream-dim)] leading-[1.65]">Want pipeline that outlives the next ad platform algorithm change.</p>
+
+      <div class="mt-6 flex items-center justify-center gap-2">
+        <button type="button" class="t-dot is-active" data-t-dot aria-label="Show testimonial 1"></button>
+        <button type="button" class="t-dot" data-t-dot aria-label="Show testimonial 2"></button>
+        <button type="button" class="t-dot" data-t-dot aria-label="Show testimonial 3"></button>
       </div>
     </div>
   </div>
@@ -2975,7 +3029,7 @@
         <a href="#case-studies" class="nav-link w-fit">Case Studies</a>
         <a href="#process" class="nav-link w-fit">Process</a>
         <a href="#repurpose" class="nav-link w-fit">Solutions</a>
-        <a href="#enablement" class="nav-link w-fit">Testimonial</a>
+        <a href="#testimonials" class="nav-link w-fit">Testimonial</a>
       </nav>
 
       <div class="flex items-center gap-3">
@@ -3328,6 +3382,30 @@ void main() {
       item.setAttribute('data-open', String(willOpen));
       btn.setAttribute('aria-expanded', String(willOpen));
     });
+  });
+})();
+
+// Testimonials carousel — prev/next arrows + dot navigation toggling
+// `.is-active` on slides and dots. Reuses .t-slide/.t-dot/.t-arrow,
+// CSS that already existed in this file but had never been wired to
+// any markup or script until now.
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('[data-t-slide]'));
+  var dots = Array.prototype.slice.call(document.querySelectorAll('[data-t-dot]'));
+  var prevBtn = document.querySelector('[data-t-prev]');
+  var nextBtn = document.querySelector('[data-t-next]');
+  if (!slides.length) return;
+  var index = 0;
+
+  function show(i) {
+    index = (i + slides.length) % slides.length;
+    slides.forEach(function (el, n) { el.classList.toggle('is-active', n === index); });
+    dots.forEach(function (el, n) { el.classList.toggle('is-active', n === index); });
+  }
+  if (prevBtn) prevBtn.addEventListener('click', function () { show(index - 1); });
+  if (nextBtn) nextBtn.addEventListener('click', function () { show(index + 1); });
+  dots.forEach(function (dot, n) {
+    dot.addEventListener('click', function () { show(n); });
   });
 })();
 
