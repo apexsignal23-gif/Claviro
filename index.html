@@ -596,17 +596,32 @@
     fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round;
     stroke-dasharray: 1000; stroke-dashoffset: 0;
     animation: day90-draw 5s var(--ease-spring) infinite;
+    animation-play-state: paused;
   }
   .day90-fill{
     fill: var(--accent); opacity: .08;
     clip-path: inset(0 0% 0 0);
     animation: day90-reveal 5s var(--ease-spring) infinite;
+    animation-play-state: paused;
   }
   .day90-dot{
     fill: var(--accent);
     transform-box: fill-box; transform-origin: center;
     opacity: 1; transform: scale(1);
     animation: day90-dot-pop 5s var(--ease-spring) infinite;
+    animation-play-state: paused;
+  }
+  /* Paused by default and only set running once its box has actually
+     scrolled into view (the same `.is-visible` the reveal observer
+     adds for the box's own fade+translateY) — otherwise this was an
+     unconditional infinite loop from page load, completely untethered
+     from scroll position, so the chart could be mid-cycle in any state
+     by the time you actually scrolled to it instead of visibly
+     "drawing in" at that moment. */
+  #d90-box-1.is-visible .day90-line,
+  #d90-box-1.is-visible .day90-fill,
+  #d90-box-1.is-visible .day90-dot{
+    animation-play-state: running;
   }
   /* Line rests fully drawn (stroke-dashoffset:0 in the base .day90-line
      rule above) and only un-draws briefly at the very start/end of each
