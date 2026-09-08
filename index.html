@@ -660,6 +660,20 @@
   .d90-stack{ display: flex; flex-direction: column; }
   .d90-connector{ position: relative; height: 64px; margin: 0 auto; width: 2px; }
   .d90-connector-line{ position: absolute; inset: 0; width: 100%; background: var(--ink-border); }
+  /* Fills in white behind the dot as it travels — same `progress`
+     value the dot's own translateY uses, just applied as a `scaleY`
+     (not `height`, which would trigger layout on every scroll tick)
+     anchored at the top so it grows downward from 0 to full height in
+     lockstep with the dot moving down, and shrinks back the same way
+     on scroll-up. Sits between the base line and the dot in source
+     order (no z-index needed) so it paints over the gray line but
+     under the dot. */
+  .d90-connector-fill{
+    position: absolute; top: 0; left: 0; right: 0; height: 100%;
+    background: #fff;
+    transform: scaleY(0); transform-origin: top;
+    opacity: 0;
+  }
   /* Resting state is invisible (opacity:0) rather than pinned at the
      top — the connector-dot script sets opacity:1 once it starts
      tracking scroll, so a reduced-motion visitor (where that script
@@ -2443,7 +2457,7 @@
       </div>
     </div>
 
-    <div class="d90-stack mt-12 max-w-[32rem]">
+    <div class="d90-stack mt-12 max-w-[32rem] mx-auto">
       <!-- Box 1: Profile Activity — unchanged existing chart, just its
            own card now instead of the first section of a shared one. -->
       <div class="reveal card p-7 sm:p-9" id="d90-box-1">
@@ -2469,6 +2483,7 @@
            the note further down — so this stays purely visual). -->
       <div class="d90-connector" aria-hidden="true">
         <div class="d90-connector-line"></div>
+        <div class="d90-connector-fill"></div>
         <div class="d90-connector-dot"></div>
       </div>
 
@@ -2494,6 +2509,7 @@
       <!-- Connector 2: Box 2 → Box 3, same as Connector 1 above. -->
       <div class="d90-connector" aria-hidden="true">
         <div class="d90-connector-line"></div>
+        <div class="d90-connector-fill"></div>
         <div class="d90-connector-dot"></div>
       </div>
 
@@ -3239,11 +3255,14 @@ void main() {
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   var items = Array.prototype.slice.call(document.querySelectorAll('.d90-connector'))
-    .map(function (el) { return { el: el, dot: el.querySelector('.d90-connector-dot') }; })
+    .map(function (el) { return { el: el, dot: el.querySelector('.d90-connector-dot'), fill: el.querySelector('.d90-connector-fill') }; })
     .filter(function (item) { return item.dot; });
   if (!items.length) return;
 
-  items.forEach(function (item) { item.dot.style.opacity = '1'; });
+  items.forEach(function (item) {
+    item.dot.style.opacity = '1';
+    if (item.fill) item.fill.style.opacity = '1';
+  });
 
   var ticking = false;
   function update() {
@@ -3255,6 +3274,9 @@ void main() {
       var progress = Math.max(0, Math.min(1, (center - rect.top) / height));
       var travel = height - 10; // dot diameter
       item.dot.style.transform = 'translate(-50%, ' + (progress * travel) + 'px)';
+      // Same progress value, applied as the fill's scaleY — the line
+      // fills in behind the dot going down, empties back out going up.
+      if (item.fill) item.fill.style.transform = 'scaleY(' + progress + ')';
     });
   }
   function onScroll() {
