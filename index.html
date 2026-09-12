@@ -1907,19 +1907,22 @@
   /* Pull-wheel diagram (Gravity section) — replaces the old 3-ellipse
      "orbit" graphic. A 5-point woven ring inspired by metromediahouse.co's
      scroll-linked flywheel, deliberately reshaped so it isn't a copy: a
-     bowed 5-point pentagram instead of their hexagon, a handful of
-     brand-blue strands instead of a rainbow sweep, and the 5 points are
-     business outcomes (not platforms). The strand paths are generated
-     once in JS (near the bottom of the script) into #pw-strand-group;
-     that same group's inline `transform` is what the scroll listener
-     rotates — see the JS comment for how the angle is derived. */
+     smooth circular ring (traced through the 5 points in order, not their
+     hexagon) in a handful of brand-blue strands instead of a rainbow
+     sweep, and the 5 points are business outcomes (not platforms). Section
+     is now centered/full-width and the wheel sized big to match the
+     reference's scale, with a center caption filling the ring's middle
+     the way their "Content Flywheel" label does. The strand paths are
+     generated once in JS (near the bottom of the script) into
+     #pw-strand-group; that same group's inline `transform` is what the
+     scroll listener rotates — see the JS comment for how the angle is
+     derived. */
   .pw-wheel{
     position: relative;
-    width: min(400px, 82vw);
+    width: min(680px, 92vw);
     aspect-ratio: 1 / 1;
-    --pw-r: 172px;
+    --pw-r: clamp(140px, 40vw, 280px);
   }
-  @media (max-width: 480px){ .pw-wheel{ --pw-r: 126px; } }
   .pw-wheel-svg{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   .pw-strand{ fill: none; stroke-linecap: round; stroke-linejoin: round; animation: pw-shimmer 6s ease-in-out infinite; }
   #pw-strand-group{ transform-origin: 210px 210px; will-change: transform; }
@@ -1927,6 +1930,18 @@
   @media (prefers-reduced-motion: reduce){
     #pw-strand-group{ transform: none !important; }
     .pw-strand{ animation: none; }
+  }
+
+  .pw-center{
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; pointer-events: none;
+  }
+  .pw-center-label{
+    font-family: 'Manrope', 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700; letter-spacing: -0.01em;
+    font-size: clamp(1.05rem, 2.6vw, 1.55rem);
+    line-height: 1.25; color: var(--cream);
   }
 
   .pw-point{
@@ -1937,13 +1952,13 @@
     text-align: center;
   }
   .pw-point-icon{
-    width: 44px; height: 44px; border-radius: 12px;
+    width: clamp(40px, 6vw, 52px); height: clamp(40px, 6vw, 52px); border-radius: 12px;
     background: rgba(255,255,255,.04); border: 1px solid var(--ink-border);
     display: flex; align-items: center; justify-content: center;
     box-shadow: 0 8px 20px -12px rgba(76,110,245,.55);
   }
-  .pw-point-icon i{ font-size: 1.15rem; color: var(--accent-hot); }
-  .pw-point-label{ font-size: .78rem; font-weight: 600; line-height: 1.35; color: var(--cream-dim); white-space: nowrap; }
+  .pw-point-icon i{ font-size: clamp(1.15rem, 1.6vw, 1.4rem); color: var(--accent-hot); }
+  .pw-point-label{ font-size: clamp(.78rem, 1.3vw, .92rem); font-weight: 600; line-height: 1.35; color: var(--cream-dim); white-space: nowrap; }
 
   /* testimonial carousel — revived 2026-09-08 (was built at some point,
      never wired to any markup until now); only .t-dot's inactive color
@@ -2588,6 +2603,7 @@
       <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
         What Changes<br>By <span class="text-shine inline-block">Day 90</span>
       </h2>
+      <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">The cumulative effect of consistent production and distribution over 90 days.</p>
     </div>
 
     <div class="d90-stack mt-12">
@@ -2774,16 +2790,17 @@
      project and saved verbatim for reuse; the user asked for it back
      here) ================= -->
 <section class="relative py-24 sm:py-28 overflow-hidden">
-  <div class="max-w-[1280px] mx-auto px-6 lg:px-10 grid lg:grid-cols-2 gap-14 items-center">
-    <div class="reveal">
+  <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
+    <div class="reveal max-w-[34rem] mx-auto text-center">
       <h2 class="text-shine inline-block text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
         Gravity, Not Guesswork.
       </h2>
-      <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)] max-w-[30rem]">
+      <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">
         Consistency compounds. Every post either adds to your founder&rsquo;s pull on the market, or gets forgotten in a feed. We build the system that keeps compounding after we leave the room.
-      </p>    </div>
+      </p>
+    </div>
 
-    <div class="reveal flex items-center justify-center py-6">
+    <div class="reveal flex items-center justify-center py-6 mt-10">
       <div class="pw-wheel" id="pw-wheel">
         <svg class="pw-wheel-svg" viewBox="0 0 420 420" aria-hidden="true">
           <g id="pw-strand-group"></g>
@@ -2792,6 +2809,8 @@
             <animate attributeName="r" values="5;9;5" dur="3s" repeatCount="indefinite" />
           </circle>
         </svg>
+
+        <div class="pw-center" aria-hidden="true"><span class="pw-center-label">Compounding<br>Pull</span></div>
 
         <div class="pw-point" style="--a:-90deg">
           <span class="pw-point-icon"><i class="ph-bold ph-chart-line-up" aria-hidden="true"></i></span>
@@ -3550,12 +3569,14 @@ void main() {
 })();
 
 // Pull-wheel (Gravity section) — builds the 5-point strand ring once,
-// then rotates it as the page scrolls. Shape: a bowed pentagram (each
-// vertex joined to the vertex two places around, edges bowed outward
-// into a soft petal instead of a straight line), redrawn 7 times at
-// tiny rotational offsets with a brand-blue-to-white gradient across the
-// copies — that repetition is what reads as a woven "ribbon" rather than
-// a single stroked outline. Rotation is recomputed from the wheel's own
+// then rotates it as the page scrolls. Shape: a smooth circle traced
+// through the 5 vertices IN ORDER (not skip-one, which would draw a
+// star) — each edge is a quadratic curve bowed outward from its chord by
+// R*(1-cos(36deg)), the exact offset that makes a 5-chord arc read as a
+// true circle rather than a pentagon. Redrawn 7 times at tiny rotational
+// offsets with a brand-blue-to-white gradient across the copies — that
+// repetition is what reads as a woven "ribbon" rather than a single
+// stroked outline. Rotation is recomputed from the wheel's own
 // getBoundingClientRect() on every scroll tick (not an accumulated
 // scrollY delta), so it can't drift out of sync after a resize/reflow.
 (function () {
@@ -3570,14 +3591,14 @@ void main() {
     var ang = (-90 + i * (360 / points)) * Math.PI / 180;
     verts.push([cx + R * Math.cos(ang), cy + R * Math.sin(ang)]);
   }
-  var order = [0, 2, 4, 1, 3, 0]; // pentagram edge order (skip-one)
+  var order = [0, 1, 2, 3, 4, 0]; // sequential (circle), not skip-one (star)
   var d = 'M ' + verts[order[0]][0] + ',' + verts[order[0]][1];
+  var bow = R * (1 - Math.cos(Math.PI / points)); // exact chord->circle bow for n points
   for (var k = 1; k < order.length; k++) {
     var p0 = verts[order[k - 1]], p1 = verts[order[k]];
     var mx = (p0[0] + p1[0]) / 2, my = (p0[1] + p1[1]) / 2;
     var dx = mx - cx, dy = my - cy;
     var dist = Math.sqrt(dx * dx + dy * dy) || 1;
-    var bow = 30; // bows each edge outward into a rounded petal
     var qx = mx + (dx / dist) * bow, qy = my + (dy / dist) * bow;
     d += ' Q ' + qx + ',' + qy + ' ' + p1[0] + ',' + p1[1];
   }
