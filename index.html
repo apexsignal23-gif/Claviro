@@ -1909,21 +1909,22 @@
      scroll-linked flywheel, deliberately reshaped so it isn't a copy: a
      smooth circular ring (traced through the 5 points in order, not their
      hexagon) in a handful of brand-blue strands instead of a rainbow
-     sweep, and the 5 points are business outcomes (not platforms). Section
-     is now centered/full-width and the wheel sized big to match the
-     reference's scale, with a center caption filling the ring's middle
-     the way their "Content Flywheel" label does. The strand paths are
-     generated once in JS (near the bottom of the script) into
-     #pw-strand-group; that same group's inline `transform` is what the
-     scroll listener rotates — see the JS comment for how the angle is
-     derived. */
+     sweep, and the 5 points are business outcomes (not platforms). The
+     strand paths are generated once in JS into #pw-strand-group, whose
+     inline `transform` the scroll listener rotates.
+     Sizing note: the ring's rendered radius is a fixed fraction of the
+     container (2*R/420 of the width — see the JS), and --pw-r (the
+     label anchor radius) MUST clear that by roughly half a label card's
+     height or the cards clip into the ring — this bit the first pass,
+     where labels sat almost on the ring. Keep a real gap when touching
+     either the JS `R` or this clamp(). */
   .pw-wheel{
     position: relative;
-    width: min(680px, 92vw);
+    width: min(600px, 90vw);
     aspect-ratio: 1 / 1;
-    --pw-r: clamp(140px, 40vw, 280px);
+    --pw-r: clamp(165px, 44vw, 272px);
   }
-  .pw-wheel-svg{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .pw-wheel-svg{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; z-index: 1; }
   .pw-strand{ fill: none; stroke-linecap: round; stroke-linejoin: round; animation: pw-shimmer 6s ease-in-out infinite; }
   #pw-strand-group{ transform-origin: 210px 210px; will-change: transform; }
   @keyframes pw-shimmer{ 0%, 100%{ opacity: var(--pw-op, .5); } 50%{ opacity: calc(var(--pw-op, .5) * 1.6); } }
@@ -1932,8 +1933,26 @@
     .pw-strand{ animation: none; }
   }
 
+  /* Ambient blue glow behind the ring — a dedicated radial gradient
+     rather than relying on the strand's own drop-shadow, so its color
+     and spread are controllable on their own (per explicit "increase the
+     blue" feedback: the old glow leaned pale/white). Sized to the ring's
+     own diameter (59.5% = 2*125/420) so its blur falloff clears the
+     labels at --pw-r. */
+  .pw-wheel::before{
+    content: '';
+    position: absolute; left: 50%; top: 50%;
+    width: 59.5%; height: 59.5%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(76,110,245,.6) 0%, rgba(57,83,184,.32) 45%, transparent 72%);
+    filter: blur(26px);
+    z-index: 0;
+    pointer-events: none;
+  }
+
   .pw-center{
-    position: absolute; inset: 0;
+    position: absolute; inset: 0; z-index: 2;
     display: flex; align-items: center; justify-content: center;
     text-align: center; pointer-events: none;
   }
@@ -1945,11 +1964,23 @@
   }
 
   .pw-point{
-    position: absolute; top: 50%; left: 50%;
+    position: absolute; top: 50%; left: 50%; z-index: 2;
     transform: rotate(var(--a)) translateY(calc(-1 * var(--pw-r))) rotate(calc(-1 * var(--a))) translate(-50%, -50%);
     width: max-content;
+  }
+  /* The reveal animation lives on this inner wrapper, not .pw-point
+     itself — .pw-point's own transform is already the full radial-
+     placement chain, so a separate element handles the scroll-scrubbed
+     fade/rise without the two fighting over one `transform` property. */
+  .pw-point-inner{
     display: flex; flex-direction: column; align-items: center; gap: .55rem;
     text-align: center;
+    opacity: 0; transform: translateY(10px);
+    transition: opacity .5s var(--ease-spring), transform .5s var(--ease-spring);
+  }
+  .pw-point.is-visible .pw-point-inner{ opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce){
+    .pw-point-inner{ opacity: 1; transform: none; transition: none; }
   }
   .pw-point-icon{
     width: clamp(40px, 6vw, 52px); height: clamp(40px, 6vw, 52px); border-radius: 12px;
@@ -2813,24 +2844,34 @@
         <div class="pw-center" aria-hidden="true"><span class="pw-center-label">Compounding<br>Pull</span></div>
 
         <div class="pw-point" style="--a:-90deg">
-          <span class="pw-point-icon"><i class="ph-bold ph-chart-line-up" aria-hidden="true"></i></span>
-          <span class="pw-point-label">Investor<br>access</span>
+          <div class="pw-point-inner">
+            <span class="pw-point-icon"><i class="ph-bold ph-chart-line-up" aria-hidden="true"></i></span>
+            <span class="pw-point-label">Investor<br>access</span>
+          </div>
         </div>
         <div class="pw-point" style="--a:-18deg">
-          <span class="pw-point-icon"><i class="ph-bold ph-users-three" aria-hidden="true"></i></span>
-          <span class="pw-point-label">Recruiting<br>talent</span>
+          <div class="pw-point-inner">
+            <span class="pw-point-icon"><i class="ph-bold ph-users-three" aria-hidden="true"></i></span>
+            <span class="pw-point-label">Recruiting<br>talent</span>
+          </div>
         </div>
         <div class="pw-point" style="--a:54deg">
-          <span class="pw-point-icon"><i class="ph-bold ph-handshake" aria-hidden="true"></i></span>
-          <span class="pw-point-label">Strategic<br>partnerships</span>
+          <div class="pw-point-inner">
+            <span class="pw-point-icon"><i class="ph-bold ph-handshake" aria-hidden="true"></i></span>
+            <span class="pw-point-label">Strategic<br>partnerships</span>
+          </div>
         </div>
         <div class="pw-point" style="--a:126deg">
-          <span class="pw-point-icon"><i class="ph-bold ph-megaphone-simple" aria-hidden="true"></i></span>
-          <span class="pw-point-label">Media<br>opportunities</span>
+          <div class="pw-point-inner">
+            <span class="pw-point-icon"><i class="ph-bold ph-megaphone-simple" aria-hidden="true"></i></span>
+            <span class="pw-point-label">Media<br>opportunities</span>
+          </div>
         </div>
         <div class="pw-point" style="--a:198deg">
-          <span class="pw-point-icon"><i class="ph-bold ph-eye" aria-hidden="true"></i></span>
-          <span class="pw-point-label">Acquisition<br>visibility</span>
+          <div class="pw-point-inner">
+            <span class="pw-point-icon"><i class="ph-bold ph-eye" aria-hidden="true"></i></span>
+            <span class="pw-point-label">Acquisition<br>visibility</span>
+          </div>
         </div>
       </div>
     </div>
@@ -3579,13 +3620,21 @@ void main() {
 // stroked outline. Rotation is recomputed from the wheel's own
 // getBoundingClientRect() on every scroll tick (not an accumulated
 // scrollY delta), so it can't drift out of sync after a resize/reflow.
+// The same tick also scrubs the 5 point labels in one after another
+// (and back out in reverse on scroll-up) as a function of how far the
+// wheel has scrolled through the viewport — not a fixed timer, so it
+// tracks scroll position exactly, matching the reference site.
 (function () {
   var group = document.getElementById('pw-strand-group');
   var wheel = document.getElementById('pw-wheel');
   if (!group || !wheel) return;
+  var pointEls = Array.prototype.slice.call(wheel.querySelectorAll('.pw-point'));
 
   var svgNS = 'http://www.w3.org/2000/svg';
-  var cx = 210, cy = 210, R = 150, points = 5;
+  // R kept well under half the 420 viewBox (210) so --pw-r (the label
+  // radius, in CSS) has real clearance for a label card's own height —
+  // shrink both together if resizing, not R alone, or labels reclip.
+  var cx = 210, cy = 210, R = 125, points = 5;
   var verts = [];
   for (var i = 0; i < points; i++) {
     var ang = (-90 + i * (360 / points)) * Math.PI / 180;
@@ -3616,21 +3665,37 @@ void main() {
     var op = (s === colors.length - 1) ? 0.85 : 0.22 + s * 0.07;
     path.style.setProperty('--pw-op', op);
     path.style.animationDelay = (-s * 0.7) + 's';
-    if (s === colors.length - 1) path.style.filter = 'drop-shadow(0 0 6px rgba(143,168,255,.6))';
+    // Deeper, more saturated blue (--accent) rather than the pale
+    // periwinkle (--accent-hot) this started as — explicit "increase the
+    // blue" feedback on the first pass.
+    if (s === colors.length - 1) path.style.filter = 'drop-shadow(0 0 8px rgba(76,110,245,.85))';
     group.appendChild(path);
   });
 
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduced) return;
 
+  // Reveal thresholds spread across the middle of the wheel's scroll-
+  // through (not the full 0-1 range) so all 5 have finished appearing
+  // while the wheel is still comfortably on screen, not right at its edges.
+  var revealAt = [0.22, 0.34, 0.46, 0.58, 0.70];
+
   var ticking = false;
   function updateWheel() {
     ticking = false;
     var rect = wheel.getBoundingClientRect();
-    var viewportCenter = (window.innerHeight || document.documentElement.clientHeight) / 2;
+    var vh = window.innerHeight || document.documentElement.clientHeight;
     var wheelCenter = rect.top + rect.height / 2;
-    var deg = (viewportCenter - wheelCenter) * 0.16; // deg of spin per px scrolled
+    var deg = (vh / 2 - wheelCenter) * 0.16; // deg of spin per px scrolled
     group.style.transform = 'rotate(' + deg + 'deg)';
+
+    // 0 as the wheel enters from the bottom of the viewport, 1 once it's
+    // fully scrolled past the top — recomputed live, so scrolling back up
+    // un-reveals the points in reverse, same as scrolling down reveals them.
+    var progress = Math.max(0, Math.min(1, (vh - rect.top) / (vh + rect.height)));
+    pointEls.forEach(function (pt, idx) {
+      pt.classList.toggle('is-visible', progress >= revealAt[idx]);
+    });
   }
   function onWheelScroll() {
     if (!ticking) { ticking = true; requestAnimationFrame(updateWheel); }
