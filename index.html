@@ -1951,18 +1951,6 @@
     pointer-events: none;
   }
 
-  .pw-center{
-    position: absolute; inset: 0; z-index: 2;
-    display: flex; align-items: center; justify-content: center;
-    text-align: center; pointer-events: none;
-  }
-  .pw-center-label{
-    font-family: 'Manrope', 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
-    font-weight: 700; letter-spacing: -0.01em;
-    font-size: clamp(1.05rem, 2.6vw, 1.55rem);
-    line-height: 1.25; color: var(--cream);
-  }
-
   .pw-point{
     position: absolute; top: 50%; left: 50%; z-index: 2;
     transform: rotate(var(--a)) translateY(calc(-1 * var(--pw-r))) rotate(calc(-1 * var(--a))) translate(-50%, -50%);
@@ -2840,8 +2828,6 @@
             <animate attributeName="r" values="5;9;5" dur="3s" repeatCount="indefinite" />
           </circle>
         </svg>
-
-        <div class="pw-center" aria-hidden="true"><span class="pw-center-label">Compounding<br>Pull</span></div>
 
         <div class="pw-point" style="--a:-90deg">
           <div class="pw-point-inner">
