@@ -3943,44 +3943,55 @@ void main() {
   }
 
   var thumbStyleTag = null;
+  var lastWholeDays = null;
+  var lastColor = null;
   // `days` can be fractional here (the auto-play sweep passes a smooth,
-  // continuously-eased value so the slider glides instead of ticking
-  // between whole-day stops) — everything discrete (the stat number,
-  // which dots are active, the headline, the "N days" text) rounds to
-  // a whole day first, but the slider's own fill/thumb tracks the raw
-  // value so its position never lags or jumps relative to what's
-  // actually driving it.
+  // continuously-eased value every animation frame so the slider glides
+  // instead of ticking between whole-day stops). The actual VISIBLE lag
+  // was this function redoing all its expensive work on every one of
+  // those ~60 frames/sec regardless — 100 dots' worth of class/style
+  // writes, and worst of all rewriting the injected thumb-color
+  // stylesheet's `textContent`, which forces the browser to re-parse
+  // that CSS text and re-match it against the page every single frame.
+  // None of that ever actually changes except at whole-day boundaries
+  // (~26 times across a whole sweep, not ~400), so it's now gated behind
+  // an actual change in `wholeDays` — only the slider's own fill
+  // position/thumb still moves every frame, which is all that needs to.
   function render(days) {
     var wholeDays = Math.round(days);
-    var pct = retainedPct(wholeDays);
-    var t = (96 - pct) / (96 - 11); // 0 = best, 1 = worst
-    var color = lerpColor(Math.min(1, Math.max(0, t)));
 
-    dots.forEach(function (dot, idx) {
-      var active = rank[idx] < pct;
-      dot.classList.toggle('is-active', active);
-      dot.style.backgroundColor = active ? color : '';
-    });
+    if (wholeDays !== lastWholeDays) {
+      lastWholeDays = wholeDays;
+      var pct = retainedPct(wholeDays);
+      var t = (96 - pct) / (96 - 11); // 0 = best, 1 = worst
+      lastColor = lerpColor(Math.min(1, Math.max(0, t)));
 
-    statNum.textContent = pct;
-    statNum.style.color = color;
-    headline.textContent = headlineFor(wholeDays);
-    headline.style.color = color;
+      dots.forEach(function (dot, idx) {
+        var active = rank[idx] < pct;
+        dot.classList.toggle('is-active', active);
+        dot.style.backgroundColor = active ? lastColor : '';
+      });
 
-    dayVal.textContent = wholeDays;
-    dayWord.textContent = wholeDays === 1 ? 'day' : 'days';
+      statNum.textContent = pct;
+      statNum.style.color = lastColor;
+      headline.textContent = headlineFor(wholeDays);
+      headline.style.color = lastColor;
+
+      dayVal.textContent = wholeDays;
+      dayWord.textContent = wholeDays === 1 ? 'day' : 'days';
+
+      // The slider thumb's color can't be set via inline style (it's a
+      // pseudo-element, ::-webkit-slider-thumb), so it goes through a
+      // small injected stylesheet instead — same technique the mock used.
+      if (!thumbStyleTag) {
+        thumbStyleTag = document.createElement('style');
+        document.head.appendChild(thumbStyleTag);
+      }
+      thumbStyleTag.textContent = '.rt-slider::-webkit-slider-thumb{ background:' + lastColor + '; } .rt-slider::-moz-range-thumb{ background:' + lastColor + '; }';
+    }
 
     var pctPos = ((days - slider.min) / (slider.max - slider.min)) * 100;
-    slider.style.background = 'linear-gradient(to right, ' + color + ' 0%, ' + color + ' ' + pctPos + '%, rgba(255,255,255,.1) ' + pctPos + '%, rgba(255,255,255,.1) 100%)';
-
-    // The slider thumb's color can't be set via inline style (it's a
-    // pseudo-element, ::-webkit-slider-thumb), so it goes through a
-    // small injected stylesheet instead — same technique the mock used.
-    if (!thumbStyleTag) {
-      thumbStyleTag = document.createElement('style');
-      document.head.appendChild(thumbStyleTag);
-    }
-    thumbStyleTag.textContent = '.rt-slider::-webkit-slider-thumb{ background:' + color + '; } .rt-slider::-moz-range-thumb{ background:' + color + '; }';
+    slider.style.background = 'linear-gradient(to right, ' + lastColor + ' 0%, ' + lastColor + ' ' + pctPos + '%, rgba(255,255,255,.1) ' + pctPos + '%, rgba(255,255,255,.1) 100%)';
   }
 
   render(parseInt(slider.value, 10));
