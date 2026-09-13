@@ -1423,109 +1423,109 @@
     .fl-loop-bead{ animation: none; opacity: 0; }
   }
 
-  /* Retention section — REBUILT FROM SCRATCH 2026-08-28, replacing the
-     "Private, regional delivery" network diagram entirely (was reproduced
-     from repixa.io's Enterprise-infrastructure grid, curled live HTML/CSS)
-     per "replace this animation with something which indicates that
-     posting consistency results in customer retention. Make a detailed
-     animation." New concept, three pieces synced on one 8s loop: `.rt-day`
-     ×5 (a streak row, checking off one at a time — "consistent posting")
-     → `.rt-curve-main` (a retention line chart that progressively draws
-     itself upward as the streak builds, then holds high) → `.rt-dot` ×3
-     (a small cluster of customers that appear once the curve tops out —
-     the retained audience the consistency bought). Same underlying
-     techniques as the Repurpose diagrams above: `pathLength`-normalized
-     SVG paths, and reduced-motion bases set to whichever state reads as a
-     complete, intentional static image — here that's everything already
-     checked/drawn/arrived, not everything empty. `--ease-spring` is
-     reused here as an @keyframes timing-function for the first time
-     (previously only used on `transition`s elsewhere in this file) — same
-     curve, just applied to a different animation type. h3/p copy changed
-     with it (was repixa's own regional-infrastructure text, unrelated to
-     what's drawn now). */
-  .rt-card{ max-width: 26rem; margin: 0 auto; }
-  .rt-visual{ align-items: center; justify-content: center; }
-  .rt-day{
-    position: absolute; top: 15%; transform: translate(-50%,-50%) scale(1);
-    width: 30px; height: 30px; border-radius: 8px;
-    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.16);
-    display: grid; place-items: center; font-size: 1rem; color: var(--accent-hot);
-    box-shadow: 0 6px 14px rgba(0,0,0,.24);
-    opacity: 1;
+  /* Retention section — REBUILT AGAIN 2026-09-13, this time ported from a
+     user-supplied interactive mock (claviro-retention-mock: index.html/
+     styles.css/script.js, dropped in their Downloads folder) rather than
+     built from scratch — curled that mock's real markup/CSS/JS, recolored
+     off Claviro's own tokens (its --blue/--blue-2 were already almost
+     exactly --accent-hot, so this is a light touch, not a repaint) and
+     folded into this file's existing conventions rather than pasted
+     verbatim: `is-*` state classes instead of bare `.revealed`/`.show`,
+     an IIFE gated on `prefers-reduced-motion` and `IntersectionObserver`
+     like every other scroll-triggered piece on this page (the mock's own
+     unconditional `runSequence()` call + always-on hover listeners is
+     gone), and `width:min(px, 100%)` sizing instead of the mock's raw
+     `vw` (a real bug elsewhere on this page turned out to trace back to
+     exactly that pattern — see the pull-wheel comment further down).
+     Same underlying idea as the card this replaces (a chart that draws in
+     to show retention building), just a materially richer version: a
+     status-row + self-drawing chart card with a pulse dot that TRAVELS
+     the curve (computed per-frame from the path's own geometry via
+     getPointAtLength, not a canned CSS animation — see the script), then
+     a below-the-card "system" of 4 steps (Publish → Recognize → Return →
+     Compound) that reveals and fills in step by step. Replays on hover
+     over the card (or by hovering an individual step directly), and once
+     automatically the first time it scrolls into view. */
+  .rt-orb{ position: absolute; border-radius: 50%; filter: blur(90px); opacity: .12; pointer-events: none; }
+  .rt-orb-a{ width: 360px; height: 240px; background: var(--accent); left: 8%; top: 15%; }
+  .rt-orb-b{ width: 260px; height: 220px; background: var(--accent-hot); right: 8%; top: 55%; opacity: .06; }
+  .rt-scene{ position: relative; display: flex; flex-direction: column; align-items: center; }
+  .rt-card-wrap{ width: 100%; will-change: transform, filter; transition: transform .4s ease, filter .4s ease; }
+  .rt-card{
+    width: min(418px, 100%); margin: 0 auto; border-radius: 19px; padding: 23px;
+    background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow: 0 30px 80px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.03);
   }
-  .rt-day-1{ left: 11.5%; animation: rt-day-pop-1 8s var(--ease-spring) infinite; }
-  .rt-day-2{ left: 30.8%; animation: rt-day-pop-2 8s var(--ease-spring) infinite; }
-  .rt-day-3{ left: 50%;   animation: rt-day-pop-3 8s var(--ease-spring) infinite; }
-  .rt-day-4{ left: 69.2%; animation: rt-day-pop-4 8s var(--ease-spring) infinite; }
-  .rt-day-5{ left: 88.5%; animation: rt-day-pop-5 8s var(--ease-spring) infinite; }
-  .rt-chart{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-  .rt-axis{ fill: none; stroke: rgba(255,255,255,.12); stroke-width: 1; stroke-dasharray: 2 4; }
-  .rt-curve-main{
-    fill: none; stroke: var(--accent-hot); stroke-width: 2.6; stroke-linecap: round;
-    filter: drop-shadow(0 0 6px rgba(76,110,245,.5));
-    stroke-dasharray: 1000; stroke-dashoffset: 0;
-    animation: rt-curve-draw 8s var(--ease-spring) infinite;
+  .rt-visual-panel{
+    height: 277px; border-radius: 16px; padding: 27px 27px 0;
+    background: var(--ink-900); border: 1px solid var(--ink-border);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
   }
-  .rt-dot{
-    fill: var(--accent-hot); filter: drop-shadow(0 0 5px rgba(76,110,245,.7));
-    transform-box: fill-box; transform-origin: center;
-    opacity: 1; transform: scale(1);
-    animation: rt-dot-pop 8s var(--ease-spring) infinite;
+  .rt-status-row{ display: flex; justify-content: space-between; align-items: center; }
+  .rt-status-box{
+    width: 31px; height: 31px; border-radius: 8px;
+    border: 1px solid var(--ink-border); background: rgba(255,255,255,.03);
+    display: grid; place-items: center;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
   }
-  .rt-dot-2{ animation-delay: .15s; }
-  .rt-dot-3{ animation-delay: .3s; }
-  /* Each day chip dims/shrinks only during its own "not checked off yet"
-     window, then pops to its base look (opacity:1/scale(1), declared on
-     .rt-day above) and stays there for the rest of the loop — the five
-     wake-up points (10/23/36/49/62%) are evenly spaced ~13% apart, about
-     1s of the 8s loop per day, so the streak visibly fills in left to
-     right instead of all at once. */
-  @keyframes rt-day-pop-1{
-    0%, 4%, 98%, 100%{ opacity: .4; transform: translate(-50%,-50%) scale(.85); }
-    10%, 92%{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  .rt-status-box i{ width: 9px; height: 5px; border-left: 2px solid var(--accent-hot); border-bottom: 2px solid var(--accent-hot); transform: rotate(-45deg) translateY(-1px); display: block; }
+  .rt-status-box.is-muted{ opacity: .35; }
+  .rt-chart-wrap{ position: relative; height: 198px; margin-top: 3px; }
+  .rt-chart{ width: 100%; height: 100%; overflow: visible; }
+  .rt-gridline{ stroke: var(--ink-border); stroke-width: 1.4; stroke-linecap: round; stroke-dasharray: 1 8; opacity: .5; }
+  .rt-line{ fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .rt-line-ghost{ stroke: var(--accent-deep); stroke-width: 8; opacity: .08; filter: url(#rt-glow); }
+  .rt-line-main{ stroke: var(--accent-hot); stroke-width: 4; filter: url(#rt-glow); stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .rt-pulse-dot{
+    position: absolute; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent-hot);
+    box-shadow: 0 0 0 6px rgba(76,110,245,.14), 0 0 20px rgba(76,110,245,.6);
+    opacity: 0; left: 17px; top: 146px; transform: translate(-50%, -50%);
   }
-  @keyframes rt-day-pop-2{
-    0%, 17%, 98%, 100%{ opacity: .4; transform: translate(-50%,-50%) scale(.85); }
-    23%, 92%{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  .rt-copy{ padding-top: 21px; }
+  .rt-system-panel{
+    width: min(780px, 100%); margin: 2.5rem auto 0; height: 280px;
+    display: grid; grid-template-columns: repeat(4, 1fr); align-items: end;
+    padding: 0 20px; position: relative;
+    opacity: 0; pointer-events: none; transition: opacity .5s ease;
   }
-  @keyframes rt-day-pop-3{
-    0%, 30%, 98%, 100%{ opacity: .4; transform: translate(-50%,-50%) scale(.85); }
-    36%, 92%{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  .rt-system-panel.is-revealed{ opacity: 1; }
+  .rt-system-track{
+    position: absolute; left: 8%; right: 8%; bottom: 62px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--ink-border) 10%, var(--ink-border) 90%, transparent);
+    overflow: hidden;
   }
-  @keyframes rt-day-pop-4{
-    0%, 43%, 98%, 100%{ opacity: .4; transform: translate(-50%,-50%) scale(.85); }
-    49%, 92%{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  .rt-system-progress{
+    display: block; height: 1px; width: 0;
+    background: linear-gradient(90deg, rgba(76,110,245,.2), var(--accent-hot));
+    box-shadow: 0 0 18px rgba(76,110,245,.55);
+    transition: width .6s cubic-bezier(.22,.8,.2,1);
   }
-  @keyframes rt-day-pop-5{
-    0%, 56%, 98%, 100%{ opacity: .4; transform: translate(-50%,-50%) scale(.85); }
-    62%, 92%{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  .rt-system-step{
+    border: 0; background: transparent; color: var(--cream-dimmer); text-align: left;
+    padding: 0 22px; display: flex; flex-direction: column; gap: 5px;
+    transition: color .35s ease, transform .35s ease;
+    pointer-events: auto; cursor: pointer;
   }
-  /* Curve rests fully drawn (stroke-dashoffset:0 in the base .rt-curve-main
-     rule above) and only un-draws briefly at the very start/end of each
-     loop (the "resetting" beat). A single dasharray equal to the whole
-     pathLength, animating dashoffset from that same value down to 0, is
-     the standard self-drawing-line technique — distinct from the short-
-     dash/long-gap "traveling bead" used on the Repurpose diagrams above:
-     there the dash is short and travels along a fixed-length line; here
-     the dash IS the whole line and its drawn LENGTH grows. Finishes
-     drawing at 68%, just after the 5th day pops at 62%, so the last
-     check-off visibly "completes" the curve a beat later. */
-  @keyframes rt-curve-draw{
-    0%, 4%{ stroke-dashoffset: 1000; }
-    68%, 92%{ stroke-dashoffset: 0; }
-    98%, 100%{ stroke-dashoffset: 1000; }
+  .rt-system-step span{ font-size: 10px; letter-spacing: .18em; opacity: .7; }
+  .rt-system-step strong{ font-size: 14px; font-weight: 600; }
+  .rt-system-step small{ font-size: 11px; color: var(--cream-dimmer); }
+  .rt-system-step.is-active{ color: var(--cream); transform: translateY(-5px); }
+  .rt-system-step.is-active small{ color: var(--cream-dim); }
+  .rt-interaction-note{
+    margin-top: 1.5rem; font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--cream-dimmer); opacity: 0; transition: opacity .5s ease;
   }
-  /* Customer dots rest visible (base .rt-dot rule above) and only hide
-     during the collect/draw phase, popping in right as the curve above
-     finishes (74%) — the small .15s/.3s delays are a cosmetic stagger
-     only (all three still land inside the same beat), not a real
-     sequence, same idiom as the Repurpose diagrams' cosmetic offsets. */
-  @keyframes rt-dot-pop{
-    0%, 66%, 98%, 100%{ opacity: 0; transform: scale(0); }
-    74%, 92%{ opacity: 1; transform: scale(1); }
+  .rt-interaction-note.is-shown{ opacity: .85; }
+  @media (max-width: 640px){
+    .rt-system-panel{ height: 170px; align-items: start; }
+    .rt-system-track{ bottom: auto; top: 54px; }
+    .rt-system-step{ padding: 0 8px; }
+    .rt-system-step small{ display: none; }
   }
   @media (prefers-reduced-motion: reduce){
-    .rt-day-1, .rt-day-2, .rt-day-3, .rt-day-4, .rt-day-5, .rt-curve-main, .rt-dot{ animation: none; }
+    .rt-card-wrap{ transition: none; }
   }
 
   /* Enablement section — rebuilt to match a reference screenshot exactly:
@@ -3056,34 +3056,63 @@
   </div>
 </section>
 
-<!-- ================= RETENTION (new) — single mirror-style card,
-     "Private, regional delivery" network diagram curled from repixa.io
-     ================= -->
-<section id="retention" class="relative py-24 sm:py-28">
-  <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
+<!-- ================= RETENTION — ported from a user-supplied interactive
+     mock (claviro-retention-mock); see the CSS comment above `.rt-orb`
+     for the full history/porting notes. ================= -->
+<section id="retention" class="relative py-24 sm:py-28 overflow-hidden">
+  <div class="rt-orb rt-orb-a" aria-hidden="true"></div>
+  <div class="rt-orb rt-orb-b" aria-hidden="true"></div>
+  <div class="max-w-[1280px] mx-auto px-6 lg:px-10 relative">
     <div class="reveal max-w-[34rem] mx-auto text-center">
       <h2 class="text-shine inline-block text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
         Retention
       </h2>
     </div>
 
-    <div class="mirror-card rt-card reveal mt-12">
-      <div class="mirror-visual rt-visual" aria-hidden="true">
-        <div class="rt-day rt-day-1"><i class="ph-bold ph-check" aria-hidden="true"></i></div>
-        <div class="rt-day rt-day-2"><i class="ph-bold ph-check" aria-hidden="true"></i></div>
-        <div class="rt-day rt-day-3"><i class="ph-bold ph-check" aria-hidden="true"></i></div>
-        <div class="rt-day rt-day-4"><i class="ph-bold ph-check" aria-hidden="true"></i></div>
-        <div class="rt-day rt-day-5"><i class="ph-bold ph-check" aria-hidden="true"></i></div>
-        <svg class="rt-chart" viewBox="0 0 260 195" preserveAspectRatio="none">
-          <path class="rt-axis" d="M25 182 H235" />
-          <path class="rt-curve-main" pathLength="1000" d="M25 158 C70 152,95 110,135 95 C175 82,205 72,235 68" />
-          <circle class="rt-dot rt-dot-1" cx="222" cy="58" r="4" />
-          <circle class="rt-dot rt-dot-2" cx="238" cy="49" r="4" />
-          <circle class="rt-dot rt-dot-3" cx="248" cy="64" r="4" />
-        </svg>
+    <div class="rt-scene reveal mt-12" id="rt-scene">
+      <div class="rt-card-wrap" id="rt-card-wrap">
+        <article class="rt-card">
+          <div class="rt-visual-panel">
+            <div class="rt-status-row" aria-hidden="true">
+              <span class="rt-status-box is-checked"><i></i></span>
+              <span class="rt-status-box is-checked"><i></i></span>
+              <span class="rt-status-box is-checked"><i></i></span>
+              <span class="rt-status-box is-checked"><i></i></span>
+              <span class="rt-status-box is-muted"><i></i></span>
+            </div>
+
+            <div class="rt-chart-wrap" aria-hidden="true">
+              <svg viewBox="0 0 360 205" preserveAspectRatio="none" class="rt-chart">
+                <defs>
+                  <filter id="rt-glow" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur stdDeviation="3.5" result="blur" />
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                </defs>
+                <path class="rt-gridline" d="M28 184H330" vector-effect="non-scaling-stroke" />
+                <path class="rt-line rt-line-ghost" vector-effect="non-scaling-stroke" d="M28 149 C 64 144, 89 125, 116 102 S 165 59, 210 45 S 274 21, 329 16" />
+                <path class="rt-line rt-line-main" vector-effect="non-scaling-stroke" id="rt-line" pathLength="1" d="M28 149 C 64 144, 89 125, 116 102 S 165 59, 210 45 S 274 21, 329 16" />
+              </svg>
+              <span class="rt-pulse-dot" id="rt-pulse-dot"></span>
+            </div>
+          </div>
+
+          <div class="rt-copy">
+            <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Consistent posting keeps them coming back</h3>
+            <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Sporadic content loses an audience before it forms. A steady, predictable cadence is what turns casual viewers into people who stick around.</p>
+          </div>
+        </article>
       </div>
-      <h3 class="font-display font-semibold text-[1.05rem] text-[var(--cream)]">Consistent posting keeps them coming back</h3>
-      <p class="mt-2 text-[0.88rem] leading-[1.6] text-[var(--cream-dim)]">Sporadic content loses an audience before it forms. A steady, predictable cadence is what turns casual viewers into people who stick around.</p>
+
+      <div class="rt-system-panel" id="rt-system-panel" aria-label="Retention system steps">
+        <div class="rt-system-track"><span class="rt-system-progress" id="rt-system-progress"></span></div>
+        <button type="button" class="rt-system-step is-active" data-rt-step="0"><span>01</span><strong>Publish</strong><small>Stay visible</small></button>
+        <button type="button" class="rt-system-step" data-rt-step="1"><span>02</span><strong>Recognize</strong><small>Build familiarity</small></button>
+        <button type="button" class="rt-system-step" data-rt-step="2"><span>03</span><strong>Return</strong><small>Repeat attention</small></button>
+        <button type="button" class="rt-system-step" data-rt-step="3"><span>04</span><strong>Compound</strong><small>Audience gravity</small></button>
+      </div>
+
+      <p class="rt-interaction-note" id="rt-interaction-note">Scroll or hover to replay the retention loop</p>
     </div>
   </div>
 </section>
@@ -3873,6 +3902,105 @@ void main() {
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
   update();
+})();
+
+// Retention section — ported from the user-supplied mock's script.js
+// (see the CSS comment above `.rt-orb` for the full porting notes).
+// The pulse dot's position is computed per-frame from the path's own
+// geometry (getPointAtLength + the SVG's live bounding box), not a
+// canned CSS animation, so it stays exactly on the curve regardless of
+// how the chart itself scales at any screen size.
+(function () {
+  var scene = document.getElementById('rt-scene');
+  if (!scene) return;
+  var cardWrap = document.getElementById('rt-card-wrap');
+  var line = document.getElementById('rt-line');
+  var dot = document.getElementById('rt-pulse-dot');
+  var panel = document.getElementById('rt-system-panel');
+  var progress = document.getElementById('rt-system-progress');
+  var note = document.getElementById('rt-interaction-note');
+  var steps = Array.prototype.slice.call(scene.querySelectorAll('.rt-system-step'));
+  if (!cardWrap || !line || !dot || !panel || !progress || !note || !steps.length) return;
+
+  function activateStep(index) {
+    steps.forEach(function (s, i) { s.classList.toggle('is-active', i === index); });
+    progress.style.width = ((index + 1) * 25) + '%';
+  }
+  steps.forEach(function (step) {
+    step.addEventListener('mouseenter', function () {
+      activateStep(Number(step.getAttribute('data-rt-step')));
+    });
+  });
+
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // Same convention as every other gated animation on this page: land
+    // on the finished state (line fully drawn, steps revealed) instead
+    // of stuck mid-animation or blank. Hovering a step still works.
+    line.style.strokeDashoffset = '0';
+    dot.style.opacity = '.35';
+    panel.classList.add('is-revealed');
+    note.classList.add('is-shown');
+    activateStep(0);
+    return;
+  }
+
+  var timers = [];
+  function clearTimers() { timers.forEach(function (t) { clearTimeout(t); }); timers = []; }
+
+  function animateDot() {
+    var total = line.getTotalLength();
+    dot.style.opacity = '1';
+    var start = performance.now();
+    var duration = 1800;
+    function frame(now) {
+      var t = Math.min(1, (now - start) / duration);
+      var eased = 1 - Math.pow(1 - t, 3);
+      var pt = line.getPointAtLength(total * eased);
+      var box = line.ownerSVGElement.getBoundingClientRect();
+      var vb = line.ownerSVGElement.viewBox.baseVal;
+      dot.style.left = ((pt.x - vb.x) / vb.width * box.width) + 'px';
+      dot.style.top = ((pt.y - vb.y) / vb.height * box.height) + 'px';
+      if (t < 1) requestAnimationFrame(frame); else dot.style.opacity = '.35';
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function runSequence() {
+    clearTimers();
+    line.style.transition = 'none';
+    line.style.strokeDashoffset = '1';
+    cardWrap.style.transform = 'translateY(12px) scale(.985)';
+    cardWrap.style.filter = 'brightness(.88)';
+    panel.classList.remove('is-revealed');
+    note.classList.remove('is-shown');
+    progress.style.width = '0%';
+    activateStep(0);
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        line.style.transition = 'stroke-dashoffset 1.85s cubic-bezier(.16,.72,.2,1)';
+        line.style.strokeDashoffset = '0';
+        cardWrap.style.transform = 'translateY(0) scale(1)';
+        cardWrap.style.filter = 'brightness(1)';
+        animateDot();
+      });
+    });
+    timers.push(setTimeout(function () { panel.classList.add('is-revealed'); }, 850));
+    [0, 1, 2, 3].forEach(function (i) {
+      timers.push(setTimeout(function () { activateStep(i); }, 900 + i * 430));
+    });
+    timers.push(setTimeout(function () { note.classList.add('is-shown'); }, 2500));
+  }
+
+  cardWrap.addEventListener('mouseenter', runSequence);
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) { if (entry.isIntersecting) runSequence(); });
+    }, { threshold: 0.42 });
+    io.observe(scene);
+  } else {
+    runSequence();
+  }
 })();
 
 // Pull-wheel (Gravity section) — builds the 5-point strand ring once,
