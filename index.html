@@ -3874,9 +3874,18 @@ void main() {
 
 // Retention section — ported from the user-supplied mock's inline
 // script (retention-section-v2.html; see the CSS comment above
-// `.rt-card` for the full porting notes). Not scroll-gated like the
-// rest of this page's animated pieces — it's driven entirely by the
-// slider, so it just renders its initial value once on load.
+// `.rt-card` for the full porting notes), then extended with an
+// auto-play loop per explicit request: the slider sweeps itself from
+// min to max, resets, and sweeps again — a self-running demo — while
+// staying fully user-controllable at any point. A genuine user drag
+// (the native `input` event, which never fires from the script's own
+// `slider.value = x` assignments below) immediately stops the auto
+// sweep and hands control back; auto-play quietly resumes on its own
+// a few seconds after the user stops touching it. Gated to
+// prefers-reduced-motion (no auto loop at all, manual-only) and to the
+// section's own scroll visibility (paused off-screen, same convention
+// as this page's other continuously-animated pieces) so it isn't
+// running a rAF loop nobody can see.
 (function () {
   var grid = document.getElementById('rt-grid');
   var slider = document.getElementById('rt-slider');
@@ -3966,8 +3975,120 @@ void main() {
     thumbStyleTag.textContent = '.rt-slider::-webkit-slider-thumb{ background:' + color + '; } .rt-slider::-moz-range-thumb{ background:' + color + '; }';
   }
 
-  slider.addEventListener('input', function () { render(parseInt(slider.value, 10)); });
   render(parseInt(slider.value, 10));
+
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var min = parseInt(slider.min, 10);
+  var max = parseInt(slider.max, 10);
+
+  var SWEEP_MS = 7000;    // time to slide from min to max
+  var HOLD_START_MS = 700;   // pause at the low end before sliding
+  var HOLD_END_MS = 1100;  // pause at the high end before resetting
+  var RESUME_DELAY_MS = 4500; // idle time after a user drag before auto-play takes back over
+
+  var rafId = null;
+  var timerId = null;
+  var resumeTimer = null;
+  var autoRunning = false;
+  var everStarted = false;
+  var visible = false;
+
+  function setValue(v) {
+    slider.value = v;
+    render(v);
+  }
+
+  function clearAutoTimers() {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    if (timerId) { clearTimeout(timerId); timerId = null; }
+  }
+
+  // Eases a single min->max slide over `duration`, calling `onDone` once
+  // it lands exactly on `to` (rAF timing is approximate, so the final
+  // frame snaps to the real target rather than whatever the easing math
+  // rounded to).
+  function sweep(from, to, duration, onDone) {
+    var start = null;
+    function frame(ts) {
+      if (start === null) start = ts;
+      var t = Math.min(1, (ts - start) / duration);
+      var eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      setValue(Math.round(from + (to - from) * eased));
+      if (t < 1) {
+        rafId = requestAnimationFrame(frame);
+      } else {
+        rafId = null;
+        setValue(to);
+        if (onDone) onDone();
+      }
+    }
+    rafId = requestAnimationFrame(frame);
+  }
+
+  function loopFrom(startVal) {
+    timerId = setTimeout(function () {
+      if (!autoRunning) return;
+      sweep(startVal, max, SWEEP_MS, function () {
+        if (!autoRunning) return;
+        timerId = setTimeout(function () {
+          if (!autoRunning) return;
+          setValue(min);
+          loopFrom(min);
+        }, HOLD_END_MS);
+      });
+    }, HOLD_START_MS);
+  }
+
+  function startAuto() {
+    if (reduced || autoRunning || !visible) return;
+    autoRunning = true;
+    if (!everStarted) {
+      // First run eases up from wherever the slider already sits (its
+      // initial HTML value) instead of jumping to min first, so nothing
+      // visibly snaps the moment the demo kicks in.
+      everStarted = true;
+      loopFrom(parseInt(slider.value, 10));
+    } else {
+      setValue(min);
+      loopFrom(min);
+    }
+  }
+
+  function stopAuto() {
+    autoRunning = false;
+    clearAutoTimers();
+  }
+
+  function scheduleResume() {
+    clearTimeout(resumeTimer);
+    if (reduced) return;
+    resumeTimer = setTimeout(startAuto, RESUME_DELAY_MS);
+  }
+
+  // The native `input` event only ever fires from a real user drag/
+  // keypress — never from this script's own `slider.value = x` — so
+  // this is a clean signal for "the user just took control."
+  slider.addEventListener('input', function () {
+    stopAuto();
+    render(parseInt(slider.value, 10));
+    scheduleResume();
+  });
+
+  if (reduced) return;
+
+  if ('IntersectionObserver' in window) {
+    var section = document.getElementById('retention') || grid;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        visible = entry.isIntersecting;
+        if (visible) startAuto(); else stopAuto();
+      });
+    }, { threshold: 0.3 });
+    io.observe(section);
+  } else {
+    visible = true;
+    startAuto();
+  }
 })();
 
 // Pull-wheel (Gravity section) — builds the 5-point strand ring once,
