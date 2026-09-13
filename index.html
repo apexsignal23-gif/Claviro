@@ -3053,7 +3053,7 @@
     </div>
 
     <div class="rt-card reveal mt-12">
-      <p class="rt-headline" id="rt-headline">Still familiar — barely.</p>
+      <p class="rt-headline" id="rt-headline">Still familiar, but barely.</p>
 
       <div class="rt-panel">
         <div class="rt-display-row">
@@ -3078,7 +3078,7 @@
       </div>
 
       <div class="rt-copy">
-        <p>Drag the slider. Each square is one of 100 people who followed you for a reason — the wider the gap between posts, the more of them stop remembering what that reason was.</p>
+        <p>Drag the slider. Each square is one of 100 people who followed you for a reason, and the wider the gap between posts, the more of them stop remembering what that reason was.</p>
         <p class="rt-fine">Illustrative model, not a guarantee. Actual retention depends on content quality, platform, and audience fit.</p>
       </div>
     </div>
@@ -3937,14 +3937,22 @@ void main() {
 
   function headlineFor(days) {
     if (days <= 3) return "That's a habit forming.";
-    if (days <= 7) return 'Still familiar — barely.';
+    if (days <= 7) return "Still familiar, but barely.";
     if (days <= 14) return "You're fading into their feed's history.";
     return 'Most of them have already moved on.';
   }
 
   var thumbStyleTag = null;
+  // `days` can be fractional here (the auto-play sweep passes a smooth,
+  // continuously-eased value so the slider glides instead of ticking
+  // between whole-day stops) — everything discrete (the stat number,
+  // which dots are active, the headline, the "N days" text) rounds to
+  // a whole day first, but the slider's own fill/thumb tracks the raw
+  // value so its position never lags or jumps relative to what's
+  // actually driving it.
   function render(days) {
-    var pct = retainedPct(days);
+    var wholeDays = Math.round(days);
+    var pct = retainedPct(wholeDays);
     var t = (96 - pct) / (96 - 11); // 0 = best, 1 = worst
     var color = lerpColor(Math.min(1, Math.max(0, t)));
 
@@ -3956,11 +3964,11 @@ void main() {
 
     statNum.textContent = pct;
     statNum.style.color = color;
-    headline.textContent = headlineFor(days);
+    headline.textContent = headlineFor(wholeDays);
     headline.style.color = color;
 
-    dayVal.textContent = days;
-    dayWord.textContent = days === 1 ? 'day' : 'days';
+    dayVal.textContent = wholeDays;
+    dayWord.textContent = wholeDays === 1 ? 'day' : 'days';
 
     var pctPos = ((days - slider.min) / (slider.max - slider.min)) * 100;
     slider.style.background = 'linear-gradient(to right, ' + color + ' 0%, ' + color + ' ' + pctPos + '%, rgba(255,255,255,.1) ' + pctPos + '%, rgba(255,255,255,.1) 100%)';
@@ -4013,7 +4021,11 @@ void main() {
       if (start === null) start = ts;
       var t = Math.min(1, (ts - start) / duration);
       var eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-      setValue(Math.round(from + (to - from) * eased));
+      // Not rounded here — the raw float lets the native thumb glide
+      // continuously along the track instead of ticking between whole-
+      // day stops; render() rounds internally wherever a whole day
+      // actually matters (the stat, dots, and headline).
+      setValue(from + (to - from) * eased);
       if (t < 1) {
         rafId = requestAnimationFrame(frame);
       } else {
