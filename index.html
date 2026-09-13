@@ -112,14 +112,19 @@
     --shadow-btn-hover: 0 18px 38px -10px rgba(143,168,255,.62), 0 3px 12px rgba(0,0,0,.4);
   }
 
-  html { scroll-behavior: smooth; color-scheme: dark; overflow-x: hidden; }
+  html { scroll-behavior: smooth; color-scheme: dark; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-  /* Safety net against any residual horizontal overflow on narrow phones
-     (a few decorative widgets on this page size themselves off raw `vw`,
-     which is relative to the true viewport rather than the padded
-     content column — see .pw-wheel below for the specific fix — this
-     just guarantees a stray px or two never produces sideways scroll). */
-  body{ overflow-x: hidden; }
+  /* NOTE: do NOT add `overflow-x: hidden` here as a blanket safety net
+     against stray horizontal overflow — tried that, and it silently
+     broke `position: sticky` for every descendant (the Industry
+     Standard section's whole scroll-stacking effect depends on sticky
+     cards; see the `.iv-card` comment below for why: "no ancestor of
+     .iv-card may have overflow:hidden/auto/scroll"). Setting overflow-x
+     to anything but `visible` on html/body forces the OTHER axis to
+     become a real scroll container too (per the CSS overflow
+     computed-value rule), which is exactly the ancestor overflow that
+     comment warns about. Fix actual overflow bugs at their source (see
+     .pw-wheel's sizing fix) instead of blanketing it here. */
 
   /* One continuous backdrop for the whole page instead of 14 identical
      flat fills repeated per-section (which is where "pure black, zero
