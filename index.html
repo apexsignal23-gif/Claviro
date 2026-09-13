@@ -2046,23 +2046,35 @@
      height or the cards clip into the ring — this bit the first pass,
      where labels sat almost on the ring. Keep a real gap when touching
      either the JS `R` or this clamp().
-     Mobile fix: --pw-r used to be a RAW `44vw`, sized off the true
-     browser viewport regardless of this section's own side padding —
-     harmless on wide screens (the viewport and the padded content
-     column are close enough), but on a narrow phone the padding eats a
-     much bigger share of the viewport, so the wheel (also sized off raw
-     `90vw`) and its labels ended up wider than the column that actually
-     had room for them, pushing labels off the edge of the screen. Both
-     values are now derived from `--pw-size` (the wheel's OWN rendered
-     width, itself capped to 100% of its flex parent instead of a raw
-     vw), so the label radius always scales down in lockstep with
-     however small the wheel itself actually renders. */
+     Mobile fix, take 2: --pw-r used to be a RAW `44vw`, sized off the
+     true browser viewport regardless of this section's own side
+     padding — on a narrow phone the padding eats a much bigger share of
+     the viewport, so the wheel (also sized off raw `90vw`) and its
+     labels ended up wider than the column that actually had room for
+     them, pushing labels off the edge of the screen.
+     First fix attempt stored the wheel's own size in a plain custom
+     property (`--pw-size: min(600px, 100%)`) and referenced it from
+     `--pw-r` via calc() — broken in a much worse way than the original
+     bug: a bare `%` doesn't carry a fixed meaning through a custom
+     property, it's re-resolved wherever var() is finally used, and
+     `--pw-r` is consumed inside `.pw-point`'s `transform`, where `%`
+     resolves against THAT element's own (small, content-sized) box, not
+     the wheel — so --pw-r collapsed down to almost nothing and every
+     label rendered near dead center, inside the ring.
+     Fixed for real with a CSS container query unit (`cqw`) instead of a
+     custom property built on `%`: `cqw` is a true length, not a
+     percentage, so it keeps meaning "49% of THIS container's width" no
+     matter which property or which descendant ends up consuming it via
+     var() — exactly the property `vw` doesn't have (that one always
+     means the viewport) and plain `%` doesn't have either (means
+     different things on different properties). `container-type` below
+     opts `.pw-wheel` in as that reference container. */
   .pw-wheel{
     position: relative;
-    --pw-size: min(600px, 100%);
-    width: var(--pw-size);
+    container-type: inline-size;
+    width: min(600px, 100%);
     aspect-ratio: 1 / 1;
-    --pw-r: clamp(88px, calc(var(--pw-size) * 0.44), 272px);
+    --pw-r: clamp(90px, 49cqw, 272px);
   }
   .pw-wheel-svg{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; z-index: 1; }
   .pw-strand{ fill: none; stroke-linecap: round; stroke-linejoin: round; animation: pw-shimmer 6s ease-in-out infinite; }
