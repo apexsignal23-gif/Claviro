@@ -591,22 +591,14 @@
      further down for why: this box's fade replays every scroll pass,
      not just once, so this needs the same toggle rather than a one-
      shot reveal). */
-  /* Header row redesign (eyebrow pill + 3 stat badges beside the
-     heading) and each box's new icon/title/subtitle/dropdown header —
-     added per a reference screenshot's updated mockups. Colors stay on
-     this site's own tokens (accent-hot for icon tints, cream-dimmer for
-     muted text) rather than the reference's own palette, per explicit
-     instruction to copy the layout/components, not the colors. */
-  .d90-eyebrow{
-    display: inline-block;
-    font-size: .68rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
-    color: var(--cream-dimmer);
-    border: 1px solid var(--ink-border);
-    background: rgba(255,255,255,.03);
-    padding: .35rem .85rem;
-    border-radius: 999px;
-    margin-bottom: 1rem;
-  }
+  /* Header row redesign (eyebrow label, shared `.en-eyebrow` — plain
+     text, no pill/box, per explicit request — + 3 stat badges beside
+     the heading) and each box's new icon/title/subtitle/dropdown header
+     — added per a reference screenshot's updated mockups. Colors stay
+     on this site's own tokens (accent-hot for icon tints, cream-dimmer
+     for muted text) rather than the reference's own palette, per
+     explicit instruction to copy the layout/components, not the
+     colors. */
   .d90-stats{ display: flex; flex-wrap: wrap; gap: .7rem; flex: none; }
   .d90-stat{
     display: flex; align-items: center; gap: .65rem;
@@ -2731,7 +2723,7 @@
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="reveal flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
       <div class="max-w-[34rem]">
-        <p class="d90-eyebrow">Solutions</p>
+        <p class="en-eyebrow">Solutions</p>
         <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
           What Changes<br>By <span class="text-shine inline-block">Day 90</span>
         </h2>
