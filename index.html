@@ -112,8 +112,14 @@
     --shadow-btn-hover: 0 18px 38px -10px rgba(143,168,255,.62), 0 3px 12px rgba(0,0,0,.4);
   }
 
-  html { scroll-behavior: smooth; color-scheme: dark; }
+  html { scroll-behavior: smooth; color-scheme: dark; overflow-x: hidden; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  /* Safety net against any residual horizontal overflow on narrow phones
+     (a few decorative widgets on this page size themselves off raw `vw`,
+     which is relative to the true viewport rather than the padded
+     content column — see .pw-wheel below for the specific fix — this
+     just guarantees a stray px or two never produces sideways scroll). */
+  body{ overflow-x: hidden; }
 
   /* One continuous backdrop for the whole page instead of 14 identical
      flat fills repeated per-section (which is where "pure black, zero
@@ -656,6 +662,22 @@
     font-size: .62rem; color: var(--cream-dimmer);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
+  /* On a narrow phone, box 1's 10 day-labels (and box 3's 7) get so
+     little width each that "Day 10"/"Day 90" etc. just ellipsis down to
+     an illegible "D…" — thin out to every 3rd label instead. Hidden via
+     `visibility` rather than `display:none` so the remaining labels keep
+     their original flex slot (and stay lined up under the right bar/
+     point) instead of the row re-spacing itself across fewer items. */
+  @media (max-width: 640px){
+    .d90-hist-labels span:nth-child(2),
+    .d90-hist-labels span:nth-child(3),
+    .d90-hist-labels span:nth-child(5),
+    .d90-hist-labels span:nth-child(6),
+    .d90-hist-labels span:nth-child(8),
+    .d90-hist-labels span:nth-child(9){
+      visibility: hidden;
+    }
+  }
 
   .d90-bar-row-top{ display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; }
   .d90-bar-pct{ font-size: .78rem; font-weight: 700; color: var(--cream); flex: none; }
@@ -818,12 +840,17 @@
   .d90-swatch-consistent{ background: var(--accent); }
   .d90-swatch-sporadic{ background: rgba(255,255,255,.28); }
   .d90-momentum-chart{ overflow: visible; }
-  .d90-axis-label{ font-size: 11px; fill: var(--cream-dimmer); }
-  /* Gridlines + a labeled y-axis (0/25/50/75/100) and 7-point x-axis
-     (Day 1/15/30/45/60/75/90), a soft gradient fill under the consistent
-     line, and static dots at each labeled day — all new mockup pieces
-     from the reference screenshot, added alongside (not replacing) the
-     existing traveling dot + draw-in animation below. */
+  /* Gridlines + a labeled y-axis (100/0, in real HTML beside the SVG —
+     see the markup for why) and a 7-point x-axis (Day 1/15/30/45/60/
+     75/90), a soft gradient fill under the consistent line, and static
+     dots at each labeled day — all new mockup pieces from the reference
+     screenshot, added alongside (not replacing) the existing traveling
+     dot + draw-in animation below. */
+  .d90-momentum-yaxis{
+    flex: none; width: 1.8rem;
+    display: flex; flex-direction: column; justify-content: space-between;
+    text-align: right; font-size: .64rem; color: var(--cream-dimmer);
+  }
   .d90-grid-line{ stroke: var(--ink-border); stroke-width: 1; }
   .d90-momentum-area{
     opacity: 0;
@@ -2018,12 +2045,24 @@
      label anchor radius) MUST clear that by roughly half a label card's
      height or the cards clip into the ring — this bit the first pass,
      where labels sat almost on the ring. Keep a real gap when touching
-     either the JS `R` or this clamp(). */
+     either the JS `R` or this clamp().
+     Mobile fix: --pw-r used to be a RAW `44vw`, sized off the true
+     browser viewport regardless of this section's own side padding —
+     harmless on wide screens (the viewport and the padded content
+     column are close enough), but on a narrow phone the padding eats a
+     much bigger share of the viewport, so the wheel (also sized off raw
+     `90vw`) and its labels ended up wider than the column that actually
+     had room for them, pushing labels off the edge of the screen. Both
+     values are now derived from `--pw-size` (the wheel's OWN rendered
+     width, itself capped to 100% of its flex parent instead of a raw
+     vw), so the label radius always scales down in lockstep with
+     however small the wheel itself actually renders. */
   .pw-wheel{
     position: relative;
-    width: min(600px, 90vw);
+    --pw-size: min(600px, 100%);
+    width: var(--pw-size);
     aspect-ratio: 1 / 1;
-    --pw-r: clamp(165px, 44vw, 272px);
+    --pw-r: clamp(88px, calc(var(--pw-size) * 0.44), 272px);
   }
   .pw-wheel-svg{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; z-index: 1; }
   .pw-strand{ fill: none; stroke-linecap: round; stroke-linejoin: round; animation: pw-shimmer 6s ease-in-out infinite; }
@@ -2868,54 +2907,62 @@
           <span class="d90-legend-item"><span class="d90-swatch d90-swatch-sporadic" aria-hidden="true"></span>Sporadic</span>
         </div>
 
-        <svg viewBox="0 0 1280 260" class="d90-momentum-chart w-full h-auto max-h-[210px] mt-4" aria-hidden="true">
-          <defs>
-            <linearGradient id="d90-momentum-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="var(--accent)" stop-opacity=".22"/>
-              <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
+        <!-- Axis labels moved out of the SVG into real HTML text — SVG
+             `font-size` is set in the viewBox's own coordinate units, so
+             on a narrow phone (where this 1280-wide viewBox renders at
+             barely a quarter of its width) the old in-SVG <text> shrank
+             to a couple of real screen pixels, unreadable. HTML text
+             sits outside that scaling entirely. Strokes get the same
+             mobile problem for thickness, fixed instead with
+             vector-effect="non-scaling-stroke" (keeps a constant screen-
+             pixel width regardless of how small the SVG renders). Only 2
+             y-axis labels (100/0) rather than box 1's 5 — this chart's
+             height is content-driven (aspect-ratio, not a fixed px), so
+             only the top/bottom labels are guaranteed to land exactly on
+             their gridline at every width; kept simple rather than
+             chasing exact alignment for 3 in-between values. -->
+        <div class="d90-chart mt-4" aria-hidden="true">
+          <div class="d90-momentum-yaxis"><span>100</span><span>0</span></div>
+          <div class="d90-plot">
+            <svg viewBox="0 24 1280 200" class="d90-momentum-chart w-full h-auto max-h-[210px]">
+              <defs>
+                <linearGradient id="d90-momentum-fill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="var(--accent)" stop-opacity=".22"/>
+                  <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
 
-          <line class="d90-grid-line" x1="40" y1="220" x2="1240" y2="220"/>
-          <line class="d90-grid-line" x1="40" y1="172" x2="1240" y2="172"/>
-          <line class="d90-grid-line" x1="40" y1="124" x2="1240" y2="124"/>
-          <line class="d90-grid-line" x1="40" y1="76" x2="1240" y2="76"/>
-          <line class="d90-grid-line" x1="40" y1="28" x2="1240" y2="28"/>
+              <line class="d90-grid-line" vector-effect="non-scaling-stroke" x1="40" y1="220" x2="1240" y2="220"/>
+              <line class="d90-grid-line" vector-effect="non-scaling-stroke" x1="40" y1="172" x2="1240" y2="172"/>
+              <line class="d90-grid-line" vector-effect="non-scaling-stroke" x1="40" y1="124" x2="1240" y2="124"/>
+              <line class="d90-grid-line" vector-effect="non-scaling-stroke" x1="40" y1="76" x2="1240" y2="76"/>
+              <line class="d90-grid-line" vector-effect="non-scaling-stroke" x1="40" y1="28" x2="1240" y2="28"/>
 
-          <text class="d90-axis-label" x="32" y="224" text-anchor="end">0</text>
-          <text class="d90-axis-label" x="32" y="176" text-anchor="end">25</text>
-          <text class="d90-axis-label" x="32" y="128" text-anchor="end">50</text>
-          <text class="d90-axis-label" x="32" y="80" text-anchor="end">75</text>
-          <text class="d90-axis-label" x="32" y="32" text-anchor="end">100</text>
+              <path class="d90-momentum-area"
+                    d="M40,196 C240,186 440,150 640,108 C840,78 1040,52 1232,38 L1232,220 L40,220 Z"
+                    fill="url(#d90-momentum-fill)"/>
 
-          <path class="d90-momentum-area"
-                d="M40,196 C240,186 440,150 640,108 C840,78 1040,52 1232,38 L1232,220 L40,220 Z"
-                fill="url(#d90-momentum-fill)"/>
+              <path class="d90-path-sporadic" vector-effect="non-scaling-stroke" pathLength="100"
+                    d="M40,205 L280,150 L320,190 L560,130 L600,175 L840,140 L880,185 L1120,150 L1160,190 L1232,175"/>
 
-          <path class="d90-path-sporadic" pathLength="100"
-                d="M40,205 L280,150 L320,190 L560,130 L600,175 L840,140 L880,185 L1120,150 L1160,190 L1232,175"/>
+              <path class="d90-path-consistent" vector-effect="non-scaling-stroke" pathLength="100"
+                    d="M40,196 C240,186 440,150 640,108 C840,78 1040,52 1232,38"/>
 
-          <path class="d90-path-consistent" pathLength="100"
-                d="M40,196 C240,186 440,150 640,108 C840,78 1040,52 1232,38"/>
+              <circle class="d90-momentum-vertex" vector-effect="non-scaling-stroke" cx="40" cy="196" r="4"/>
+              <circle class="d90-momentum-vertex" vector-effect="non-scaling-stroke" cx="239" cy="178" r="4"/>
+              <circle class="d90-momentum-vertex" vector-effect="non-scaling-stroke" cx="437" cy="148" r="4"/>
+              <circle class="d90-momentum-vertex" vector-effect="non-scaling-stroke" cx="636" cy="109" r="4"/>
+              <circle class="d90-momentum-vertex" vector-effect="non-scaling-stroke" cx="835" cy="80" r="4"/>
+              <circle class="d90-momentum-vertex" vector-effect="non-scaling-stroke" cx="1033" cy="56" r="4"/>
+              <circle class="d90-momentum-vertex" vector-effect="non-scaling-stroke" cx="1232" cy="38" r="4"/>
 
-          <circle class="d90-momentum-vertex" cx="40" cy="196" r="4"/>
-          <circle class="d90-momentum-vertex" cx="239" cy="178" r="4"/>
-          <circle class="d90-momentum-vertex" cx="437" cy="148" r="4"/>
-          <circle class="d90-momentum-vertex" cx="636" cy="109" r="4"/>
-          <circle class="d90-momentum-vertex" cx="835" cy="80" r="4"/>
-          <circle class="d90-momentum-vertex" cx="1033" cy="56" r="4"/>
-          <circle class="d90-momentum-vertex" cx="1232" cy="38" r="4"/>
-
-          <circle class="d90-momentum-dot" r="4"/>
-
-          <text class="d90-axis-label" x="40" y="248" text-anchor="middle">Day 1</text>
-          <text class="d90-axis-label" x="239" y="248" text-anchor="middle">Day 15</text>
-          <text class="d90-axis-label" x="437" y="248" text-anchor="middle">Day 30</text>
-          <text class="d90-axis-label" x="636" y="248" text-anchor="middle">Day 45</text>
-          <text class="d90-axis-label" x="835" y="248" text-anchor="middle">Day 60</text>
-          <text class="d90-axis-label" x="1033" y="248" text-anchor="middle">Day 75</text>
-          <text class="d90-axis-label" x="1232" y="248" text-anchor="middle">Day 90</text>
-        </svg>
+              <circle class="d90-momentum-dot" r="4"/>
+            </svg>
+            <div class="d90-hist-labels">
+              <span>Day 1</span><span>Day 15</span><span>Day 30</span><span>Day 45</span><span>Day 60</span><span>Day 75</span><span>Day 90</span>
+            </div>
+          </div>
+        </div>
 
         <p class="mt-4 text-[0.78rem] text-[var(--cream-dimmer)]">Illustrative. Individual results vary by market, offer, and consistency.</p>
       </div>
