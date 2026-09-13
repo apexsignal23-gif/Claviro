@@ -591,7 +591,84 @@
      further down for why: this box's fade replays every scroll pass,
      not just once, so this needs the same toggle rather than a one-
      shot reveal). */
-  .d90-hist{ display: flex; align-items: flex-end; gap: .5rem; height: 170px; }
+  /* Header row redesign (eyebrow pill + 3 stat badges beside the
+     heading) and each box's new icon/title/subtitle/dropdown header —
+     added per a reference screenshot's updated mockups. Colors stay on
+     this site's own tokens (accent-hot for icon tints, cream-dimmer for
+     muted text) rather than the reference's own palette, per explicit
+     instruction to copy the layout/components, not the colors. */
+  .d90-eyebrow{
+    display: inline-block;
+    font-size: .68rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--cream-dimmer);
+    border: 1px solid var(--ink-border);
+    background: rgba(255,255,255,.03);
+    padding: .35rem .85rem;
+    border-radius: 999px;
+    margin-bottom: 1rem;
+  }
+  .d90-stats{ display: flex; flex-wrap: wrap; gap: .7rem; flex: none; }
+  .d90-stat{
+    display: flex; align-items: center; gap: .65rem;
+    border: 1px solid var(--ink-border); border-radius: 12px;
+    background: rgba(255,255,255,.02);
+    padding: .65rem .95rem;
+  }
+  .d90-stat-icon{ font-size: 1.1rem; color: var(--accent-hot); flex: none; }
+  .d90-stat-text{ display: flex; flex-direction: column; line-height: 1.25; }
+  .d90-stat-text strong{ font-size: .85rem; font-weight: 700; color: var(--cream); white-space: nowrap; }
+  .d90-stat-text small{ font-size: .68rem; color: var(--cream-dimmer); white-space: nowrap; }
+
+  .d90-box-head{ display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .d90-box-head-left{ display: flex; align-items: center; gap: .75rem; }
+  .d90-box-icon{
+    width: 2.25rem; height: 2.25rem; border-radius: 10px; flex: none;
+    display: grid; place-items: center;
+    background: rgba(76,110,245,.12); border: 1px solid rgba(76,110,245,.28);
+    color: var(--accent-hot); font-size: 1.05rem;
+  }
+  .d90-box-title{ display: block; font-size: .98rem; font-weight: 700; color: var(--cream); }
+  .d90-box-subtitle{ display: block; margin-top: .15rem; font-size: .76rem; color: var(--cream-dimmer); }
+  .d90-box-dropdown{
+    display: inline-flex; align-items: center; gap: .35rem;
+    font-size: .72rem; font-weight: 600; color: var(--cream-dim);
+    border: 1px solid var(--ink-border); border-radius: 999px;
+    padding: .35rem .8rem;
+    white-space: nowrap;
+  }
+  .d90-box-dropdown i{ font-size: .6rem; color: var(--cream-dimmer); }
+
+  /* Box 1's chart gained a labeled y-axis (0/25/50/75/100) and x-axis
+     (Day 1..90) around the existing bars — `.d90-hist`/`.d90-hist-bar`
+     below are untouched (same reveal + breathing animation gated to
+     #d90-box-1.is-visible), just now nested inside `.d90-plot` next to
+     a `.d90-yaxis` column, with `.d90-hist-labels` matching its flex
+     sizing exactly (same flex-basis + gap) so each label centers under
+     its bar without needing per-bar wrapper elements. */
+  .d90-chart{ display: flex; gap: .75rem; }
+  .d90-yaxis{
+    flex: none; width: 1.8rem; height: 170px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    text-align: right; font-size: .64rem; color: var(--cream-dimmer);
+  }
+  .d90-plot{ flex: 1; min-width: 0; position: relative; }
+  .d90-gridlines{
+    position: absolute; left: 0; right: 0; top: 0; height: 170px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    pointer-events: none;
+  }
+  .d90-gridlines span{ display: block; height: 1px; background: var(--ink-border); }
+  .d90-hist-labels{ display: flex; gap: .5rem; margin-top: .6rem; }
+  .d90-hist-labels span{
+    flex: 1 1 0; min-width: 0; text-align: center;
+    font-size: .62rem; color: var(--cream-dimmer);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .d90-bar-row-top{ display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; }
+  .d90-bar-pct{ font-size: .78rem; font-weight: 700; color: var(--cream); flex: none; }
+
+  .d90-hist{ position: relative; display: flex; align-items: flex-end; gap: .5rem; height: 170px; }
   /* Reveal (0 -> --h) uses `height`, the breathing that follows uses
      `transform: scaleY` — different properties on purpose, exactly
      the same split .d90-bar-fill/.d90-bar-breathe use for the "Who's
@@ -749,8 +826,37 @@
   .d90-swatch-consistent{ background: var(--accent); }
   .d90-swatch-sporadic{ background: rgba(255,255,255,.28); }
   .d90-momentum-chart{ overflow: visible; }
-  .d90-gap-marker{ stroke: rgba(255,255,255,.28); stroke-width: 1; stroke-dasharray: 3 3; opacity: .5; }
   .d90-axis-label{ font-size: 11px; fill: var(--cream-dimmer); }
+  /* Gridlines + a labeled y-axis (0/25/50/75/100) and 7-point x-axis
+     (Day 1/15/30/45/60/75/90), a soft gradient fill under the consistent
+     line, and static dots at each labeled day — all new mockup pieces
+     from the reference screenshot, added alongside (not replacing) the
+     existing traveling dot + draw-in animation below. */
+  .d90-grid-line{ stroke: var(--ink-border); stroke-width: 1; }
+  .d90-momentum-area{
+    opacity: 0;
+    animation: d90-momentum-area-fade 6s cubic-bezier(.3,.1,.3,1) infinite;
+    animation-play-state: paused;
+  }
+  @keyframes d90-momentum-area-fade{
+    0%{ opacity: 0; }
+    4%{ opacity: 1; }
+    92%{ opacity: 1; }
+    100%{ opacity: 0; }
+  }
+  .d90-momentum-vertex{
+    fill: var(--ink-950); stroke: var(--accent-hot); stroke-width: 2;
+    opacity: 0;
+    animation: d90-momentum-area-fade 6s cubic-bezier(.3,.1,.3,1) infinite;
+    animation-play-state: paused;
+  }
+  #d90-box-3.is-visible .d90-momentum-area,
+  #d90-box-3.is-visible .d90-momentum-vertex{
+    animation-play-state: running;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .d90-momentum-area, .d90-momentum-vertex{ animation: none; opacity: 1; }
+  }
   /* Both paths and the dot share one draw-in timeline (pathLength="100"
      on each path, same convention used throughout this page): fade in,
      draw to completion by 92%, hold briefly, then fade out together for
@@ -2621,11 +2727,29 @@
      resolves to whatever now sits in that position) ================= -->
 <section id="process" class="relative py-24 sm:py-28">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
-    <div class="reveal max-w-[34rem]">
-      <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
-        What Changes<br>By <span class="text-shine inline-block">Day 90</span>
-      </h2>
-      <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">The cumulative effect of consistent production and distribution over 90 days.</p>
+    <div class="reveal flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
+      <div class="max-w-[34rem]">
+        <p class="d90-eyebrow">Growth Over Time</p>
+        <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
+          What Changes<br>By <span class="text-shine inline-block">Day 90</span>
+        </h2>
+        <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">The cumulative effect of consistent production and distribution over 90 days.</p>
+      </div>
+
+      <div class="d90-stats">
+        <div class="d90-stat">
+          <i class="ph-bold ph-chart-bar d90-stat-icon" aria-hidden="true"></i>
+          <span class="d90-stat-text"><strong>90</strong><small>Days</small></span>
+        </div>
+        <div class="d90-stat">
+          <i class="ph-bold ph-users-three d90-stat-icon" aria-hidden="true"></i>
+          <span class="d90-stat-text"><strong>3x</strong><small>Faster Growth</small></span>
+        </div>
+        <div class="d90-stat">
+          <i class="ph-bold ph-lightning d90-stat-icon" aria-hidden="true"></i>
+          <span class="d90-stat-text"><strong>Consistent</strong><small>Compounding Results</small></span>
+        </div>
+      </div>
     </div>
 
     <div class="d90-stack mt-12">
@@ -2641,20 +2765,37 @@
            matching box 2's bars instead of sitting static once
            revealed. -->
       <div class="d90-reveal card p-7 sm:p-9 d90-box" id="d90-box-1">
-        <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">Profile activity, first 90 days</p>
-        <div class="d90-hist mt-6" aria-hidden="true">
-          <div class="d90-hist-bar" style="--h: 14%; --i: 0"></div>
-          <div class="d90-hist-bar" style="--h: 20%; --i: 1"></div>
-          <div class="d90-hist-bar" style="--h: 27%; --i: 2"></div>
-          <div class="d90-hist-bar" style="--h: 35%; --i: 3"></div>
-          <div class="d90-hist-bar" style="--h: 44%; --i: 4"></div>
-          <div class="d90-hist-bar" style="--h: 53%; --i: 5"></div>
-          <div class="d90-hist-bar" style="--h: 62%; --i: 6"></div>
-          <div class="d90-hist-bar" style="--h: 71%; --i: 7"></div>
-          <div class="d90-hist-bar" style="--h: 80%; --i: 8"></div>
-          <div class="d90-hist-bar" style="--h: 88%; --i: 9"></div>
-          <div class="d90-hist-bar" style="--h: 95%; --i: 10"></div>
-          <div class="d90-hist-bar" style="--h: 100%; --i: 11"></div>
+        <div class="d90-box-head">
+          <div class="d90-box-head-left">
+            <span class="d90-box-icon"><i class="ph-bold ph-chart-bar" aria-hidden="true"></i></span>
+            <span>
+              <span class="d90-box-title">Profile Activity</span>
+              <span class="d90-box-subtitle">First 90 Days</span>
+            </span>
+          </div>
+          <span class="d90-box-dropdown" aria-hidden="true">Cumulative <i class="ph-bold ph-caret-down" aria-hidden="true"></i></span>
+        </div>
+
+        <div class="d90-chart mt-6" aria-hidden="true">
+          <div class="d90-yaxis"><span>100</span><span>75</span><span>50</span><span>25</span><span>0</span></div>
+          <div class="d90-plot">
+            <div class="d90-gridlines"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="d90-hist">
+              <div class="d90-hist-bar" style="--h: 14%; --i: 0"></div>
+              <div class="d90-hist-bar" style="--h: 23%; --i: 1"></div>
+              <div class="d90-hist-bar" style="--h: 32%; --i: 2"></div>
+              <div class="d90-hist-bar" style="--h: 41%; --i: 3"></div>
+              <div class="d90-hist-bar" style="--h: 50%; --i: 4"></div>
+              <div class="d90-hist-bar" style="--h: 59%; --i: 5"></div>
+              <div class="d90-hist-bar" style="--h: 68%; --i: 6"></div>
+              <div class="d90-hist-bar" style="--h: 78%; --i: 7"></div>
+              <div class="d90-hist-bar" style="--h: 89%; --i: 8"></div>
+              <div class="d90-hist-bar" style="--h: 100%; --i: 9"></div>
+            </div>
+            <div class="d90-hist-labels">
+              <span>Day 1</span><span>Day 10</span><span>Day 20</span><span>Day 30</span><span>Day 40</span><span>Day 50</span><span>Day 60</span><span>Day 70</span><span>Day 80</span><span>Day 90</span>
+            </div>
+          </div>
         </div>
         <p class="mt-4 text-[0.78rem] text-[var(--cream-dimmer)]">Illustrative. Individual results vary by market, offer, and consistency.</p>
       </div>
@@ -2674,19 +2815,38 @@
 
       <!-- Box 2: Who's Showing Up -->
       <div class="d90-reveal card p-7 sm:p-9 d90-box" id="d90-box-2">
-        <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">Who&rsquo;s showing up</p>
-        <div class="d90-bars mt-5" id="d90-bars">
+        <div class="d90-box-head">
+          <div class="d90-box-head-left">
+            <span class="d90-box-icon"><i class="ph-bold ph-users-three" aria-hidden="true"></i></span>
+            <span>
+              <span class="d90-box-title">Who&rsquo;s Showing Up</span>
+              <span class="d90-box-subtitle">Audience Sources</span>
+            </span>
+          </div>
+          <span class="d90-box-dropdown" aria-hidden="true">Last 90 Days <i class="ph-bold ph-caret-down" aria-hidden="true"></i></span>
+        </div>
+
+        <div class="d90-bars mt-6" id="d90-bars">
           <div class="d90-bar-row">
-            <span class="d90-bar-label">Existing customers</span>
-            <div class="d90-bar-track"><div class="d90-bar-fill" style="--d90-bar-w: 82%"></div></div>
+            <div class="d90-bar-row-top">
+              <span class="d90-bar-label">Existing customers</span>
+              <span class="d90-bar-pct">72%</span>
+            </div>
+            <div class="d90-bar-track"><div class="d90-bar-fill" style="--d90-bar-w: 72%"></div></div>
           </div>
           <div class="d90-bar-row">
-            <span class="d90-bar-label">Comparing alternatives</span>
-            <div class="d90-bar-track"><div class="d90-bar-fill" style="--d90-bar-w: 56%"></div></div>
+            <div class="d90-bar-row-top">
+              <span class="d90-bar-label">Comparing alternatives</span>
+              <span class="d90-bar-pct">48%</span>
+            </div>
+            <div class="d90-bar-track"><div class="d90-bar-fill" style="--d90-bar-w: 48%"></div></div>
           </div>
           <div class="d90-bar-row">
-            <span class="d90-bar-label">New profile visitors</span>
-            <div class="d90-bar-track"><div class="d90-bar-fill" style="--d90-bar-w: 38%"></div></div>
+            <div class="d90-bar-row-top">
+              <span class="d90-bar-label">New profile visitors</span>
+              <span class="d90-bar-pct">32%</span>
+            </div>
+            <div class="d90-bar-track"><div class="d90-bar-fill" style="--d90-bar-w: 32%"></div></div>
           </div>
         </div>
         <p class="mt-4 text-[0.78rem] text-[var(--cream-dimmer)]">Illustrative. Individual results vary by market, offer, and consistency.</p>
@@ -2701,22 +2861,42 @@
 
       <!-- Box 3: The Momentum -->
       <div class="d90-reveal card p-7 sm:p-9 d90-box" id="d90-box-3">
-        <p class="text-[0.72rem] font-semibold tracking-[0.15em] text-[var(--cream-dimmer)] uppercase">The momentum</p>
+        <div class="d90-box-head">
+          <div class="d90-box-head-left">
+            <span class="d90-box-icon"><i class="ph-bold ph-chart-line-up" aria-hidden="true"></i></span>
+            <span class="d90-box-title">The Momentum</span>
+          </div>
+          <span class="d90-box-dropdown" aria-hidden="true">Last 90 Days <i class="ph-bold ph-caret-down" aria-hidden="true"></i></span>
+        </div>
 
-        <div class="d90-legend mt-5">
+        <div class="d90-legend mt-4">
           <span class="d90-legend-item"><span class="d90-swatch d90-swatch-consistent" aria-hidden="true"></span>Consistent</span>
           <span class="d90-legend-item"><span class="d90-swatch d90-swatch-sporadic" aria-hidden="true"></span>Sporadic</span>
         </div>
 
         <svg viewBox="0 0 1280 260" class="d90-momentum-chart w-full h-auto max-h-[210px] mt-4" aria-hidden="true">
-          <line x1="40" y1="220" x2="1240" y2="220" stroke="var(--ink-border)" stroke-width="1"/>
-          <line x1="40" y1="130" x2="1240" y2="130" stroke="var(--ink-border)" stroke-width="1"/>
-          <line x1="40" y1="40" x2="1240" y2="40" stroke="var(--ink-border)" stroke-width="1"/>
+          <defs>
+            <linearGradient id="d90-momentum-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--accent)" stop-opacity=".22"/>
+              <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
 
-          <line class="d90-gap-marker" x1="320" y1="150" x2="320" y2="220"/>
-          <line class="d90-gap-marker" x1="600" y1="130" x2="600" y2="220"/>
-          <line class="d90-gap-marker" x1="880" y1="140" x2="880" y2="220"/>
-          <line class="d90-gap-marker" x1="1160" y1="150" x2="1160" y2="220"/>
+          <line class="d90-grid-line" x1="40" y1="220" x2="1240" y2="220"/>
+          <line class="d90-grid-line" x1="40" y1="172" x2="1240" y2="172"/>
+          <line class="d90-grid-line" x1="40" y1="124" x2="1240" y2="124"/>
+          <line class="d90-grid-line" x1="40" y1="76" x2="1240" y2="76"/>
+          <line class="d90-grid-line" x1="40" y1="28" x2="1240" y2="28"/>
+
+          <text class="d90-axis-label" x="32" y="224" text-anchor="end">0</text>
+          <text class="d90-axis-label" x="32" y="176" text-anchor="end">25</text>
+          <text class="d90-axis-label" x="32" y="128" text-anchor="end">50</text>
+          <text class="d90-axis-label" x="32" y="80" text-anchor="end">75</text>
+          <text class="d90-axis-label" x="32" y="32" text-anchor="end">100</text>
+
+          <path class="d90-momentum-area"
+                d="M40,196 C240,186 440,150 640,108 C840,78 1040,52 1232,38 L1232,220 L40,220 Z"
+                fill="url(#d90-momentum-fill)"/>
 
           <path class="d90-path-sporadic" pathLength="100"
                 d="M40,205 L280,150 L320,190 L560,130 L600,175 L840,140 L880,185 L1120,150 L1160,190 L1232,175"/>
@@ -2724,10 +2904,23 @@
           <path class="d90-path-consistent" pathLength="100"
                 d="M40,196 C240,186 440,150 640,108 C840,78 1040,52 1232,38"/>
 
+          <circle class="d90-momentum-vertex" cx="40" cy="196" r="4"/>
+          <circle class="d90-momentum-vertex" cx="239" cy="178" r="4"/>
+          <circle class="d90-momentum-vertex" cx="437" cy="148" r="4"/>
+          <circle class="d90-momentum-vertex" cx="636" cy="109" r="4"/>
+          <circle class="d90-momentum-vertex" cx="835" cy="80" r="4"/>
+          <circle class="d90-momentum-vertex" cx="1033" cy="56" r="4"/>
+          <circle class="d90-momentum-vertex" cx="1232" cy="38" r="4"/>
+
           <circle class="d90-momentum-dot" r="4"/>
 
-          <text class="d90-axis-label" x="40" y="240">Day 1</text>
-          <text class="d90-axis-label" x="1160" y="240">Day 90</text>
+          <text class="d90-axis-label" x="40" y="248" text-anchor="middle">Day 1</text>
+          <text class="d90-axis-label" x="239" y="248" text-anchor="middle">Day 15</text>
+          <text class="d90-axis-label" x="437" y="248" text-anchor="middle">Day 30</text>
+          <text class="d90-axis-label" x="636" y="248" text-anchor="middle">Day 45</text>
+          <text class="d90-axis-label" x="835" y="248" text-anchor="middle">Day 60</text>
+          <text class="d90-axis-label" x="1033" y="248" text-anchor="middle">Day 75</text>
+          <text class="d90-axis-label" x="1232" y="248" text-anchor="middle">Day 90</text>
         </svg>
 
         <p class="mt-4 text-[0.78rem] text-[var(--cream-dimmer)]">Illustrative. Individual results vary by market, offer, and consistency.</p>
