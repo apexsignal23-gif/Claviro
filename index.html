@@ -1432,17 +1432,22 @@
      user-supplied interactive mock (retention-section-v2.html, dropped in
      their Downloads folder): a single self-contained "retention model"
      widget, not a looping decorative animation like the two versions
-     before it. A 10x10 grid stands in for 100 followers; dragging the
+     before it. A 10x10 grid stands in for 100 customers; dragging the
      posting-frequency slider recomputes how many of them are still
      "retained" (an exponential falloff curve) and redraws the grid, the
      big stat number, and the headline together, sliding their shared
      color from the brand blue (healthy) to a coral warning (badly
      lapsed) — the one deliberate second hue on this page, justified
      because it's a real data signal (a decline), not decoration; the
-     `--accent`/`--accent-hot` blue still owns everything else. Ported
-     the mock's real CSS/JS (not guessed from a description), just
-     recolored onto this site's tokens and folded into its `rt-` class
-     prefix. No scroll-trigger/IntersectionObserver here — unlike this
+     `--accent`/`--accent-hot` blue still owns everything else. Copy
+     reframed 2026-09-14 from "profile"/"followers" language (the
+     mock's own default) to customer retention — same exact model and
+     mechanics, just describing the audience as customers of the
+     business rather than social-profile followers, per explicit
+     request. Ported the mock's real CSS/JS (not guessed from a
+     description), just recolored onto this site's tokens and folded
+     into its `rt-` class prefix. No scroll-trigger/IntersectionObserver
+     here — unlike this
      page's other animated sections, this one is driven entirely by
      direct user input (the slider), so it just renders its initial
      state once on load. */
@@ -3060,7 +3065,7 @@
           <div class="rt-stat">
             <div class="rt-stat-num" id="rt-stat-num">59</div>
             <div class="rt-stat-of">out of 100</div>
-            <div class="rt-stat-lbl">people still paying attention to you</div>
+            <div class="rt-stat-lbl">customers still paying attention to you</div>
           </div>
         </div>
 
@@ -3077,7 +3082,7 @@
       </div>
 
       <div class="rt-copy">
-        <p>Drag the slider. Each square is one of 100 people who followed you for a reason, and the wider the gap between posts, the more of them stop remembering what that reason was.</p>
+        <p>Drag the slider. Each square is one of 100 customers who chose you for a reason, and the wider the gap between posts, the more of them stop remembering what that reason was.</p>
         <p class="rt-fine">Illustrative model, not a guarantee. Actual retention depends on content quality, platform, and audience fit.</p>
       </div>
     </div>
@@ -3937,7 +3942,7 @@ void main() {
   function headlineFor(days) {
     if (days <= 3) return "That's a habit forming.";
     if (days <= 7) return "Still familiar, but barely.";
-    if (days <= 14) return "You're fading into their feed's history.";
+    if (days <= 14) return "You're fading from their memory.";
     return 'Most of them have already moved on.';
   }
 
