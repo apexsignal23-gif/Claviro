@@ -1729,22 +1729,16 @@
       align-items: start;
       gap: 2.5rem;
     }
-    /* Sticky positioning lives on this wrapper, not `.iv-scroll-head`
-       itself — `.iv-scroll-head` already carries `.reveal`'s own
-       transform (translateY(28px) -> none on reveal) for its fade-in,
-       and a permanent centering transform on the SAME element would
-       fight that (whichever rule's transform declaration wins wipes out
-       the other's, since transform doesn't compose across separate
-       rules). Splitting the sticky/centering transform onto an outer
-       wrapper keeps the two transforms independent. `top: 50vh` (a
-       viewport-relative unit, not `50%` -- that would resolve against
-       this wrapper's OWN containing block, which spans the full height
-       of the tall card stack, not the viewport) plus `translateY(-50%)`
-       is the standard "stick vertically centered" pairing: anchor at
-       the vertical middle of the viewport, then shift up by half the
-       element's own height so it's actually centered there, not just
-       top-aligned at that point. */
-    .iv-scroll-head-sticky{ position: sticky; top: 50vh; transform: translateY(-50%); }
+    /* Pinned near the top (not vertically centered mid-viewport — tried
+       that per an initial reading of "bring it to the middle", corrected
+       by explicit follow-up to "top middle": top of the screen, not
+       centered down the middle of it) at the SAME offset `.iv-card`
+       itself sticks at, so the heading and whichever card is currently
+       locked in place line up at the same height as you scroll. Sticky
+       positioning lives on this wrapper rather than `.iv-scroll-head`
+       itself since that element already carries `.reveal`'s own
+       transform for its fade-in. */
+    .iv-scroll-head-sticky{ position: sticky; top: 7rem; }
     /* The heading still carried its full hero-sized `sm:text-[2.8rem]`
        (tuned for when it spanned a wide centered block), which at this
        narrow an 18rem column wraps "Everything We Produce is Industry
