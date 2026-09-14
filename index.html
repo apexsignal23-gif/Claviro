@@ -1469,26 +1469,26 @@
     background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
     border: 1px solid rgba(255,255,255,.12);
   }
-  @media (min-width: 640px){ .rt-card{ padding: 1.75rem; } }
+  @media (min-width: 640px){ .rt-card{ padding: 1.5rem; } }
   .rt-card-inner{ width: 100%; }
   .rt-headline{
     font-size: 1.4rem; font-weight: 700; text-align: center;
-    margin: 0 0 1.1rem; min-height: 1.9rem; color: var(--cream);
+    margin: 0 0 .85rem; min-height: 1.9rem; color: var(--cream);
     transition: color .35s ease;
   }
   .rt-panel{
     background: var(--ink-900); border: 1px solid var(--ink-border);
-    border-radius: 14px; padding: 1.25rem 1rem;
+    border-radius: 14px; padding: 1.1rem 1rem;
   }
-  @media (min-width: 640px){ .rt-panel{ padding: 1.75rem 1.5rem; } }
+  @media (min-width: 640px){ .rt-panel{ padding: 1.4rem 1.5rem; } }
   /* Grid + stat sized to actually fill the panel now that the panel
      itself is full-width — was a compact ~406px cluster floating in
      the middle of a much wider box with dead margin on both sides;
      scaling the dots and stat number up (rather than just centering a
      small cluster in a big box) is what makes the panel read as
      proportionate to its own size. */
-  .rt-display-row{ display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
-  @media (min-width: 640px){ .rt-display-row{ gap: 3rem; margin-bottom: 1.5rem; } }
+  .rt-display-row{ display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  @media (min-width: 640px){ .rt-display-row{ gap: 3rem; margin-bottom: 1.1rem; } }
   .rt-grid{ display: grid; grid-template-columns: repeat(10, 1fr); gap: 7px; width: min(340px, 100%); flex-shrink: 0; }
   .rt-dot{
     width: 100%; aspect-ratio: 1/1; border-radius: 5px;
@@ -1522,7 +1522,7 @@
   .rt-slider::-moz-range-track{ background: transparent; height: 8px; }
   .rt-ticks{ display: flex; justify-content: space-between; margin-top: .7rem; padding: 0 1px; }
   .rt-ticks span{ font-size: .75rem; color: var(--cream-dimmer); }
-  .rt-copy{ padding: 1.25rem .25rem 0; text-align: center; }
+  .rt-copy{ padding: 1rem .25rem 0; text-align: center; }
   .rt-copy p{ font-size: .95rem; line-height: 1.65; color: var(--cream-dim); margin: 0 auto .75rem; max-width: none; }
   .rt-copy .rt-fine{ font-size: .8rem; color: var(--cream-dimmer); font-style: italic; margin: 0 auto; max-width: 60ch; }
   @media (prefers-reduced-motion: reduce){
