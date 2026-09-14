@@ -1729,7 +1729,22 @@
       align-items: start;
       gap: 2.5rem;
     }
-    .iv-scroll-head{ position: sticky; top: 7rem; }
+    /* Sticky positioning lives on this wrapper, not `.iv-scroll-head`
+       itself — `.iv-scroll-head` already carries `.reveal`'s own
+       transform (translateY(28px) -> none on reveal) for its fade-in,
+       and a permanent centering transform on the SAME element would
+       fight that (whichever rule's transform declaration wins wipes out
+       the other's, since transform doesn't compose across separate
+       rules). Splitting the sticky/centering transform onto an outer
+       wrapper keeps the two transforms independent. `top: 50vh` (a
+       viewport-relative unit, not `50%` -- that would resolve against
+       this wrapper's OWN containing block, which spans the full height
+       of the tall card stack, not the viewport) plus `translateY(-50%)`
+       is the standard "stick vertically centered" pairing: anchor at
+       the vertical middle of the viewport, then shift up by half the
+       element's own height so it's actually centered there, not just
+       top-aligned at that point. */
+    .iv-scroll-head-sticky{ position: sticky; top: 50vh; transform: translateY(-50%); }
     /* The heading still carried its full hero-sized `sm:text-[2.8rem]`
        (tuned for when it spanned a wide centered block), which at this
        narrow an 18rem column wraps "Everything We Produce is Industry
@@ -1740,6 +1755,29 @@
        comfortable lines instead. */
     .iv-scroll-head h2{ font-size: 1.7rem; line-height: 1.2; }
     .iv-scroll-head p{ font-size: .88rem; line-height: 1.6; }
+  }
+  /* Live "currently showing" label, per explicit request — swaps text
+     between "LinkedIn Posts" and "Short Videos" as the matching card
+     scrolls into the sticky position (see the JS near the bottom of the
+     page: it watches each `.iv-card`'s own live position, same
+     rAF-on-scroll pattern as the d90 connector dots elsewhere on this
+     page, rather than a fixed timer). Only ever visible at `lg:` (see
+     the `hidden lg:inline-flex` on the element) since it's paired with
+     the sticky heading, which only exists at that breakpoint — display
+     itself is left to those Tailwind classes, not set here, so this
+     rule can't fight their responsive toggle. Specificity note: scoped
+     as `.iv-scroll-head .iv-scroll-tag` (not just `.iv-scroll-tag`) so
+     it reliably wins over the plain `.iv-scroll-head p` font-size rule
+     above for the same element. */
+  .iv-scroll-head .iv-scroll-tag{
+    align-items: center; gap: .5rem;
+    margin-top: 1.5rem;
+    font-size: .8rem; font-weight: 700; letter-spacing: .01em;
+    color: var(--accent-hot);
+  }
+  .iv-scroll-tag::before{
+    content: ''; width: 6px; height: 6px; border-radius: 50%; flex: none;
+    background: var(--accent-hot); box-shadow: 0 0 0 3px rgba(76,110,245,.2);
   }
   .iv-scroll-cards{ width: 100%; display: flex; flex-direction: column; gap: 2.5rem; }
   @media (min-width: 768px){
@@ -2439,14 +2477,17 @@
 <section id="industry-standard" class="relative py-24 sm:py-28">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="iv-scroll-stack">
-      <div class="iv-scroll-head reveal max-w-[34rem] self-start">
-        <p class="en-eyebrow">Process</p>
-        <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
-          Everything We Produce is <span class="text-shine inline-block">Industry Standard</span>
-        </h2>
-        <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">
-          The production quality behind every post we publish, built to stop the scroll before your founder&rsquo;s name ever shows up.
-        </p>
+      <div class="iv-scroll-head-sticky">
+        <div class="iv-scroll-head reveal max-w-[34rem] self-start">
+          <p class="en-eyebrow">Process</p>
+          <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
+            Everything We Produce is <span class="text-shine inline-block">Industry Standard</span>
+          </h2>
+          <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">
+            The production quality behind every post we publish, built to stop the scroll before your founder&rsquo;s name ever shows up.
+          </p>
+          <p class="iv-scroll-tag hidden lg:inline-flex" id="iv-scroll-tag" aria-live="polite">LinkedIn Posts</p>
+        </div>
       </div>
 
       <div class="iv-scroll-cards">
@@ -3804,6 +3845,45 @@ void main() {
 
     setTimeout(startCycle, 600 + i * 500 + Math.random() * 1200);
   });
+})();
+
+// Industry Standard sticky heading tag — swaps "LinkedIn Posts" /
+// "Short Videos" as the matching card scrolls into the sticky spot,
+// per explicit request. Same technique as the Day-90 connector dots
+// elsewhere on this page: recompute each card's own live
+// getBoundingClientRect() on every scroll tick (rAF-throttled) rather
+// than a fixed timer, so it can't drift out of sync with what's
+// actually on screen. Whichever card's top has already reached (or
+// passed) the sticky offset is the one currently "locked" on top of
+// the stack — the LAST card in DOM order that's true for is the active
+// one, since later cards cover earlier ones.
+(function () {
+  var tag = document.getElementById('iv-scroll-tag');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('#industry-standard .iv-card'));
+  if (!tag || !cards.length) return;
+
+  var labels = ['LinkedIn Posts', 'Short Videos'];
+  var stickyTop = parseFloat(getComputedStyle(cards[0]).top) || 112;
+  var lastActive = -1;
+  var ticking = false;
+
+  function update() {
+    ticking = false;
+    var active = 0;
+    cards.forEach(function (card, i) {
+      if (card.getBoundingClientRect().top <= stickyTop + 1) active = i;
+    });
+    if (active !== lastActive) {
+      lastActive = active;
+      tag.textContent = labels[active] || labels[labels.length - 1];
+    }
+  }
+  function onScroll() {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  update();
 })();
 
 // FAQ accordion — one panel open at a time. Toggles a `data-open`
