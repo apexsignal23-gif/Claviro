@@ -1724,14 +1724,22 @@
     .iv-scroll-stack{
       display: grid;
       /* Narrower than a first pass (was minmax(260px,22rem)) — the card
-         column needs the room, and this heading's own content (a short
-         eyebrow + a 2-line heading + a short subtext line) reads fine
-         narrower than the 34rem cap it also carries. */
+         column needs the room. */
       grid-template-columns: minmax(220px, 18rem) 1fr;
       align-items: start;
       gap: 2.5rem;
     }
     .iv-scroll-head{ position: sticky; top: 7rem; }
+    /* The heading still carried its full hero-sized `sm:text-[2.8rem]`
+       (tuned for when it spanned a wide centered block), which at this
+       narrow an 18rem column wraps "Everything We Produce is Industry
+       Standard" across 5-6 short lines packed tight — reads cramped, not
+       like a real sidebar heading. Sized down specifically for this
+       column (h2/p element selectors here out-specificity the plain
+       utility classes, no !important needed) so it wraps to 3-4
+       comfortable lines instead. */
+    .iv-scroll-head h2{ font-size: 1.7rem; line-height: 1.2; }
+    .iv-scroll-head p{ font-size: .88rem; line-height: 1.6; }
   }
   .iv-scroll-cards{ width: 100%; display: flex; flex-direction: column; gap: 2.5rem; }
   @media (min-width: 768px){
