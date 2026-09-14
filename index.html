@@ -1749,6 +1749,12 @@
        comfortable lines instead. */
     .iv-scroll-head h2{ font-size: 1.7rem; line-height: 1.2; }
     .iv-scroll-head p{ font-size: .88rem; line-height: 1.6; }
+    /* "Top middle" per explicit follow-up (with the Testimonial section
+       as the visual reference) — centered text within the sticky column,
+       not left-aligned. `.iv-scroll-head`'s own `max-w-[34rem]` no
+       longer needs to constrain anything here (the grid column already
+       caps its width), so it's just along for the ride. */
+    .iv-scroll-head{ text-align: center; }
   }
   /* Live "currently showing" label, per explicit request — swaps text
      between "LinkedIn Posts" and "Short Videos" as the matching card
