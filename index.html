@@ -1699,26 +1699,36 @@
      HTML/CSS, not guessed from a screenshot). Originally a sticky heading
      column beside the cards (contentfloww's own layout); the user later
      asked for the heading centered at the top instead, with the cards
-     centered below it — so `.iv-scroll-head` became just a block up top
-     (no longer sticky/side-by-side), later left-aligned per a further
-     request (see below) — and `.iv-scroll-stack` stays a single centered
-     column at every breakpoint regardless. NOTE: `.iv-scroll-stack` is a
-     flex column with `align-items:center`, so a child left needs its own
-     `self-start` (Tailwind) to escape that centering — just dropping
-     `mx-auto text-center` from `.iv-scroll-head` alone isn't enough, the
-     flex parent still centers the whole block regardless of its own text
-     alignment (hit this exact bug once, see the left-align entry below).
-     The stacking effect
-     itself is unchanged: each `.iv-card` is `position:sticky`, so as the
-     page scrolls, a card rides up from below the viewport, locks at the
-     same `top` offset as the one before it, and — because later DOM
-     siblings paint over earlier ones by default — visually slides up to
-     cover the previous card. That's the whole "content gradually appears
-     as you scroll" effect, pure CSS, no JS/IntersectionObserver needed.
-     IMPORTANT: no ancestor of `.iv-card` may have
-     `overflow:hidden/auto/scroll` — that silently breaks
+     centered below it, then — 2026-09-14, per an explicit reference
+     screenshot of contentfloww's own layout again — asked for the sticky
+     side-by-side version BACK on desktop specifically, while phone stays
+     exactly as it's been (single stacked column): so `.iv-scroll-stack`
+     is a plain flex column below `lg`, unchanged, and becomes a 2-column
+     grid at `lg:` and up — a narrow sticky heading column on the left,
+     the card stack on the right. `.iv-scroll-head` picks up its own
+     `position:sticky` at that same breakpoint, at the SAME `top` offset
+     `.iv-card` already uses, so the heading and whichever card is
+     currently "in focus" line up at the same height as you scroll,
+     matching the reference. The stacking effect itself is unchanged at
+     any breakpoint: each `.iv-card` is `position:sticky`, so as the page
+     scrolls, a card rides up from below the viewport, locks at the same
+     `top` offset as the one before it, and — because later DOM siblings
+     paint over earlier ones by default — visually slides up to cover the
+     previous card. That's the whole "content gradually appears as you
+     scroll" effect, pure CSS, no JS/IntersectionObserver needed.
+     IMPORTANT: no ancestor of `.iv-card` (or now `.iv-scroll-head`) may
+     have `overflow:hidden/auto/scroll` — that silently breaks
      `position:sticky` for everything inside it. */
   .iv-scroll-stack{ display: flex; flex-direction: column; align-items: center; gap: 3rem; }
+  @media (min-width: 1024px){
+    .iv-scroll-stack{
+      display: grid;
+      grid-template-columns: minmax(260px, 22rem) 1fr;
+      align-items: start;
+      gap: 3.5rem;
+    }
+    .iv-scroll-head{ position: sticky; top: 7rem; }
+  }
   .iv-scroll-cards{ width: 100%; display: flex; flex-direction: column; gap: 2.5rem; }
   @media (min-width: 768px){
     .iv-scroll-cards{ gap: 7rem; }
