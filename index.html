@@ -1696,59 +1696,78 @@
 
   /* Industry Standard: sticky-stack scroll reveal, reverse-engineered from
      contentfloww.com's own "Podcast trailers" section (curled their live
-     HTML/CSS, not guessed from a screenshot). Originally a sticky heading
-     column beside the cards (contentfloww's own layout); the user later
-     asked for the heading centered at the top instead, with the cards
-     centered below it, then — 2026-09-14, per an explicit reference
-     screenshot of contentfloww's own layout again — asked for the sticky
-     side-by-side version BACK on desktop specifically, while phone stays
-     exactly as it's been (single stacked column): so `.iv-scroll-stack`
-     is a plain flex column below `lg`, unchanged, and becomes a 2-column
-     grid at `lg:` and up — a narrow sticky heading column on the left,
-     the card stack on the right. `.iv-scroll-head` picks up its own
-     `position:sticky` at that same breakpoint, at the SAME `top` offset
-     `.iv-card` already uses, so the heading and whichever card is
-     currently "in focus" line up at the same height as you scroll,
-     matching the reference. The stacking effect itself is unchanged at
-     any breakpoint: each `.iv-card` is `position:sticky`, so as the page
-     scrolls, a card rides up from below the viewport, locks at the same
-     `top` offset as the one before it, and — because later DOM siblings
-     paint over earlier ones by default — visually slides up to cover the
-     previous card. That's the whole "content gradually appears as you
-     scroll" effect, pure CSS, no JS/IntersectionObserver needed.
+     HTML/CSS, not guessed from a screenshot). This has flip-flopped a
+     few times: originally a sticky heading column beside the cards
+     (contentfloww's own layout) -> centered heading above the cards
+     (a misreading of "top middle" got sorted out via the Testimonial
+     section as the reference) -> and now, 2026-09-14, restored to the
+     sticky side-by-side version once more, per an explicit follow-up
+     naming "the sliding feature" specifically and re-pointing at
+     contentfloww's own "Podcast trailers" layout as the reference again
+     (screenshot: a small eyebrow + heading pinned on the left, the
+     stacking cards on the right). `.iv-scroll-stack` is a plain flex
+     column below `lg` (phone/tablet untouched, exactly as it's always
+     been), and becomes a 2-column grid at `lg:` and up — a narrow sticky
+     heading column on the left, the card stack on the right.
+     `.iv-scroll-head` picks up its own `position:sticky` at that same
+     breakpoint, at the SAME `top` offset `.iv-card` already uses, so the
+     heading and whichever card is currently "in focus" line up at the
+     same height as you scroll, matching the reference. The stacking
+     effect itself is unchanged at any breakpoint: each `.iv-card` is
+     `position:sticky`, so as the page scrolls, a card rides up from
+     below the viewport, locks at the same `top` offset as the one
+     before it, and — because later DOM siblings paint over earlier ones
+     by default — visually slides up to cover the previous card. That's
+     the whole "content gradually appears as you scroll" effect, pure
+     CSS, no JS/IntersectionObserver needed.
      IMPORTANT: no ancestor of `.iv-card` (or now `.iv-scroll-head`) may
      have `overflow:hidden/auto/scroll` — that silently breaks
      `position:sticky` for everything inside it. */
-  /* Heading sits centered, full-width, above the cards — NOT a sticky
-     side column beside them. A 2-column sticky-sidebar version (matching
-     contentfloww.com's own "Podcast trailers" layout) was tried per an
-     earlier request, but centering the heading's own TEXT inside that
-     still-left-positioned narrow column wasn't the same thing as moving
-     the whole block to the top-middle of the page — the column itself
-     was still structurally the left third of the grid, so the heading
-     stayed visually on the left no matter how its text aligned. Reverted
-     per explicit, unambiguous follow-up (with the Testimonial section's
-     centered heading as the reference both times): back to one centered
-     block up top at every breakpoint. `.iv-scroll-head` in the markup
-     still carries `self-start lg:self-center` — `self-start` is a
-     leftover from when this needed to escape the flex row's own
-     centering to sit left-aligned (an even older, separate request);
-     `lg:self-center` cancels it back out at this breakpoint specifically
-     since the underlying complaint here was about desktop. The cards
-     below keep their own sticky-stacking scroll effect exactly as
-     before — that part was never in question, only the heading's
-     position was. */
   .iv-scroll-stack{ display: flex; flex-direction: column; align-items: center; gap: 3rem; }
-  .iv-scroll-head{ text-align: center; }
+  @media (min-width: 1024px){
+    .iv-scroll-stack{
+      display: grid;
+      grid-template-columns: minmax(220px, 18rem) 1fr;
+      align-items: start;
+      gap: 2.5rem;
+    }
+    /* Pinned near the top at the SAME offset `.iv-card` itself sticks
+       at, so the heading and whichever card is currently locked in
+       place line up at the same height as you scroll. Sticky
+       positioning lives on this wrapper rather than `.iv-scroll-head`
+       itself since that element already carries `.reveal`'s own
+       transform for its fade-in. */
+    .iv-scroll-head-sticky{ position: sticky; top: 7rem; }
+    /* The heading carries its full hero-sized `sm:text-[2.8rem]` (tuned
+       for when it spanned a wide centered block), which at this narrow
+       an 18rem column wraps across 5-6 cramped lines — sized down
+       specifically for this column (h2/p element selectors here
+       out-specificity the plain utility classes, no !important needed)
+       so it wraps to 3-4 comfortable lines instead, like a real sidebar
+       heading. */
+    .iv-scroll-head h2{ font-size: 1.7rem; line-height: 1.2; }
+    .iv-scroll-head p{ font-size: .88rem; line-height: 1.6; }
+    /* Left-aligned to match contentfloww's own reference (a plain
+       left-aligned eyebrow/heading/subtext block sitting in the sticky
+       column, not centered text) — `self-start` on the element itself
+       (in the markup) already keeps the whole block left in the flex
+       row below `lg`; this just leaves that alone rather than
+       overriding it back to centered at this breakpoint. */
+  }
+  /* No text-align override here — left-aligned by default (block-level
+     h2/p), matching contentfloww's own reference at every breakpoint;
+     a centered version existed briefly during the centered-heading
+     revert and is gone now that the sticky sidebar is back. */
   /* Live "currently showing" label, per explicit request — swaps text
      between "LinkedIn Posts" and "Short Videos" as the matching card
      scrolls into the sticky position (see the JS near the bottom of the
      page: it watches each `.iv-card`'s own live position, same
      rAF-on-scroll pattern as the d90 connector dots elsewhere on this
      page, rather than a fixed timer). Only ever visible at `lg:` (see
-     the `hidden lg:inline-flex` on the element) — display itself is
-     left to those Tailwind classes, not set here, so this rule can't
-     fight their responsive toggle. Specificity note: scoped
+     the `hidden lg:inline-flex` on the element) since it's paired with
+     the sticky heading, which only exists at that breakpoint — display
+     itself is left to those Tailwind classes, not set here, so this
+     rule can't fight their responsive toggle. Specificity note: scoped
      as `.iv-scroll-head .iv-scroll-tag` (not just `.iv-scroll-tag`) so
      it reliably wins over the plain `.iv-scroll-head p` font-size rule
      above for the same element. */
@@ -1784,10 +1803,16 @@
      card 1 showed through beneath it). Fix: pin every card to the same
      fixed height + overflow:hidden, and center each card's content
      inside that box so shorter content isn't glued to the top.
-     (Briefly went through a 2-column sticky-sidebar layout on
-     2026-09-14, which narrowed this card and needed a shorter height to
-     match — reverted back to the single centered column below, so this
-     card is full-width again and back to its original height too.) */
+     Height trimmed 32rem->26rem 2026-09-14: this card only gets the
+     narrower right column's width now that the section is a 2-column
+     sticky layout again (see `.iv-scroll-stack`), so card 2's 4
+     width-driven 9:16 videos render noticeably smaller than they used
+     to — the box around them stayed pinned to the OLD wide-card height,
+     leaving them stranded in a lot of dead vertical space. Trimmed the
+     shared height down (not all the way to what the videos alone would
+     need — card 1 still needs enough room for its LinkedIn post text,
+     which wraps to MORE lines at this narrower width, not less) to
+     shrink that gap without risking clipping card 1's content. */
   @media (min-width: 1024px){
     .iv-card{
       /* NOT a flat rem alone — a sticky element's own height still has to
@@ -1795,12 +1820,11 @@
          locks at `top:7rem`; a taller-than-available-space sticky card
          just runs off the bottom of the window with no way to scroll
          further into view (scrolling the page can't move an
-         already-stuck element up more). Cap it to the smaller of 32rem
+         already-stuck element up more). Cap it to the smaller of 26rem
          or the real available viewport height (100vh minus the top
          offset and a bit of breathing room) so it always fits on short
-         windows too — this is what was clipping row 3 of the 9-image
-         LinkedIn grid on shorter viewports. */
-      height: max(20rem, min(32rem, calc(100svh - 9rem)));
+         windows too. */
+      height: max(18rem, min(26rem, calc(100svh - 9rem)));
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -1824,7 +1848,7 @@
   .iv-item{ scroll-snap-align: start; flex: 0 0 60%; }
   @media (min-width: 640px){ .iv-item{ flex-basis: 34%; } }
   @media (min-width: 1024px){
-    .iv-grid{ overflow: visible; display: grid; grid-template-columns: repeat(4, 1fr); }
+    .iv-grid{ overflow: visible; display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; }
     .iv-item{ flex: none; }
   }
   .iv-frame{
@@ -2454,7 +2478,7 @@
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="iv-scroll-stack">
       <div class="iv-scroll-head-sticky">
-        <div class="iv-scroll-head reveal max-w-[34rem] self-start lg:self-center">
+        <div class="iv-scroll-head reveal max-w-[34rem] self-start">
           <p class="en-eyebrow">Process</p>
           <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
             Everything We Produce is <span class="text-shine inline-block">Industry Standard</span>
