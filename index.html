@@ -1725,6 +1725,26 @@
   @media (min-width: 768px){
     .iv-scroll-cards{ gap: 7rem; }
   }
+  /* Static video card BELOW the sticky-stack, per explicit request: "a
+     fixed box which won't move" as a deliberate contrast to the sliding/
+     stacking `.iv-card`s above it. Same dark card shell (background
+     gradient, border, radius, padding) as `.iv-card`, but plain
+     `position:static` (the default — no `top` offset set at all), so it
+     just sits in normal document flow after the stack instead of
+     locking in place while scrolling. Its video keeps a plain 16:9 box
+     (no stretch-to-fill-height override like the old, since-removed
+     `.iv-video-full` used) specifically so it AVOIDS that class's
+     pillarboxing problem: the box already matches the source video's
+     real aspect ratio, so there's no mismatch for Gumlet's own player to
+     letterbox around. */
+  .iv-static-card{
+    width: 100%;
+    background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 20px;
+    padding: 1rem;
+  }
+  .iv-static-card .iv-video{ aspect-ratio: 16 / 9; }
   .iv-card{
     position: sticky;
     top: 7rem;
@@ -2404,14 +2424,21 @@
      .podcast-trailers-component / .sticky-wrapper / .podcast_wrapper /
      .portfolio-video-wrapper), re-themed onto Claviro's dark ink tokens.
      See the CSS comment above `.iv-scroll-stack` for how the effect works.
-     2 cards: (1) a grid of raw LinkedIn post screenshots, (2) all 4
-     vertical clips together. A 3rd card (one full-width 16:9 video) has
-     now been added and removed twice (2026-08-24, 2026-09-18) — the
-     second time because Gumlet's own player pillarboxed the stretched
-     video with visible white bars instead of filling/cropping the box
-     (a cross-origin-iframe limitation `object-fit:cover` can't reach
-     inside; see the git history for `.iv-video-full` if it's ever
-     wanted again) — don't re-add it without being asked. -->
+     2 sticky/sliding cards: (1) a grid of raw LinkedIn post screenshots,
+     (2) all 4 vertical clips together. A 3rd sticky card (one
+     full-width 16:9 video) has been added and removed twice
+     (2026-08-24, 2026-09-18) — the second time because Gumlet's own
+     player pillarboxed the stretched video with visible white bars
+     instead of filling/cropping the box (a cross-origin-iframe
+     limitation `object-fit:cover` can't reach inside; see the git
+     history for `.iv-video-full` if it's ever wanted again) — don't
+     re-add it without being asked. That same video now lives below the
+     sliding stack instead, per explicit request, as a plain STATIC
+     `.iv-static-card` (see its CSS comment above `.iv-scroll-cards`) —
+     not part of the sticky/sliding effect at all, so it has no
+     pillarboxing problem (its box is a plain 16:9, matching the video's
+     real shape, instead of being stretched to fill a sticky card's
+     fixed height). -->
 <section id="industry-standard" class="relative py-24 sm:py-28">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="iv-scroll-head reveal max-w-[36rem]">
@@ -2579,6 +2606,17 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Static (non-sticky) video card below the sliding stack -->
+      <div class="iv-static-card reveal">
+        <div class="iv-video">
+          <iframe
+            loading="lazy" title="Gumlet video player"
+            src="https://play.gumlet.io/embed/6a8c294cb6df33640456242c?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
+            referrerpolicy="origin"
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
         </div>
       </div>
     </div>
