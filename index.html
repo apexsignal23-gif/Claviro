@@ -1699,11 +1699,14 @@
      HTML/CSS, not guessed from a screenshot). Layout has flip-flopped a
      few times: sticky heading column beside the cards (contentfloww's
      own layout) -> centered heading above the cards -> sticky sidebar
-     again -> centered heading with cards left / tag right -> and now,
-     2026-09-18, cards and tag swapped once more per explicit request:
-     the eyebrow/heading/subtext stay as one centered block up top
-     ("top middle", same treatment as Testimonials), but within
-     `.iv-scroll-stack` the live "LinkedIn Posts / Short Videos" tag is
+     again -> centered heading with cards left / tag right -> cards/tag
+     swapped (tag left, cards right) -> and now, 2026-09-18, the heading
+     block itself moved from centered to left-aligned, per explicit
+     follow-up (matching every other section's plain left-aligned
+     heading, e.g. Pricing/Retention — the brief centered "top middle"
+     treatment is gone). It still sits as one full-width block up top,
+     just left-aligned instead of centered. Within `.iv-scroll-stack`
+     below it, the live "LinkedIn Posts / Short Videos" tag is
      now the LEFT column and the cards are the RIGHT column (DOM order
      unchanged — `.iv-scroll-cards` still comes first in the markup,
      `.iv-scroll-tag-sticky` second — the swap is purely visual via
@@ -1724,7 +1727,10 @@
      IMPORTANT: no ancestor of `.iv-card` (or `.iv-scroll-tag-sticky`)
      may have `overflow:hidden/auto/scroll` — that silently breaks
      `position:sticky` for everything inside it. */
-  .iv-scroll-head{ text-align: center; }
+  /* Left-aligned (default block alignment) — matches every other
+     section's heading on this page (Pricing, Retention, etc.); the
+     brief centered "top middle" version is gone per explicit
+     follow-up. */
   .iv-scroll-stack{ display: flex; flex-direction: column; align-items: center; gap: 3rem; }
   @media (min-width: 1024px){
     .iv-scroll-stack{
@@ -2448,7 +2454,7 @@
      removed per explicit request — don't re-add it without being asked. -->
 <section id="industry-standard" class="relative py-24 sm:py-28">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
-    <div class="iv-scroll-head reveal max-w-[36rem] mx-auto">
+    <div class="iv-scroll-head reveal max-w-[36rem]">
       <p class="en-eyebrow">Process</p>
       <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
         Everything We Produce is <span class="text-shine inline-block">Industry Standard</span>
