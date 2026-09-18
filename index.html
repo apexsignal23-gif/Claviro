@@ -1805,6 +1805,17 @@
     position: absolute; inset: 0; width: 100%; height: 100%;
     object-fit: cover; border: 0;
   }
+  /* Card 3's full-width 16:9 video, instead of the 4-up vertical (9:16)
+     grid card 2 uses (re-added 2026-09-18; was removed once before, see
+     the section comment above). At `lg:` (where .iv-card is capped to a
+     fixed height so the cards can fully occlude each other while
+     stacking — see .iv-card) it stretches to fill the full card height
+     instead of its native 16:9 shape; the iframe's own `object-fit:cover`
+     (from the base `.iv-video` rule above) crops rather than distorts. */
+  .iv-video-full{ aspect-ratio: 16 / 9; }
+  @media (min-width: 1024px){
+    .iv-video-full{ aspect-ratio: auto; height: 100%; }
+  }
   /* Card 1's LinkedIn post grid. 2 columns on mobile, 3 at `sm:`+. At
      `lg:` (where .iv-card is capped to a fixed height — see .iv-card) the
      grid fills that height exactly via height:100% + 3 equal `1fr` rows,
@@ -2404,9 +2415,10 @@
      .podcast-trailers-component / .sticky-wrapper / .podcast_wrapper /
      .portfolio-video-wrapper), re-themed onto Claviro's dark ink tokens.
      See the CSS comment above `.iv-scroll-stack` for how the effect works.
-     2 cards: (1) a grid of raw LinkedIn post screenshots, (2) all 4
-     vertical clips together. A 3rd card (one full-width video) was
-     removed per explicit request — don't re-add it without being asked. -->
+     3 cards: (1) a grid of raw LinkedIn post screenshots, (2) all 4
+     vertical clips together, (3) one full-width 16:9 video. Card 3 was
+     removed once already (2026-08-24) and re-added 2026-09-18 per a
+     fresh explicit request with the same Gumlet embed as before. -->
 <section id="industry-standard" class="relative py-24 sm:py-28">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="iv-scroll-head reveal max-w-[36rem]">
@@ -2573,6 +2585,17 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: one full-width 16:9 video -->
+        <div class="iv-card">
+          <div class="iv-video iv-video-full" data-video-slot="final">
+            <iframe
+              loading="lazy" title="Gumlet video player"
+              src="https://play.gumlet.io/embed/6a8c294cb6df33640456242c?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
+              referrerpolicy="origin"
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
           </div>
         </div>
       </div>
