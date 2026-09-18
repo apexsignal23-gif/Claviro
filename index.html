@@ -1697,84 +1697,30 @@
   /* Industry Standard: sticky-stack scroll reveal, reverse-engineered from
      contentfloww.com's own "Podcast trailers" section (curled their live
      HTML/CSS, not guessed from a screenshot). Layout has flip-flopped a
-     few times: sticky heading column beside the cards (contentfloww's
-     own layout) -> centered heading above the cards -> sticky sidebar
-     again -> centered heading with cards left / tag right -> cards/tag
-     swapped (tag left, cards right) -> and now, 2026-09-18, the heading
-     block itself moved from centered to left-aligned, per explicit
-     follow-up (matching every other section's plain left-aligned
-     heading, e.g. Pricing/Retention — the brief centered "top middle"
-     treatment is gone). It still sits as one full-width block up top,
-     just left-aligned instead of centered. Within `.iv-scroll-stack`
-     below it, the live "LinkedIn Posts / Short Videos" tag is
-     now the LEFT column and the cards are the RIGHT column (DOM order
-     unchanged — `.iv-scroll-cards` still comes first in the markup,
-     `.iv-scroll-tag-sticky` second — the swap is purely visual via
-     `order`, so the JS that walks `.iv-card` elements and the reveal/
-     scroll-tracking logic don't care either way).
-     `.iv-scroll-stack` is a plain flex column below `lg` (phone/tablet
-     untouched — the tag column is simply hidden there, exactly as
-     before), and becomes a 2-column grid at `lg:` and up: `.iv-card`
-     keeps `position:sticky`, so as the page scrolls, a card rides up
-     from below the viewport, locks at the same `top` offset as the one
+     lot: sticky heading column beside the cards -> centered heading
+     above the cards -> sticky sidebar again -> centered heading with
+     cards left / tag right -> cards/tag swapped -> heading left-aligned
+     -> and now, 2026-09-18, back to a single centered column of cards
+     with NO side column at all: the live "LinkedIn Posts / Short
+     Videos" tag feature was removed entirely per explicit request (not
+     just hidden — the HTML, this CSS, and the scroll-tracking JS block
+     that drove it are all gone; don't re-add any of it without being
+     asked). `.iv-scroll-head` (eyebrow/heading/subtext) stays a plain
+     left-aligned block up top; `.iv-scroll-stack` is just a centered
+     flex column at every breakpoint now, holding only `.iv-scroll-
+     cards`. The stacking effect itself is unchanged: each `.iv-card` is
+     `position:sticky`, so as the page scrolls, a card rides up from
+     below the viewport, locks at the same `top` offset as the one
      before it, and — because later DOM siblings paint over earlier ones
-     by default — visually slides up to cover the previous card. The tag
-     column sticks at that same `top` offset so the label lines up with
-     whichever card is currently in focus. That's the whole "content
-     gradually appears as you scroll" effect, pure CSS, no
-     JS/IntersectionObserver needed for the stacking itself (the tag
-     text swap is the one bit of scroll-driven JS, unchanged below).
-     IMPORTANT: no ancestor of `.iv-card` (or `.iv-scroll-tag-sticky`)
-     may have `overflow:hidden/auto/scroll` — that silently breaks
+     by default — visually slides up to cover the previous card. That's
+     the whole "content gradually appears as you scroll" effect, pure
+     CSS, no JS/IntersectionObserver needed.
+     IMPORTANT: no ancestor of `.iv-card` may have
+     `overflow:hidden/auto/scroll` — that silently breaks
      `position:sticky` for everything inside it. */
   /* Left-aligned (default block alignment) — matches every other
-     section's heading on this page (Pricing, Retention, etc.); the
-     brief centered "top middle" version is gone per explicit
-     follow-up. */
+     section's heading on this page (Pricing, Retention, etc.). */
   .iv-scroll-stack{ display: flex; flex-direction: column; align-items: center; gap: 3rem; }
-  @media (min-width: 1024px){
-    .iv-scroll-stack{
-      display: grid;
-      grid-template-columns: minmax(140px, 12rem) 1fr;
-      align-items: start;
-      gap: 2.5rem;
-    }
-    /* Visual-only swap: cards column (1fr, defined second above) renders
-       on the right; tag column (12rem, defined first above) renders on
-       the left. `order` moves them without touching DOM order, which
-       the sticky-stack effect and the scroll-tracking JS both rely on
-       staying as-is. */
-    .iv-scroll-tag-sticky{ order: 1; }
-    .iv-scroll-cards{ order: 2; }
-  }
-  /* Live "currently showing" label, per explicit request — swaps text
-     between "LinkedIn Posts" and "Short Videos" as the matching card
-     scrolls into the sticky position (see the JS near the bottom of the
-     page: it watches each `.iv-card`'s own live position, same
-     rAF-on-scroll pattern as the d90 connector dots elsewhere on this
-     page, rather than a fixed timer). Lives in its own sticky column,
-     now on the LEFT of the cards — hidden below `lg:` (see the
-     `hidden lg:flex` on the element) since that's the only breakpoint
-     where the 2-column split exists at all.
-     `top: 50%` + `translateY(-50%)` (not a flat `top:7rem` like
-     `.iv-card` uses) per explicit follow-up: was sticking flush with
-     the top of the viewport/cards, looked stranded up there next to
-     the much taller card stack — this is the standard sticky-vertical-
-     center trick, and works reliably here specifically because the
-     containing block (this element's grid area, sized by the tall
-     `.iv-scroll-cards` column next to it) has a definite resolved
-     height for the `50%` to resolve against, unlike a plain block
-     container with auto height. */
-  .iv-scroll-tag-sticky{ position: sticky; top: 50%; transform: translateY(-50%); }
-  .iv-scroll-tag{
-    align-items: center; gap: .65rem;
-    font-size: 1.15rem; font-weight: 700; letter-spacing: .01em;
-    color: var(--accent-hot);
-  }
-  .iv-scroll-tag::before{
-    content: ''; width: 9px; height: 9px; border-radius: 50%; flex: none;
-    background: var(--accent-hot); box-shadow: 0 0 0 4px rgba(76,110,245,.2);
-  }
   .iv-scroll-cards{ width: 100%; display: flex; flex-direction: column; gap: 2.5rem; }
   @media (min-width: 768px){
     .iv-scroll-cards{ gap: 7rem; }
@@ -2629,10 +2575,6 @@
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="iv-scroll-tag-sticky hidden lg:block">
-        <p class="iv-scroll-tag hidden lg:flex" id="iv-scroll-tag" aria-live="polite">LinkedIn Posts</p>
       </div>
     </div>
   </div>
@@ -3833,45 +3775,6 @@ void main() {
 
     setTimeout(startCycle, 600 + i * 500 + Math.random() * 1200);
   });
-})();
-
-// Industry Standard sticky heading tag — swaps "LinkedIn Posts" /
-// "Short Videos" as the matching card scrolls into the sticky spot,
-// per explicit request. Same technique as the Day-90 connector dots
-// elsewhere on this page: recompute each card's own live
-// getBoundingClientRect() on every scroll tick (rAF-throttled) rather
-// than a fixed timer, so it can't drift out of sync with what's
-// actually on screen. Whichever card's top has already reached (or
-// passed) the sticky offset is the one currently "locked" on top of
-// the stack — the LAST card in DOM order that's true for is the active
-// one, since later cards cover earlier ones.
-(function () {
-  var tag = document.getElementById('iv-scroll-tag');
-  var cards = Array.prototype.slice.call(document.querySelectorAll('#industry-standard .iv-card'));
-  if (!tag || !cards.length) return;
-
-  var labels = ['LinkedIn Posts', 'Short Videos'];
-  var stickyTop = parseFloat(getComputedStyle(cards[0]).top) || 112;
-  var lastActive = -1;
-  var ticking = false;
-
-  function update() {
-    ticking = false;
-    var active = 0;
-    cards.forEach(function (card, i) {
-      if (card.getBoundingClientRect().top <= stickyTop + 1) active = i;
-    });
-    if (active !== lastActive) {
-      lastActive = active;
-      tag.textContent = labels[active] || labels[labels.length - 1];
-    }
-  }
-  function onScroll() {
-    if (!ticking) { ticking = true; requestAnimationFrame(update); }
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll);
-  update();
 })();
 
 // FAQ accordion — one panel open at a time. Toggles a `data-open`
