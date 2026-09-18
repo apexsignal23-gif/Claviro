@@ -763,7 +763,39 @@
      box's content vertically means the shorter boxes (mainly bars)
      gain breathing room evenly top and bottom instead of one big gap
      stuck at the bottom. */
-  .d90-box{ min-height: 19rem; display: flex; flex-direction: column; justify-content: center; }
+  /* Liquid-glass treatment, per explicit request to match `#nav-chrome`'s
+     frosted-header look (see that CSS comment for the full technique
+     writeup — this is the same recipe, just reused on these 3 boxes
+     instead of the nav): a soft corner sheen (radial-gradient) layered
+     over a vertical glass-tint gradient, backdrop blur/saturate for the
+     "frost", and a bright inset top edge + dim inset bottom edge to read
+     as a curved glass rim — all replacing the plain flat `var(--ink-900)`
+     fill `.card` gives every other box on the page. Scoped to `.d90-box`
+     specifically (not the shared `.card` class itself), so this doesn't
+     ripple out to Mirror/Pricing/Testimonials/etc, which all stay flat.
+     Selector is `.card.d90-box`, not plain `.d90-box` — the generic
+     `.card` rule (background/border/box-shadow) is declared LATER in
+     this stylesheet, and at equal specificity a later same-specificity
+     rule wins regardless of which one is "more specific to the
+     component"; the compound selector's higher specificity (0,0,2,0 vs
+     `.card`'s 0,0,1,0) is what actually guarantees this wins, not
+     source order. Needs backdrop-filter support (all modern evergreen
+     browsers); falls back to the semi-opaque base fill on older ones,
+     which still reads fine, just without blur. */
+  .card.d90-box{
+    min-height: 19rem; display: flex; flex-direction: column; justify-content: center;
+    background:
+      radial-gradient(120% 160% at 12% -20%, rgba(255,255,255,.12), transparent 55%),
+      linear-gradient(180deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,.02) 45%, rgba(8,8,8,.35) 100%),
+      rgba(16,16,16,.5);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    backdrop-filter: blur(22px) saturate(180%);
+    border-color: rgba(255,255,255,.14);
+    box-shadow:
+      var(--shadow-card),
+      inset 0 1px 0 rgba(255,255,255,.16),
+      inset 0 -1px 0 rgba(255,255,255,.04);
+  }
   .d90-connector{ position: relative; height: 84px; margin: 0 auto; width: 2px; }
   .d90-connector-line{ position: absolute; inset: 0; width: 100%; background: var(--ink-border); }
   /* Fills in white behind the dot as it travels — same `progress`
