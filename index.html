@@ -1755,8 +1755,17 @@
      page, rather than a fixed timer). Lives in its own sticky column,
      now on the LEFT of the cards — hidden below `lg:` (see the
      `hidden lg:flex` on the element) since that's the only breakpoint
-     where the 2-column split exists at all. */
-  .iv-scroll-tag-sticky{ position: sticky; top: 7rem; }
+     where the 2-column split exists at all.
+     `top: 50%` + `translateY(-50%)` (not a flat `top:7rem` like
+     `.iv-card` uses) per explicit follow-up: was sticking flush with
+     the top of the viewport/cards, looked stranded up there next to
+     the much taller card stack — this is the standard sticky-vertical-
+     center trick, and works reliably here specifically because the
+     containing block (this element's grid area, sized by the tall
+     `.iv-scroll-cards` column next to it) has a definite resolved
+     height for the `50%` to resolve against, unlike a plain block
+     container with auto height. */
+  .iv-scroll-tag-sticky{ position: sticky; top: 50%; transform: translateY(-50%); }
   .iv-scroll-tag{
     align-items: center; gap: .65rem;
     font-size: 1.15rem; font-weight: 700; letter-spacing: .01em;
