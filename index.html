@@ -1699,16 +1699,16 @@
      HTML/CSS, not guessed from a screenshot). Layout has flip-flopped a
      few times: sticky heading column beside the cards (contentfloww's
      own layout) -> centered heading above the cards -> sticky sidebar
-     again -> and now, 2026-09-14, a third arrangement per explicit
-     follow-up: the eyebrow/heading/subtext go back to being one centered
-     block up top (full width, "top middle" — same treatment as
-     Testimonials), the cards stay pinned on the LEFT (not centered), and
-     the live "LinkedIn Posts / Short Videos" tag moves out of the
-     heading entirely into its own sticky column on the RIGHT of the
-     cards. So `.iv-scroll-head` is back to a plain centered block with
-     no sticky/grid behavior of its own; `.iv-scroll-stack` is what
-     carries the 2-column split now (cards left, tag column right)
-     instead of (heading left, cards right) like the previous version.
+     again -> centered heading with cards left / tag right -> and now,
+     2026-09-18, cards and tag swapped once more per explicit request:
+     the eyebrow/heading/subtext stay as one centered block up top
+     ("top middle", same treatment as Testimonials), but within
+     `.iv-scroll-stack` the live "LinkedIn Posts / Short Videos" tag is
+     now the LEFT column and the cards are the RIGHT column (DOM order
+     unchanged — `.iv-scroll-cards` still comes first in the markup,
+     `.iv-scroll-tag-sticky` second — the swap is purely visual via
+     `order`, so the JS that walks `.iv-card` elements and the reveal/
+     scroll-tracking logic don't care either way).
      `.iv-scroll-stack` is a plain flex column below `lg` (phone/tablet
      untouched — the tag column is simply hidden there, exactly as
      before), and becomes a 2-column grid at `lg:` and up: `.iv-card`
@@ -1729,21 +1729,27 @@
   @media (min-width: 1024px){
     .iv-scroll-stack{
       display: grid;
-      grid-template-columns: 1fr minmax(140px, 12rem);
+      grid-template-columns: minmax(140px, 12rem) 1fr;
       align-items: start;
       gap: 2.5rem;
     }
+    /* Visual-only swap: cards column (1fr, defined second above) renders
+       on the right; tag column (12rem, defined first above) renders on
+       the left. `order` moves them without touching DOM order, which
+       the sticky-stack effect and the scroll-tracking JS both rely on
+       staying as-is. */
+    .iv-scroll-tag-sticky{ order: 1; }
+    .iv-scroll-cards{ order: 2; }
   }
   /* Live "currently showing" label, per explicit request — swaps text
      between "LinkedIn Posts" and "Short Videos" as the matching card
      scrolls into the sticky position (see the JS near the bottom of the
      page: it watches each `.iv-card`'s own live position, same
      rAF-on-scroll pattern as the d90 connector dots elsewhere on this
-     page, rather than a fixed timer). Lives in its own sticky column to
-     the right of the cards now (was inside the heading block in the
-     previous layout) — hidden below `lg:` (see the `hidden lg:flex` on
-     the element) since that's the only breakpoint where the 2-column
-     split exists at all. */
+     page, rather than a fixed timer). Lives in its own sticky column,
+     now on the LEFT of the cards — hidden below `lg:` (see the
+     `hidden lg:flex` on the element) since that's the only breakpoint
+     where the 2-column split exists at all. */
   .iv-scroll-tag-sticky{ position: sticky; top: 7rem; }
   .iv-scroll-tag{
     align-items: center; gap: .65rem;
