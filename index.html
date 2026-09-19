@@ -114,13 +114,6 @@
 
   html { scroll-behavior: smooth; color-scheme: dark; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-  /* NOTE: only in effect for touch/reduced-motion visitors — the Lenis
-     smooth-scroll setup near the end of the file (search "Buttery-
-     smooth scroll") flips this to `auto` inline via JS the moment it
-     takes over on desktop, because leaving BOTH active double-smooths
-     every scroll position Lenis sets, which is what made scrolling feel
-     laggy/delayed (~1s) when Lenis first shipped. Don't remove that JS
-     override thinking it's redundant with this rule — it isn't. */
   /* NOTE: do NOT add `overflow-x: hidden` here as a blanket safety net
      against stray horizontal overflow — tried that, and it silently
      broke `position: sticky` for every descendant (the Industry
@@ -4432,44 +4425,6 @@ void main() {
   updateWheel();
 })();
 
-// Buttery-smooth scroll, per explicit request to match mzmedia.digital's
-// own feel -- curled their live inline script verbatim (same guard
-// conditions, same lerp value, same CDN/version), not guessed. Lenis
-// (darkroom.engineering's smooth-scroll library) intercepts the page's
-// native scroll and eases the position toward its target every frame
-// instead of jumping straight to it. Skipped entirely on touch devices
-// (a coarse pointer already scrolls natively/well; Lenis is a desktop-
-// wheel/trackpad enhancement) and under prefers-reduced-motion, exactly
-// like the reference -- so this never fights a touchscreen's own
-// momentum scroll or overrides an explicit accessibility preference.
-// Loaded dynamically (not a static <script src>) so it's skipped
-// entirely, network request included, for the users who don't need it.
-//
-// FIX 2026-09-19: scrolling felt laggy/delayed (~1s) right after this
-// shipped -- root cause was `html{scroll-behavior:smooth}` (see the CSS
-// near the top of this file) fighting Lenis: every scroll position
-// Lenis sets gets ALSO smooth-interpolated by the browser natively, so
-// the page was being double-eased, compounding into a sluggish, behind-
-// your-input feel. Confirmed by checking mzmedia.digital's own CSS —
-// they never set scroll-behavior:smooth at all; Lenis is the only thing
-// smoothing their scroll. Same fix here: flip it to `auto` the moment
-// Lenis actually takes over, so only one of them is ever smoothing at a
-// time. Left alone for touch/reduced-motion users (where Lenis never
-// loads in the first place) so their anchor-link jumps stay smooth.
-(function () {
-  var isTouch = window.matchMedia('(pointer: coarse)').matches;
-  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (isTouch || reduceMotion) return;
-  var s = document.createElement('script');
-  s.src = 'https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js';
-  s.onload = function () {
-    document.documentElement.style.scrollBehavior = 'auto';
-    var lenis = window.lenis = new Lenis({ lerp: 0.1 });
-    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-    requestAnimationFrame(raf);
-  };
-  document.body.appendChild(s);
-})();
 </script>
 
 </body>
