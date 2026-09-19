@@ -333,6 +333,7 @@
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor; mask-composite: exclude;
     pointer-events: none;
+    filter: drop-shadow(0 0 10px rgba(110,150,255,.3));
   }
   .hero-stack-card::after{
     content: ""; position: absolute; width: 283px; height: 283px;
@@ -384,7 +385,7 @@
      ring's hollow center and rounded corners entirely. */
   .hero-stack-card-2::before{
     background: radial-gradient(140% 140% at 100% 0%, #fff 0%, rgba(170,205,255,.95) 15%, rgba(140,175,255,.7) 35%, rgba(200,215,255,.55) 65%, rgba(180,195,230,.45) 100%);
-    filter: drop-shadow(0 0 6px rgba(150,190,255,.85)) drop-shadow(0 0 16px rgba(120,165,255,.55));
+    filter: drop-shadow(0 0 6px rgba(150,190,255,.85)) drop-shadow(0 0 16px rgba(120,165,255,.55)) drop-shadow(0 0 34px rgba(90,140,255,.4));
   }
   .hero-stack-card-3{
     top: 294px; left: 221px; z-index: 3;
@@ -397,7 +398,7 @@
   }
   .hero-stack-card-3::before{
     background: radial-gradient(140% 140% at 100% 0%, rgba(255,255,255,.9) 0%, rgba(170,200,250,.7) 15%, rgba(120,155,240,.5) 35%, rgba(180,195,230,.4) 65%, rgba(160,175,215,.35) 100%);
-    filter: drop-shadow(0 0 5px rgba(145,180,255,.6)) drop-shadow(0 0 12px rgba(115,155,255,.35));
+    filter: drop-shadow(0 0 5px rgba(145,180,255,.6)) drop-shadow(0 0 12px rgba(115,155,255,.35)) drop-shadow(0 0 30px rgba(90,140,255,.35));
   }
   /* Below 1024px the grid stacks to one column (see the lg:grid-cols
      class on the wrapper) -- text and cards then share vertical space
