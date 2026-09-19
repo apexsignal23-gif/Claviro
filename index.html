@@ -309,43 +309,80 @@
      "bigger and whitish" request -- same low-alpha transparent-glass
      treatment as before, just a lighter/whiter base color instead of a
      dark blue-gray one. */
+  /* Outer card: position, size, rotation, isolation only -- no
+     background and no overflow of its own. The actual glass tint lives
+     on .hero-stack-card-inner below. Keeping THIS element free of
+     overflow:hidden is what lets ::before (the border ring) and ::after
+     (the atmospheric corner glow) bleed past the card's own edge --
+     every earlier attempt at a bleeding glow got clipped invisible
+     because it lived on a descendant of an overflow:hidden element (the
+     card was carrying background/overflow/border-ring/glow all in one
+     place). isolation:isolate scopes ::after's z-index:-1 to just this
+     card, so it tucks behind THIS card's own glass instead of jumping
+     behind a different card in the shared stack. --glow-x/--glow-y/
+     --glow-size/--glow-strength are plain custom properties so any
+     card can move, resize or mute its own corner light with just a
+     couple of declarations -- see the per-card blocks below. */
   .hero-stack-card{
-    position: absolute; width: 435px; height: 272px;
-    border-radius: 18px; overflow: hidden;
+    position: absolute; width: 435px; height: 272px; border-radius: 18px;
+    isolation: isolate;
+    --glow-x: 100%; --glow-y: 0%; --glow-size: 120px; --glow-strength: 0;
     /* rotateX(8deg) is the slight backward lean (top edge recedes);
        rotateY(10deg) tilts the right edge back/away from the viewer
        (positive angle = right side moves to negative z); rotate() after
        is the original flat in-plane spin, kept on top of both. */
     transform: rotateX(8deg) rotateY(10deg) rotate(-10.5deg);
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 22px 43px rgba(0,0,0,.18), 0 0 31px rgba(120,150,255,.1);
-    transition: transform .4s var(--ease-spring), box-shadow .4s ease;
+    transition: transform .4s var(--ease-spring);
   }
   /* Hover lift: same tilt as the resting state, just translated up --
      transitions back to the resting position on mouse-out automatically
-     since it's the same transform property, not a separate animation. */
+     since it's the same transform property, not a separate animation.
+     Because the border ring and glow live on this same element (not a
+     separate synced sibling like an earlier attempt), they move with it
+     for free. */
   .hero-stack-card:hover{
     transform: translateY(-16px) rotateX(8deg) rotateY(10deg) rotate(-10.5deg);
   }
-  /* Keeps the edge-glow ring (a separate sibling element, see below)
-     pixel-aligned with its card during the hover lift -- otherwise the
-     glow would stay put while the card moves up and visibly detach. */
-  .hero-stack:has(.hero-stack-card-2:hover) .hero-stack-edge-glow-2,
-  .hero-stack:has(.hero-stack-card-3:hover) .hero-stack-edge-glow-3{
-    transform: translateY(-16px) rotateX(8deg) rotateY(10deg) rotate(-10.5deg);
+  /* The glass surface itself: background tint, blur, and overflow:hidden
+     (for the bottom mask-fade and to keep the label/number text inside
+     the rounded corners) all live one level in from the outer card, so
+     none of it clips the outer card's own border-ring/glow. */
+  .hero-stack-card-inner{
+    position: absolute; inset: 0; border-radius: inherit; overflow: hidden;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   }
+  /* Thin 1px border ring (padding + mask-composite:exclude cuts the
+     fill down to just the stroke, same technique as before). Two
+     layered backgrounds: a faint uniform tone everywhere, PLUS a radial
+     hot spot centered at --glow-x/--glow-y painted on top of it -- so
+     only the area right at that point goes cool-white -> pale blue,
+     instead of the whole perimeter lighting evenly. */
   .hero-stack-card::before{
     content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
-    background: linear-gradient(115deg, rgba(255,255,255,.95) 0%, rgba(200,215,255,.6) 36%, rgba(130,160,255,.95) 72%, rgba(120,150,255,.5) 100%);
+    pointer-events: none;
+    background:
+      radial-gradient(90% 90% at var(--glow-x) var(--glow-y), rgba(230,240,255,.95) 0%, rgba(150,185,255,.55) 14%, rgba(255,255,255,.1) 30%, transparent 55%),
+      linear-gradient(115deg, rgba(255,255,255,.4) 0%, rgba(200,215,255,.22) 50%, rgba(150,170,220,.16) 100%);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor; mask-composite: exclude;
-    pointer-events: none;
   }
+  /* Soft atmospheric bleed, pinned to that same --glow-x/--glow-y point
+     and sitting behind the glass (z-index:-1, scoped to this one card
+     by isolation:isolate above) so it can spill outside the card into
+     the dark background instead of being trapped inside it. Living on
+     the outer (unclipped) card is what lets it show past the edge at
+     all. --glow-size/--glow-strength make this reusable per card --
+     card 1 sets strength to 0 (no atmosphere, plain card), 2 and 3 dial
+     it in below. */
   .hero-stack-card::after{
-    content: ""; position: absolute; width: 283px; height: 283px;
-    right: -87px; bottom: -131px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(71,99,220,.22), transparent 67%);
-    filter: blur(5px);
+    content: ""; position: absolute; z-index: -1; pointer-events: none;
+    width: var(--glow-size); height: var(--glow-size);
+    left: calc(var(--glow-x) - (var(--glow-size) / 2));
+    top: calc(var(--glow-y) - (var(--glow-size) / 2));
+    border-radius: 50%;
+    opacity: var(--glow-strength);
+    background: radial-gradient(circle, rgba(80,130,255,.9) 0%, rgba(70,110,240,.4) 42%, transparent 72%);
+    filter: blur(20px);
   }
   .hero-stack-label{
     position: absolute; left: 51px; top: 57px;
@@ -355,91 +392,45 @@
     position: absolute; right: 26px; top: 23px;
     color: rgba(154,169,205,.6); font-size: 15px; font-weight: 400;
   }
-  /* Glow history, 2026-09-19: first tried as a filter on each card's
-     ::before ring -- invisible, because the card has overflow:hidden
-     and that clips a child's filter bleed. Then tried as an offset
-     box-shadow directly on the card (box-shadow IS exempt from an
-     element's own overflow clip, so that one actually rendered) -- but
-     a box-shadow only follows the card's plain rounded-rect bounding
-     shape, so it reads as a soft blob shifted toward a corner, not a
-     glowing EDGE LINE hugging the ring's exact curve like the reference
-     close-up. Final fix: .hero-stack-edge-glow below is a separate
-     sibling element (not a descendant of the clipped card), an exact
-     size/position/rotation copy of the card carrying the same ring
-     (padding + mask-composite:exclude) technique as the card's own
-     ::before -- since it has no overflow:hidden ancestor of its own,
-     filter: drop-shadow on ITS ring is free to bleed outward, and
-     because it's pixel-aligned to the real card, that bleed hugs the
-     real border line exactly. Each card also keeps a white bloom at its
-     own top-left corner (radial-gradient layered into the background). */
   .hero-stack-card-1{
     top: 33px; left: 26px; z-index: 1;
+    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 22px 43px rgba(0,0,0,.18), 0 0 8px rgba(150,180,255,.25);
+  }
+  .hero-stack-card-1 .hero-stack-card-inner{
     background:
       radial-gradient(93px 93px at 0% 0%, rgba(255,255,255,.22), transparent 65%),
       linear-gradient(135deg, rgba(255,255,255,.1) 0%, rgba(255,255,255,.04) 56%, rgba(210,222,255,.08) 100%);
-    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 22px 43px rgba(0,0,0,.18), 0 0 8px rgba(150,180,255,.25);
     -webkit-mask-image: linear-gradient(to bottom, #000 94%, transparent 100%);
     mask-image: linear-gradient(to bottom, #000 94%, transparent 100%);
   }
+  /* Card 1 keeps a plain, evenly faint ring -- no corner hot spot --
+     matching the reference, where only cards 2/3 catch light. */
+  .hero-stack-card-1::before{
+    background: linear-gradient(115deg, rgba(255,255,255,.95) 0%, rgba(200,215,255,.6) 36%, rgba(130,160,255,.4) 72%, rgba(120,150,255,.28) 100%);
+  }
   .hero-stack-card-2{
     top: 155px; left: 119px; z-index: 2;
+    --glow-x: 100%; --glow-y: 0%; --glow-size: 130px; --glow-strength: .85;
+    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 22px 43px rgba(0,0,0,.18);
+  }
+  .hero-stack-card-2 .hero-stack-card-inner{
     background:
       radial-gradient(93px 93px at 0% 0%, rgba(255,255,255,.26), transparent 65%),
       linear-gradient(135deg, rgba(255,255,255,.12) 0%, rgba(255,255,255,.05) 52%, rgba(205,220,255,.1) 100%);
-    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 22px 43px rgba(0,0,0,.18);
     -webkit-mask-image: linear-gradient(to bottom, #000 90%, transparent 100%);
     mask-image: linear-gradient(to bottom, #000 90%, transparent 100%);
   }
-  /* Border-line color, concentrated at the top-right corner: a radial
-     (not linear) gradient centered at 100% 0% peaks brightness exactly
-     there and falls off along both adjacent edges, matching the
-     reference's close-up. Note: this pseudo-element sits inset:0 inside
-     a card that has overflow:hidden, so any filter/drop-shadow glow put
-     on IT gets clipped by its own parent before it can bleed outward --
-     that's why earlier drop-shadow attempts here never showed up. The
-     actual visible corner glow comes from the directional box-shadow on
-     the card element itself below (box-shadow on an element is exempt
-     from that element's own overflow clip, unlike a child's filter). */
-  .hero-stack-card-2::before{
-    background: radial-gradient(140% 140% at 100% 0%, #fff 0%, rgba(170,205,255,.95) 15%, rgba(140,175,255,.7) 35%, rgba(200,215,255,.55) 65%, rgba(180,195,230,.45) 100%);
-  }
   .hero-stack-card-3{
     top: 294px; left: 221px; z-index: 3;
+    --glow-x: 100%; --glow-y: 0%; --glow-size: 120px; --glow-strength: .65;
+    box-shadow: inset 0 0 0 1px rgba(186,200,239,.28), 0 22px 48px rgba(0,0,0,.2);
+  }
+  .hero-stack-card-3 .hero-stack-card-inner{
     background:
       radial-gradient(104px 104px at 0% 0%, rgba(255,255,255,.28), transparent 65%),
       linear-gradient(135deg, rgba(255,255,255,.15) 0%, rgba(255,255,255,.06) 50%, rgba(195,215,255,.14) 100%);
-    box-shadow: inset 0 0 0 1px rgba(186,200,239,.28), 0 22px 48px rgba(0,0,0,.2);
     -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
     mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
-  }
-  .hero-stack-card-3::before{
-    background: radial-gradient(140% 140% at 100% 0%, rgba(255,255,255,.9) 0%, rgba(170,200,250,.7) 15%, rgba(120,155,240,.5) 35%, rgba(180,195,230,.4) 65%, rgba(160,175,215,.35) 100%);
-  }
-  /* Unclipped copy of the ring: same size/position/rotation as its card
-     so the ring drawn by ::before lands exactly on top of the card's
-     real border, but this element itself has no overflow:hidden, so
-     the drop-shadow filter on that ring is free to bleed past its own
-     box instead of being clipped away. */
-  .hero-stack-edge-glow{
-    position: absolute; width: 435px; height: 272px; border-radius: 18px;
-    transform: rotateX(8deg) rotateY(10deg) rotate(-10.5deg);
-    transition: transform .4s var(--ease-spring);
-    pointer-events: none;
-  }
-  .hero-stack-edge-glow::before{
-    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude;
-  }
-  .hero-stack-edge-glow-2{ top: 155px; left: 119px; z-index: 2; }
-  .hero-stack-edge-glow-2::before{
-    background: radial-gradient(140% 140% at 100% 0%, #fff 0%, rgba(200,222,255,.95) 12%, rgba(150,185,255,.6) 32%, transparent 62%);
-    filter: drop-shadow(0 0 3px rgba(230,240,255,1)) drop-shadow(0 0 10px rgba(160,200,255,.9)) drop-shadow(0 0 22px rgba(110,165,255,.75)) drop-shadow(0 0 42px rgba(80,135,245,.5));
-  }
-  .hero-stack-edge-glow-3{ top: 294px; left: 221px; z-index: 3; }
-  .hero-stack-edge-glow-3::before{
-    background: radial-gradient(140% 140% at 100% 0%, rgba(255,255,255,.9) 0%, rgba(190,212,255,.65) 12%, transparent 58%);
-    filter: drop-shadow(0 0 3px rgba(220,235,255,.9)) drop-shadow(0 0 9px rgba(150,190,255,.75)) drop-shadow(0 0 19px rgba(105,155,255,.6)) drop-shadow(0 0 36px rgba(80,130,245,.4));
   }
   /* Below 1024px the grid stacks to one column (see the lg:grid-cols
      class on the wrapper) -- text and cards then share vertical space
@@ -2775,19 +2766,23 @@
     <div class="hero-stack" aria-hidden="true">
       <div class="hero-stack-glow"></div>
       <div class="hero-stack-card hero-stack-card-1">
-        <span class="hero-stack-label">Strategy</span>
-        <span class="hero-stack-num">01</span>
+        <div class="hero-stack-card-inner">
+          <span class="hero-stack-label">Strategy</span>
+          <span class="hero-stack-num">01</span>
+        </div>
       </div>
       <div class="hero-stack-card hero-stack-card-2">
-        <span class="hero-stack-label">Production</span>
-        <span class="hero-stack-num">02</span>
+        <div class="hero-stack-card-inner">
+          <span class="hero-stack-label">Production</span>
+          <span class="hero-stack-num">02</span>
+        </div>
       </div>
-      <div class="hero-stack-edge-glow hero-stack-edge-glow-2"></div>
       <div class="hero-stack-card hero-stack-card-3">
-        <span class="hero-stack-label">Distribution</span>
-        <span class="hero-stack-num">03</span>
+        <div class="hero-stack-card-inner">
+          <span class="hero-stack-label">Distribution</span>
+          <span class="hero-stack-num">03</span>
+        </div>
       </div>
-      <div class="hero-stack-edge-glow hero-stack-edge-glow-3"></div>
     </div>
   </div>
 </section>
