@@ -1705,14 +1705,27 @@
     white-space: nowrap;
   }
   .pc-duration{ position: relative; margin-top: .35rem; font-size: .82rem; color: var(--cream-dim); }
-  .pc-price-row{ position: relative; margin-top: 1.4rem; display: flex; align-items: flex-end; gap: .35rem; }
-  /* Subtle white-to-grey gradient text on the price, matching
-     mzmedia's own `.pricing-price` (background-clip:text) rather than
-     a flat solid fill — a small metallic sheen, not a color change. */
+  /* "Starting at $X" price block, added 2026-09-19 per explicit
+     request to copy mzmedia's own price treatment exactly (their
+     `.pricing-price-wrap`/`.pricing-price` markup, curled via curl) —
+     a small muted label, then the price(s) in the same white-to-grey
+     gradient text their `.pricing-price` uses. Studio shows two prices
+     side by side (a smaller struck-through original + the real one,
+     `.pricing._02` on their site) plus a small "SAVE $X" pill
+     (`.client-highlight.save-money`); Core just shows the one price. */
+  .pc-starting-label{ position: relative; margin-top: 1.1rem; font-size: .82rem; color: var(--cream-dim); }
+  .pc-price-row{ position: relative; margin-top: .4rem; display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; }
   .pc-price{
-    font-family: 'Manrope', sans-serif; font-size: 2.1rem; font-weight: 800; letter-spacing: -.03em; line-height: 1;
+    font-family: 'Manrope', sans-serif; font-size: 1.9rem; font-weight: 800; letter-spacing: -.03em; line-height: 1;
     background-image: linear-gradient(90deg, #fff, #9aa3ad);
     -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .pc-price-struck{ font-size: 1.25rem; opacity: .65; text-decoration: line-through; }
+  .pc-save-badge{
+    position: relative; margin-top: .6rem; display: inline-flex; align-items: center; align-self: flex-start;
+    font-size: .72rem; font-weight: 600;
+    color: #c5d9ff; background: rgba(96,119,248,.24);
+    padding: .3rem .65rem; border-radius: 4px;
   }
   .pc-period{ padding-bottom: .2rem; font-size: .92rem; color: var(--cream-dim); }
   .pc-btn{
@@ -3378,6 +3391,10 @@
             <span class="pc-badge">Most Popular</span>
           </div>
           <p class="pc-duration">3 months</p>
+          <p class="pc-starting-label">Starting at</p>
+          <div class="pc-price-row">
+            <span class="pc-price">$2,500</span>
+          </div>
           <a href="#cta" class="pc-btn pc-btn-solid">Apply</a>
         </div>
         <p class="pc-features-label">Package Includes</p>
@@ -3404,6 +3421,12 @@
             <span class="pc-plan-name"><i class="ph-bold ph-buildings" aria-hidden="true"></i>Studio</span>
           </div>
           <p class="pc-duration">6 months+</p>
+          <p class="pc-starting-label">Starting at</p>
+          <div class="pc-price-row">
+            <span class="pc-price pc-price-struck">$15,000</span>
+            <span class="pc-price">$12,000</span>
+          </div>
+          <span class="pc-save-badge">SAVE $3,000</span>
           <a href="#cta" class="pc-btn pc-btn-solid">Apply</a>
         </div>
         <p class="pc-features-label">Package Includes</p>
