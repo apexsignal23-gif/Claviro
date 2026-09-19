@@ -205,7 +205,13 @@
      the shared .hero-h1 stack (Manrope) per explicit request -- the
      Sora swap tried above was undone; NOT a font swap, just weight/
      tracking on the existing Manrope stack. */
-  #top h1.hero-h1{ font-weight: 500; letter-spacing: -0.02em; }
+  /* Weight bumped 700 (was 500) 2026-09-19: that lighter 500 was tuned
+     for a since-replaced hero concept matching mzmedia.digital's thin
+     headline. The current two-column hero copies a different, bolder
+     reference instead, so the old lighter weight was leftover cruft
+     fighting the new one -- 700 (a weight this stylesheet already
+     loads, unlike the old 500) matches this reference's heavier strokes. */
+  #top h1.hero-h1{ font-weight: 700; letter-spacing: -0.02em; }
 
   /* Hero eyebrow ("01 ———") and the right-side rotated card stack, both
      added 2026-09-19 for the two-column hero redesign. Card "glass" look
@@ -220,7 +226,7 @@
   .hero-eyebrow-line{ display: block; width: 2.75rem; height: 1px; background: var(--ink-border); }
 
   .hero-stack{
-    position: relative; width: 100%; max-width: 26rem;
+    position: relative; width: 100%; max-width: 33rem;
     aspect-ratio: 1 / 0.95; margin: 0 auto;
   }
   .hero-stack-card{
@@ -2534,9 +2540,9 @@
        backdrop already comes from body::before (see its comment), this
        is just the extra concentrated blue light the reference shows
        pooling behind the cards specifically. -->
-  <div class="pointer-events-none absolute right-[-8%] top-1/2 -translate-y-1/2 h-[34rem] w-[34rem] rounded-full" style="background: radial-gradient(closest-side, rgba(76,110,245,.3), transparent 72%); filter: blur(64px);" aria-hidden="true"></div>
+  <div class="pointer-events-none absolute right-[-8%] top-1/2 -translate-y-1/2 h-[38rem] w-[38rem] rounded-full" style="background: radial-gradient(closest-side, rgba(76,110,245,.3), transparent 72%); filter: blur(64px);" aria-hidden="true"></div>
 
-  <div class="relative z-10 mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-20 py-28 sm:py-32 lg:py-40 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-10 items-center">
+  <div class="relative z-10 mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-20 py-28 sm:py-32 lg:py-40 grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-16 lg:gap-10 items-center">
     <div>
       <p class="hero-eyebrow"><span>01</span><span class="hero-eyebrow-line"></span></p>
 
