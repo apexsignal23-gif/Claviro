@@ -288,9 +288,19 @@
   @media (min-width: 1024px){
     .hero-stack{ margin-left: 100px; }
   }
+  /* Anchored with left/top at card 3's own corner (top:284+height:263,
+     left:213+width:420) instead of right/bottom -- those were relative
+     to .hero-stack's own box, which is a much wider grid column than
+     the actual card cluster, so the glow sat disconnected out in that
+     extra space rather than at card 3's real corner. Also why it read
+     as "stuck inside the box": the other glow (.hero-stack-card::after)
+     is a pseudo-element of a card that has overflow:hidden, so it gets
+     clipped at the card's own edge and can't bleed into the background
+     -- this element is a plain sibling div, not subject to that clip,
+     so it can spread past the card into the surrounding dark area. */
   .hero-stack-glow{
     position: absolute; width: 480px; height: 380px;
-    right: -120px; bottom: -80px;
+    left: 393px; top: 357px;
     background: radial-gradient(circle, rgba(70,110,240,.55), transparent 65%);
     filter: blur(30px); pointer-events: none;
   }
