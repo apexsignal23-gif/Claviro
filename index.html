@@ -4402,6 +4402,31 @@ void main() {
   updateWheel();
 })();
 
+// Buttery-smooth scroll, per explicit request to match mzmedia.digital's
+// own feel -- curled their live inline script verbatim (same guard
+// conditions, same lerp value, same CDN/version), not guessed. Lenis
+// (darkroom.engineering's smooth-scroll library) intercepts the page's
+// native scroll and eases the position toward its target every frame
+// instead of jumping straight to it. Skipped entirely on touch devices
+// (a coarse pointer already scrolls natively/well; Lenis is a desktop-
+// wheel/trackpad enhancement) and under prefers-reduced-motion, exactly
+// like the reference -- so this never fights a touchscreen's own
+// momentum scroll or overrides an explicit accessibility preference.
+// Loaded dynamically (not a static <script src>) so it's skipped
+// entirely, network request included, for the users who don't need it.
+(function () {
+  var isTouch = window.matchMedia('(pointer: coarse)').matches;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (isTouch || reduceMotion) return;
+  var s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js';
+  s.onload = function () {
+    var lenis = window.lenis = new Lenis({ lerp: 0.1 });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+  };
+  document.body.appendChild(s);
+})();
 </script>
 
 </body>
