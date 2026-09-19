@@ -1796,6 +1796,17 @@
       justify-content: center;
     }
     .iv-card > *{ width: 100%; }
+    /* Card 3 (the 16:9 video) specifically — per explicit follow-up:
+       the shared fixed height above was cropping a chunk off the top
+       and bottom of the video (that's `.iv-video-16x9`'s whole point,
+       see its CSS comment), and it looked too tight/zoomed-in with
+       on-screen text nearly touching the box edges. Safe to let just
+       THIS card grow to its natural (uncropped) 16:9-driven height
+       instead, since it's the LAST card in the stack — nothing slides
+       up after it that needs this box to stay a fixed short height to
+       stay fully covered (that constraint is only about a card
+       potentially poking out from UNDER a later, shorter one). */
+    .iv-card-natural{ height: auto; overflow: visible; }
   }
 
   /* Vertical (9:16) video grid used inside card 2 — all 4 clips together
@@ -1848,15 +1859,14 @@
      Gumlet actually saw no longer matched it.
      This version keeps the wrapper at a plain, un-stretched 16:9 (so
      Gumlet's player always sees a box matching the video's real shape —
-     no internal letterboxing, ever) and instead lets the OUTER `.iv-
-     card`'s existing `overflow:hidden` + fixed height (see `.iv-card`
-     below) do the cropping, at OUR css layer instead of Gumlet's: at
-     `lg:` a full-width 16:9 box is taller than the card's ~20-32rem
-     cap, so it centers (via `.iv-card`'s flex centering) and simply
-     gets its top/bottom sliced off by the card's own overflow:hidden —
-     a plain CSS crop, not a fit decision made inside someone else's
-     iframe. Below `lg:` (.iv-card has no fixed height there) it just
-     renders at its natural, uncropped 16:9 height. */
+     no internal letterboxing, ever). It first shipped relying on `.iv-
+     card`'s shared fixed height + overflow:hidden to crop the excess
+     top/bottom at OUR css layer instead of Gumlet's — but per explicit
+     follow-up that crop was too aggressive (on-screen text nearly
+     touching the box edges), so card 3's OWN `.iv-card` now also
+     carries `.iv-card-natural` (see the CSS comment above it, next to
+     `.iv-card`'s height rule) to opt out of that fixed height entirely
+     and show the full, uncropped frame instead. */
   .iv-video-16x9{ aspect-ratio: 16 / 9; }
   /* Card 1's LinkedIn post grid. 2 columns on mobile, 3 at `sm:`+. At
      `lg:` (where .iv-card is capped to a fixed height — see .iv-card) the
@@ -2642,7 +2652,7 @@
         </div>
 
         <!-- CARD 3: one 16:9 video, back in the sliding stack -->
-        <div class="iv-card">
+        <div class="iv-card iv-card-natural">
           <div class="iv-video iv-video-16x9" data-video-slot="final">
             <iframe
               loading="lazy" title="Gumlet video player"
