@@ -304,6 +304,19 @@
     background: radial-gradient(circle, rgba(70,110,240,.55), transparent 65%);
     filter: blur(31px); pointer-events: none;
   }
+  /* A tight, bright point-source blob centered exactly at card 2's own
+     top-right corner (top:155, left:119+435=554) -- box-shadow alone
+     glows a border's whole perimeter evenly, it can't concentrate light
+     at one specific point and fade along the adjacent edges the way a
+     positioned radial-gradient can. This is what makes the corner read
+     as the brightest spot, bleeding out past the card into the
+     background, exactly like the reference's close-up. */
+  .hero-stack-corner-glow{
+    position: absolute; width: 190px; height: 190px;
+    left: 459px; top: 60px;
+    background: radial-gradient(circle, rgba(150,190,255,.95), transparent 62%);
+    filter: blur(16px); pointer-events: none;
+  }
   /* Sized back up 2026-09-19 (reversing the earlier 0.75x pass) and
      fills shifted from a dark navy tint to a white one, per an explicit
      "bigger and whitish" request -- same low-alpha transparent-glass
@@ -2723,6 +2736,7 @@
 
     <div class="hero-stack" aria-hidden="true">
       <div class="hero-stack-glow"></div>
+      <div class="hero-stack-corner-glow"></div>
       <div class="hero-stack-card hero-stack-card-1">
         <span class="hero-stack-label">Strategy</span>
         <span class="hero-stack-num">01</span>
