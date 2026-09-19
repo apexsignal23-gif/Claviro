@@ -240,7 +240,7 @@
   .hero-sub{
     max-width: 510px; margin-top: 26px;
     color: #aeb6c4;
-    font-size: clamp(19px, 1.42vw, 25px);
+    font-size: clamp(15px, 1.1vw, 17px);
     line-height: 1.42; letter-spacing: -0.025em;
   }
 
@@ -276,6 +276,16 @@
      cost anything during the brief moment the hero itself is on
      screen, not for the rest of the page's scroll distance. */
   .hero-stack{ position: relative; min-height: 410px; }
+  /* After the last size reduction the cards (a fixed ~475px-wide
+     cluster) sat well inside a much wider 58%-of-1280px column,
+     reading as centered/pushed right with a big dead gap on the far
+     right -- pulled the whole cluster left as one unit. Scoped to
+     desktop only (matches the lg: breakpoint the two-column grid
+     itself uses) since the stacked mobile layout centers this same
+     column full-width and doesn't have the same excess space. */
+  @media (min-width: 1024px){
+    .hero-stack{ margin-left: -120px; }
+  }
   .hero-stack-glow{
     position: absolute; width: 326px; height: 252px;
     right: -74px; bottom: -32px;
