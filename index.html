@@ -338,11 +338,14 @@
      straight port of the reference's own .84/.58 factors, which were
      tuned for two-column desktop, not a stacked mobile column. */
   @media (max-width: 1023px){
-    #top h1.hero-h1{ font-size: clamp(30px, 7.5vw, 44px); }
-    .hero-eyebrow{ margin-bottom: 24px; font-size: 15px; }
-    .hero-eyebrow-line{ width: 80px; }
-    .hero-sub{ margin-top: 16px; font-size: clamp(15px, 3.4vw, 18px); }
-    .hero-actions{ margin-top: 24px; }
+    #top h1.hero-h1{ font-size: clamp(26px, 6.5vw, 36px); }
+    .hero-eyebrow{ margin-bottom: 18px; font-size: 13px; }
+    .hero-eyebrow-line{ width: 60px; }
+    .hero-sub{ margin-top: 12px; font-size: clamp(13px, 3vw, 15px); }
+    .hero-actions{ margin-top: 20px; gap: 16px; }
+    .hero-btn{ height: 50px; padding: 0 26px; font-size: 14px; }
+    .hero-btn-secondary{ min-width: 0; }
+    .hero-btn-primary{ min-width: 0; }
     /* min-height shrinks along with the transform, not just the visual
        scale -- transform never affects layout/flow, so leaving the
        desktop 546px min-height here would still reserve that full
