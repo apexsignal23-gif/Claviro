@@ -1933,6 +1933,37 @@
   }
   .li-reacts{ position: relative; display: inline-flex; align-items: center; gap: .35rem; }
   .li-reacts i{ color: var(--accent-hot); font-size: .85rem; }
+  /* Reaction-emoji stack, matching real LinkedIn/Facebook posts once
+     they've picked up more than one kind of reaction: a few small
+     overlapping circular badges (like/love/celebrate) instead of a
+     single plain thumbs-up icon, per explicit request. Same idea as
+     Facebook's own reaction cluster — each badge its own reaction
+     color, a thin dark ring separating them from their neighbor (stands
+     in for LinkedIn's white ring, since this card is dark), and
+     layered with a small negative margin so they overlap left-to-right.
+     `z-index` (not DOM/paint order) decides which badge sits on top —
+     "like" (the most common, listed first) stays frontmost, matching
+     the real product's own stacking. Purely decorative (`aria-hidden`
+     on the wrapper), same as the plain icon it replaces — the reaction
+     COUNT next to it is still the one real, accessible number. */
+  .li-react-stack{ display: inline-flex; align-items: center; }
+  .li-react-badge{
+    position: relative;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 15px; height: 15px; border-radius: 50%;
+    border: 1.5px solid var(--ink-900);
+    font-size: 8px; color: #fff;
+    margin-left: -5px;
+  }
+  .li-react-badge:first-child{ margin-left: 0; }
+  .li-react-badge-like{ background: #4c6ef5; z-index: 3; }
+  .li-react-badge-love{ background: #e0245e; z-index: 2; }
+  .li-react-badge-celebrate{ background: #3fb27f; z-index: 1; }
+  /* Overrides `.li-reacts i` above (same 0-1-1 specificity, so it needs
+     the extra `.li-reacts` ancestor to win reliably regardless of
+     source order) — these icons are tiny and white-on-color, not the
+     bigger single accent-colored thumbs-up that rule was written for. */
+  .li-reacts .li-react-badge i{ font-size: 8px; color: #fff; }
   /* Reaction counts run a repeating "climb, hold, reset" cycle (see the
      IIFE near the end of the file) — a real `textContent` mutation, not
      a CSS-counter trick, so the number stays genuine, accessible,
@@ -2514,7 +2545,7 @@
               </div>
               <p class="li-text">OpenRouter is one of the most insane stories in tech. Co-founded by OpenSea founder, Alex Atallah. It has become o&hellip;more</p>
               <div class="li-stats">
-                <span class="li-reacts"><i class="ph-fill ph-thumbs-up" aria-hidden="true"></i><span class="li-reacts-num">341</span></span>
+                <span class="li-reacts"><span class="li-react-stack" aria-hidden="true"><span class="li-react-badge li-react-badge-like"><i class="ph-fill ph-thumbs-up"></i></span><span class="li-react-badge li-react-badge-love"><i class="ph-fill ph-heart"></i></span><span class="li-react-badge li-react-badge-celebrate"><i class="ph-fill ph-hands-clapping"></i></span></span><span class="li-reacts-num">341</span></span>
                 <span>54 Comments</span>
               </div>
             </article>
@@ -2530,7 +2561,7 @@
               </div>
               <p class="li-text">What actually IS an autonomous business? I started noticing the term &ldquo;autonomous business&rdquo; when Amos E&hellip;more</p>
               <div class="li-stats">
-                <span class="li-reacts"><i class="ph-fill ph-thumbs-up" aria-hidden="true"></i><span class="li-reacts-num">116</span></span>
+                <span class="li-reacts"><span class="li-react-stack" aria-hidden="true"><span class="li-react-badge li-react-badge-like"><i class="ph-fill ph-thumbs-up"></i></span><span class="li-react-badge li-react-badge-love"><i class="ph-fill ph-heart"></i></span><span class="li-react-badge li-react-badge-celebrate"><i class="ph-fill ph-hands-clapping"></i></span></span><span class="li-reacts-num">116</span></span>
                 <span>49 Comments</span>
               </div>
             </article>
@@ -2546,7 +2577,7 @@
               </div>
               <p class="li-text">I&rsquo;ve invested millions of dollars in 30+ startups. I&rsquo;ve also grown a bootstrapped business to $50M+ in ARR and $&hellip;more</p>
               <div class="li-stats">
-                <span class="li-reacts"><i class="ph-fill ph-thumbs-up" aria-hidden="true"></i><span class="li-reacts-num">332</span></span>
+                <span class="li-reacts"><span class="li-react-stack" aria-hidden="true"><span class="li-react-badge li-react-badge-like"><i class="ph-fill ph-thumbs-up"></i></span><span class="li-react-badge li-react-badge-love"><i class="ph-fill ph-heart"></i></span><span class="li-react-badge li-react-badge-celebrate"><i class="ph-fill ph-hands-clapping"></i></span></span><span class="li-reacts-num">332</span></span>
                 <span>88 Comments</span>
               </div>
             </article>
@@ -2562,7 +2593,7 @@
               </div>
               <p class="li-text">&ldquo;The truth is, tech doesn&rsquo;t have an image problem. It doesn&rsquo;t have a message problem. It has an intention problem.&rdquo;&hellip;more</p>
               <div class="li-stats">
-                <span class="li-reacts"><i class="ph-fill ph-thumbs-up" aria-hidden="true"></i><span class="li-reacts-num">828</span></span>
+                <span class="li-reacts"><span class="li-react-stack" aria-hidden="true"><span class="li-react-badge li-react-badge-like"><i class="ph-fill ph-thumbs-up"></i></span><span class="li-react-badge li-react-badge-love"><i class="ph-fill ph-heart"></i></span><span class="li-react-badge li-react-badge-celebrate"><i class="ph-fill ph-hands-clapping"></i></span></span><span class="li-reacts-num">828</span></span>
                 <span>113 Comments</span>
               </div>
             </article>
@@ -2578,7 +2609,7 @@
               </div>
               <p class="li-text">The people confidently saying &ldquo;AI will replace engineers&rdquo; have clearly never shipped software to real users.</p>
               <div class="li-stats">
-                <span class="li-reacts"><i class="ph-fill ph-thumbs-up" aria-hidden="true"></i><span class="li-reacts-num">318</span></span>
+                <span class="li-reacts"><span class="li-react-stack" aria-hidden="true"><span class="li-react-badge li-react-badge-like"><i class="ph-fill ph-thumbs-up"></i></span><span class="li-react-badge li-react-badge-love"><i class="ph-fill ph-heart"></i></span><span class="li-react-badge li-react-badge-celebrate"><i class="ph-fill ph-hands-clapping"></i></span></span><span class="li-reacts-num">318</span></span>
                 <span>94 Comments</span>
               </div>
             </article>
@@ -2594,7 +2625,7 @@
               </div>
               <p class="li-text">2 things happened in the past 3 days that are worth reflecting on, especially if you&rsquo;re someone who thinks AI is over-hyped or have constructed a worldview where you feel safe ignoring AI develop&hellip;more</p>
               <div class="li-stats">
-                <span class="li-reacts"><i class="ph-fill ph-thumbs-up" aria-hidden="true"></i><span class="li-reacts-num">584</span></span>
+                <span class="li-reacts"><span class="li-react-stack" aria-hidden="true"><span class="li-react-badge li-react-badge-like"><i class="ph-fill ph-thumbs-up"></i></span><span class="li-react-badge li-react-badge-love"><i class="ph-fill ph-heart"></i></span><span class="li-react-badge li-react-badge-celebrate"><i class="ph-fill ph-hands-clapping"></i></span></span><span class="li-reacts-num">584</span></span>
                 <span>76 Comments</span>
               </div>
             </article>
