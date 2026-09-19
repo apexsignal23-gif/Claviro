@@ -312,20 +312,20 @@
   /* Outer card: position, size, rotation only -- no background and no
      overflow of its own. The actual glass tint lives on
      .hero-stack-card-inner below. Keeping THIS element free of
-     overflow:hidden is what lets ::before (the border ring) bleed past
-     the card's own edge, and lets a filter: drop-shadow on the card
-     itself (see cards 2/3 below) bleed too -- every earlier attempt at
-     a bleeding glow got clipped invisible because it lived on a
-     descendant of an overflow:hidden element (the card used to carry
-     background/overflow/border-ring/glow all in one place). A manually
-     positioned separate glow shape (tried right before this) turned out
-     too fragile to eyeball correctly under the card's own 3D transform;
-     filter: drop-shadow instead automatically hugs whatever the card
-     actually renders (mainly the bright corner of the ring below, since
-     everything else on the card is low-alpha glass), so there's no
-     position math to get wrong. --glow-x/--glow-y drive the border
-     ring's hot spot and are plain custom properties so any card can
-     move its own corner light with just one declaration. */
+     overflow:hidden is what lets ::before (the border ring)'s own
+     filter: drop-shadow (see cards 2/3's ::before overrides) bleed past
+     the card's edge -- every earlier attempt at a bleeding glow got
+     clipped invisible because it lived on a descendant of an
+     overflow:hidden element (the card used to carry background/
+     overflow/border-ring/glow all in one place, before this split).
+     Important: the drop-shadow has to go on ::before specifically, NOT
+     on .hero-stack-card itself -- putting it on the whole card made the
+     glow hug the card's full translucent-glass silhouette (a big glowing
+     BOX), because that fill is still opaque enough for the filter to
+     pick up. ::before renders nothing but the thin ring (transparent
+     center, via the padding+mask-composite:exclude technique below), so
+     a drop-shadow on it only ever hugs that thin ring shape -- bright at
+     the --glow-x/--glow-y corner, faint elsewhere, never the box. */
   .hero-stack-card{
     position: absolute; width: 435px; height: 272px; border-radius: 18px;
     --glow-x: 100%; --glow-y: 0%;
@@ -396,6 +396,8 @@
     top: 155px; left: 119px; z-index: 2;
     --glow-x: 100%; --glow-y: 0%;
     box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 22px 43px rgba(0,0,0,.18);
+  }
+  .hero-stack-card-2::before{
     filter: drop-shadow(0 0 6px rgba(150,190,255,.9)) drop-shadow(0 0 16px rgba(110,165,255,.7)) drop-shadow(0 0 34px rgba(80,140,255,.5));
   }
   .hero-stack-card-2 .hero-stack-card-inner{
@@ -409,6 +411,8 @@
     top: 294px; left: 221px; z-index: 3;
     --glow-x: 100%; --glow-y: 0%;
     box-shadow: inset 0 0 0 1px rgba(186,200,239,.28), 0 22px 48px rgba(0,0,0,.2);
+  }
+  .hero-stack-card-3::before{
     filter: drop-shadow(0 0 5px rgba(140,180,255,.75)) drop-shadow(0 0 13px rgba(105,155,255,.55)) drop-shadow(0 0 28px rgba(80,135,255,.4));
   }
   .hero-stack-card-3 .hero-stack-card-inner{
