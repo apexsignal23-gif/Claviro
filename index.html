@@ -238,30 +238,36 @@
   }
 
   .hero-sub{
-    max-width: 510px; margin-top: 26px;
+    max-width: 440px; margin-top: 26px;
     color: #aeb6c4;
     font-size: clamp(15px, 1.1vw, 17px);
     line-height: 1.42; letter-spacing: -0.025em;
   }
 
   .hero-actions{ display: flex; flex-wrap: wrap; gap: 26px; margin-top: 44px; }
+  /* Sized to a supplied reference screenshot showing both buttons small
+     and side-by-side -- no forced min-width (unlike the reference
+     file's original 232px/216px), so width just follows content. Kept
+     as one universal size for every breakpoint instead of a separate
+     larger desktop size, since that mismatch (small on mobile, still
+     66px/38px padding on desktop) was never asked for. */
   .hero-btn{
-    height: 66px; padding: 0 38px;
+    height: 48px; padding: 0 24px;
     display: inline-flex; align-items: center; justify-content: center;
     border-radius: 999px; text-decoration: none;
-    font-size: 17px; font-weight: 500; white-space: nowrap;
+    font-size: 14px; font-weight: 500; white-space: nowrap;
     transition: transform .3s ease;
   }
   .hero-btn:hover{ transform: translateY(-2px); }
   .hero-btn:active{ transform: translateY(0) scale(.98); }
   .hero-btn-secondary{
-    min-width: 232px; color: #f2f3f6;
+    color: #f2f3f6;
     border: 1px solid rgba(180,188,200,.28);
     background: rgba(16,19,24,.3);
     box-shadow: inset 0 0 0 1px rgba(255,255,255,.015);
   }
   .hero-btn-primary{
-    min-width: 216px; color: #07101d; font-weight: 600;
+    color: #07101d; font-weight: 600;
     background: linear-gradient(135deg, #90aaff 0%, #7e9dff 52%, #718ef8 100%);
     box-shadow: 0 12px 34px rgba(72,98,229,.18), inset 0 1px 0 rgba(255,255,255,.25);
   }
@@ -276,16 +282,6 @@
      cost anything during the brief moment the hero itself is on
      screen, not for the rest of the page's scroll distance. */
   .hero-stack{ position: relative; min-height: 410px; }
-  /* After the last size reduction the cards (a fixed ~475px-wide
-     cluster) sat well inside a much wider 58%-of-1280px column,
-     reading as centered/pushed right with a big dead gap on the far
-     right -- pulled the whole cluster left as one unit. Scoped to
-     desktop only (matches the lg: breakpoint the two-column grid
-     itself uses) since the stacked mobile layout centers this same
-     column full-width and doesn't have the same excess space. */
-  @media (min-width: 1024px){
-    .hero-stack{ margin-left: -120px; }
-  }
   .hero-stack-glow{
     position: absolute; width: 326px; height: 252px;
     right: -74px; bottom: -32px;
@@ -344,9 +340,6 @@
     #top h1.hero-h1{ font-size: clamp(26px, 6.5vw, 36px); }
     .hero-sub{ margin-top: 12px; font-size: clamp(12px, 2.6vw, 13px); }
     .hero-actions{ margin-top: 20px; gap: 12px; }
-    .hero-btn{ height: 42px; padding: 0 18px; font-size: 12.5px; }
-    .hero-btn-secondary{ min-width: 0; }
-    .hero-btn-primary{ min-width: 0; }
     /* min-height shrinks along with the transform, not just the visual
        scale -- transform never affects layout/flow, so leaving the
        desktop 546px min-height here would still reserve that full
