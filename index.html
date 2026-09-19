@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="preconnect" href="https://api.fontshare.com" />
 <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,600,500,400&display=swap" rel="stylesheet" />
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@600;700;800&family=Sora:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
 
 <!-- Icons: Phosphor -->
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
@@ -201,22 +201,11 @@
      own hero, "Product videos that just work") -- a lighter weight and
      tighter tracking than every other section's .hero-h1 (which stays
      at the usual 600 sitewide), just for this one headline, to match
-     that lighter/cleaner look. NOT the same font file: mzmedia sets
-     theirs in Sherika, a commercial webfont they self-host a purchased
-     .otf file for -- reusing that specific file on a different paying
-     client's site would very likely violate its license. Sora (free,
-     Google Fonts, SIL Open Font License) swapped in here instead as the
-     closest-shape free match -- same rounded, geometric, friendly-SaaS
-     character as Sherika, at a weight this stylesheet actually loads
-     (previous version left this at font-weight:500 with no matching
-     500 in the Manrope @import above, so it was silently snapping to
-     whatever weight the browser had on hand -- fixed by requesting
-     Sora 400/500/600 directly). */
-  #top h1.hero-h1{
-    font-family: 'Sora', 'Manrope', 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-  }
+     that lighter/cleaner look. Font-family reverted 2026-09-19 back to
+     the shared .hero-h1 stack (Manrope) per explicit request -- the
+     Sora swap tried above was undone; NOT a font swap, just weight/
+     tracking on the existing Manrope stack. */
+  #top h1.hero-h1{ font-weight: 500; letter-spacing: -0.02em; }
 
   /* Blue gradient (originally a gray-to-white sheen matching
      consulting.com's hero treatment, replaced 2026-08-25) — colors picked
