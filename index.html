@@ -1663,48 +1663,57 @@
        track with just 2 cards in it. */
     .pricing-cards{ grid-template-columns: repeat(2, 1fr); align-items: stretch; }
   }
+  /* Pricing card shell RESTYLED 2026-09-19 to match mzmedia.digital's
+     own pricing section (curled their live HTML/CSS via curl, not
+     guessed from a screenshot — see their .pricing-card/.button-03/
+     .list-item rules) per explicit request: keep every actual detail
+     (Core/Studio names, durations, feature lists, Apply buttons, the
+     Most Popular badge) exactly as-is, only restyle the shell around
+     them. Their whole aesthetic hinges on 3 things this rewrite
+     reproduces: (1) NEAR-SQUARE corners (their border-radius token is a
+     flat 3px, not a soft rounded card — used everywhere: card, button,
+     badge alike) instead of this site's usual generous rounding, (2) a
+     flat/transparent fill with just a thin inset white ring for a
+     border (`box-shadow: inset 0 0 0 1px #ffffff1f`) instead of a
+     gradient-filled card, and (3) one seamless surface, not a nested
+     "glass panel" header sitting inside the card — `.pc-header` here
+     drops its own background/border/sheen entirely and becomes a plain
+     layout wrapper, so the whole card reads as one flat plane exactly
+     like theirs. */
   .pricing-card{
-    background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
-    border: 1px solid var(--ink-border);
-    border-radius: 24px;
-    box-shadow: var(--shadow-card);
-    padding: .5rem;
+    background: rgba(255,255,255,.02);
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
+    padding: 2rem 1.75rem;
     display: flex;
     flex-direction: column;
   }
   .pricing-card-popular{
-    border-color: rgba(143,168,255,.35);
-    box-shadow: 0 0 0 1px rgba(143,168,255,.12), var(--shadow-card);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.28);
   }
-  .pc-header{
-    position: relative;
-    overflow: hidden;
-    background: rgba(255,255,255,.03);
-    border: 1px solid var(--ink-border);
-    border-radius: 18px;
-    padding: 1.5rem 1.5rem 1.75rem;
-  }
-  .pc-header::before{
-    content: '';
-    position: absolute; inset: 0 0 auto 0; height: 6rem;
-    background: linear-gradient(180deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,.02) 55%, transparent 100%);
-    pointer-events: none;
-  }
+  .pc-header{ position: relative; }
   .pc-plan-row{ position: relative; display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
   .pc-plan-name{ display: flex; align-items: center; gap: .55rem; font-weight: 700; font-size: 1.05rem; letter-spacing: -.01em; color: var(--cream); }
   .pc-plan-name i{ font-size: 1.15rem; color: var(--accent-hot); }
   .pc-badge{
     font-size: .72rem; font-weight: 600; letter-spacing: .02em;
     color: var(--accent-hot);
-    border: 1px solid rgba(143,168,255,.4);
+    box-shadow: inset 0 0 0 1px rgba(143,168,255,.4);
     background: rgba(143,168,255,.08);
     padding: .25rem .65rem;
-    border-radius: 999px;
+    border-radius: 4px;
     white-space: nowrap;
   }
   .pc-duration{ position: relative; margin-top: .35rem; font-size: .82rem; color: var(--cream-dim); }
   .pc-price-row{ position: relative; margin-top: 1.4rem; display: flex; align-items: flex-end; gap: .35rem; }
-  .pc-price{ font-family: 'Manrope', sans-serif; font-size: 2.1rem; font-weight: 800; letter-spacing: -.03em; color: var(--cream); line-height: 1; }
+  /* Subtle white-to-grey gradient text on the price, matching
+     mzmedia's own `.pricing-price` (background-clip:text) rather than
+     a flat solid fill — a small metallic sheen, not a color change. */
+  .pc-price{
+    font-family: 'Manrope', sans-serif; font-size: 2.1rem; font-weight: 800; letter-spacing: -.03em; line-height: 1;
+    background-image: linear-gradient(90deg, #fff, #9aa3ad);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
   .pc-period{ padding-bottom: .2rem; font-size: .92rem; color: var(--cream-dim); }
   .pc-btn{
     position: relative;
@@ -1712,22 +1721,34 @@
     margin-top: 1.5rem;
     width: 100%;
     padding: .8rem 1rem;
-    border-radius: 999px;
+    border-radius: 6px;
     font-weight: 600; font-size: .92rem;
     white-space: nowrap;
     touch-action: manipulation;
-    transition: transform .35s var(--ease-spring), box-shadow .35s var(--ease-spring), background-color .35s var(--ease-spring), border-color .35s var(--ease-spring), filter .35s var(--ease-spring);
+    transition: transform .35s var(--ease-spring), box-shadow .35s var(--ease-spring), background-color .35s var(--ease-spring), filter .35s var(--ease-spring);
   }
   .pc-btn-solid{ background: var(--accent-hot); color: var(--ink-950); box-shadow: var(--shadow-btn); }
   .pc-btn-solid:hover{ transform: translateY(-2px); box-shadow: var(--shadow-btn-hover); filter: brightness(1.04); }
   .pc-btn-solid:active{ transform: translateY(0) scale(.98); box-shadow: var(--shadow-btn); }
-  .pc-btn-outline{ background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.15); color: var(--cream); }
-  .pc-btn-outline:hover{ border-color: rgba(255,255,255,.3); background: rgba(255,255,255,.06); transform: translateY(-2px); }
+  .pc-btn-outline{ background: transparent; box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); color: var(--cream); }
+  .pc-btn-outline:hover{ box-shadow: inset 0 0 0 1px rgba(255,255,255,.35); background: rgba(255,255,255,.05); transform: translateY(-2px); }
   .pc-btn-outline:active{ transform: translateY(0) scale(.98); }
   .pc-btn:focus-visible{ outline: 2px solid var(--accent-hot); outline-offset: 2px; }
-  .pc-features{ display: grid; gap: .85rem; padding: 1.35rem 1.1rem 1rem; }
+  /* "Package Includes" label, matching mzmedia's own caption above
+     their feature checklist. */
+  .pc-features-label{ margin-top: 1.6rem; font-size: .72rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.4); }
+  .pc-features{ display: grid; gap: .85rem; margin-top: .85rem; padding: 0; }
   .pc-features li{ display: flex; align-items: flex-start; gap: .65rem; font-size: .88rem; line-height: 1.55; color: var(--cream-dim); }
-  .pc-features li i{ font-size: 1.05rem; color: var(--accent); margin-top: .15rem; flex-shrink: 0; }
+  /* Small plain checkmark, not the bolder filled accent-colored circle
+     this site used before — closer to the thin, muted check icon
+     mzmedia's own list items use. */
+  .pc-features li i{
+    flex-shrink: 0; margin-top: .2rem;
+    width: 15px; height: 15px; font-size: .68rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.2);
+    color: rgba(255,255,255,.55);
+  }
 
   /* Industry Standard: sticky-stack scroll reveal, reverse-engineered from
      contentfloww.com's own "Podcast trailers" section (curled their live
@@ -3359,20 +3380,21 @@
           <p class="pc-duration">3 months</p>
           <a href="#cta" class="pc-btn pc-btn-solid">Apply</a>
         </div>
+        <p class="pc-features-label">Package Includes</p>
         <ul class="pc-features">
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Tailored Strategy &amp; Roadmap</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>60 Produced Content</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Repeatable Pre-Production System</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Repurposing Existing Materials</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Designed Around a Single Founder or Executive</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Built Around LinkedIn</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Scheduling</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Video Content</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Weekly Ideation</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Bi-Weekly Checkins</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Monthly Performance Report</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Upcoming Month Optimization</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Made for Early to Mid-Stage Companies</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Tailored Strategy &amp; Roadmap</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>60 Produced Content</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Repeatable Pre-Production System</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Repurposing Existing Materials</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Designed Around a Single Founder or Executive</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Built Around LinkedIn</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Scheduling</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Video Content</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Weekly Ideation</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Bi-Weekly Checkins</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Monthly Performance Report</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Upcoming Month Optimization</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Made for Early to Mid-Stage Companies</li>
         </ul>
       </div>
 
@@ -3384,22 +3406,23 @@
           <p class="pc-duration">6 months+</p>
           <a href="#cta" class="pc-btn pc-btn-outline">Apply</a>
         </div>
+        <p class="pc-features-label">Package Includes</p>
         <ul class="pc-features">
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Everything in Core</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>120+ Produced Content</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Dedicated Creative Team</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Dedicated Success Manager</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Podcast Production</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Shooting Direction</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Custom Analytics Dashboard</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Multi-Executive Content</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Multi-Platform Expansion (6 Core Channels)</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Long-Form Content</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Mass Distribution (Clipping)</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Repeatable Post-Production System</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Priority Production &amp; Turnaround</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Access to Creative Strategies of Companies We&rsquo;ve Worked With</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Made for Late-Stage Companies</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Everything in Core</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>120+ Produced Content</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Dedicated Creative Team</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Dedicated Success Manager</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Podcast Production</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Shooting Direction</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Custom Analytics Dashboard</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Multi-Executive Content</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Multi-Platform Expansion (6 Core Channels)</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Long-Form Content</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Mass Distribution (Clipping)</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Repeatable Post-Production System</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Priority Production &amp; Turnaround</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Access to Creative Strategies of Companies We&rsquo;ve Worked With</li>
+          <li><i class="ph-bold ph-check" aria-hidden="true"></i>Made for Late-Stage Companies</li>
         </ul>
       </div>
 
