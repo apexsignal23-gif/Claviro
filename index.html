@@ -1936,16 +1936,6 @@
   .li-meta{ margin-top: 1px; display: flex; align-items: center; gap: .3rem; font-size: .68rem; color: var(--cream-dimmer); }
   .li-meta i{ font-size: .75rem; }
   .li-brand{ flex: none; font-size: 1.15rem; color: #0a66c2; margin-top: 2px; }
-  /* "+ Follow" (Pages show Follow, not the plain "in" brand mark
-     person-posts use) + the "…" overflow-menu icon beside it. */
-  .li-follow{
-    flex: none; display: inline-flex; align-items: center; gap: .2rem;
-    font-size: .78rem; font-weight: 700; color: #57a3f2;
-    transition: color .2s var(--ease-spring);
-  }
-  .li-follow:hover, .li-follow:focus-visible{ color: #7fbaf5; }
-  .li-follow:active{ color: #4a8fd6; }
-  .li-more{ flex: none; margin-top: .2rem; font-size: .85rem; color: var(--cream-dimmer); }
   .li-text{
     font-size: .78rem; line-height: 1.5; color: var(--cream-dim);
     display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
@@ -2580,8 +2570,7 @@
                   <p class="li-name">ClickUp <i class="ph-fill ph-seal-check li-verified" aria-hidden="true"></i></p>
                   <p class="li-meta">2mo <i class="ph-fill ph-globe-hemisphere-west" aria-hidden="true"></i></p>
                 </div>
-                <a href="#" class="li-follow">+ Follow</a>
-                <i class="ph-bold ph-dots-three li-more" aria-hidden="true"></i>
+                <i class="ph-fill ph-linkedin-logo li-brand" aria-hidden="true"></i>
               </div>
               <p class="li-text">The world&rsquo;s first Company Brain just dropped. Meet Brain&sup2; 👇<br><br>🧠 Every model, one price: Brain&sup2; picks the best AI for the job, with full&hellip;more</p>
               <div class="li-stats">
