@@ -330,18 +330,32 @@
     background: linear-gradient(135deg, rgba(35,43,57,.74) 0%, rgba(24,31,43,.68) 50%, rgba(37,58,116,.82) 100%);
     box-shadow: inset 0 0 0 1px rgba(186,200,239,.28), 0 21px 46px rgba(0,0,0,.2), 21px 14px 63px rgba(68,92,208,.13);
   }
-  /* Scale-down factors recalibrated for the smaller 2026-09-19 base
-     size above (the reference file's own .84/.58 were tuned for the
-     original, larger 600px-wide card -- applied unchanged on top of an
-     already-shrunk base they'd make mobile card labels unreadably
-     tiny). */
-  @media (max-width: 1200px){
-    .hero-stack{ transform: scale(.95); transform-origin: top center; }
+  /* Below 1024px the grid stacks to one column (see the lg:grid-cols
+     class on the wrapper) -- text and cards then share vertical space
+     sequentially instead of side-by-side, so a mild scale-down wasn't
+     enough; total page height was still "very big" per direct
+     feedback. Both tiers below are noticeably more aggressive than a
+     straight port of the reference's own .84/.58 factors, which were
+     tuned for two-column desktop, not a stacked mobile column. */
+  @media (max-width: 1023px){
+    #top h1.hero-h1{ font-size: clamp(38px, 9vw, 56px); }
+    .hero-eyebrow{ margin-bottom: 24px; }
+    .hero-sub{ margin-top: 16px; }
+    .hero-actions{ margin-top: 24px; }
+    /* min-height shrinks along with the transform, not just the visual
+       scale -- transform never affects layout/flow, so leaving the
+       desktop 546px min-height here would still reserve that full
+       height in the page's scroll flow even though the stack RENDERS
+       smaller, i.e. the exact "still very big" complaint this is
+       fixing. Cards are absolutely positioned inside, so a smaller
+       min-height on this box doesn't clip or reflow them -- it only
+       changes how much scroll space the box itself reserves. */
+    .hero-stack{ min-height: 340px; transform: scale(.62); transform-origin: top left; width: 630px; }
   }
-  @media (max-width: 720px){
-    .hero-stack{ transform: scale(.8); transform-origin: top left; width: 630px; margin-left: 14px; }
+  @media (max-width: 480px){
     .hero-actions{ flex-direction: column; align-items: stretch; max-width: 320px; }
     .hero-btn{ width: 100%; }
+    .hero-stack{ min-height: 250px; transform: scale(.46); }
   }
 
   /* Blue gradient (originally a gray-to-white sheen matching
@@ -2628,7 +2642,7 @@
 <section id="top" class="relative w-full overflow-hidden">
   <span id="top-content" class="sr-only"></span>
 
-  <div class="relative z-10 mx-auto max-w-[1280px] min-h-[100dvh] grid grid-cols-1 lg:grid-cols-[42%_58%] gap-10 lg:gap-0 py-16 sm:py-20 lg:py-24 items-center">
+  <div class="relative z-10 mx-auto max-w-[1280px] min-h-[100dvh] grid grid-cols-1 lg:grid-cols-[42%_58%] gap-6 lg:gap-0 py-16 sm:py-20 lg:py-24 items-center">
     <div class="hero-copy px-6 sm:px-10 lg:px-0" style="padding-left: max(1.5rem, 6.15vw);">
       <p class="hero-eyebrow"><span>01</span><span class="hero-eyebrow-line"></span></p>
 
