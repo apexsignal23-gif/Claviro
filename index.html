@@ -129,26 +129,41 @@
   /* One continuous backdrop for the whole page instead of 14 identical
      flat fills repeated per-section (which is where "pure black, zero
      depth" reads as generic/AI-flat). Three layers, all anchored to the
-     viewport via background-attachment:fixed so nothing repeats or
-     seams as sections scroll past: a fine dot-grid for structure (a
-     SaaS-dashboard texture, not a flashy effect), a primary ambient
-     glow top-center, and a second, softer glow bottom-right for
-     asymmetry — both the same accent hue (one accent color, not a
-     multi-color "AI gradient"). Individual <section> elements no
-     longer paint their own background over this. */
+     viewport via a fixed-position pseudo-element (see body::before
+     below) so nothing repeats or seams as sections scroll past: a fine
+     dot-grid for structure (a SaaS-dashboard texture, not a flashy
+     effect), a primary ambient glow top-center, and a second, softer
+     glow bottom-right for asymmetry — both the same accent hue (one
+     accent color, not a multi-color "AI gradient"). Individual
+     <section> elements no longer paint their own background over this. */
   body{
-    background:
-      radial-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
-      radial-gradient(120% 55% at 50% 0%, rgba(76,110,245,.08), transparent 62%),
-      radial-gradient(70% 45% at 88% 105%, rgba(76,110,245,.05), transparent 60%),
-      var(--ink-950);
-    background-size: 28px 28px, auto, auto;
-    background-repeat: repeat, no-repeat, no-repeat;
-    background-attachment: fixed;
+    background: var(--ink-950);
     color: var(--cream);
     font-family: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;
+  }
+  /* FIX 2026-09-19: this used to be background-attachment:fixed directly
+     on body. That property makes the browser repaint the whole gradient
+     stack on every scroll frame instead of letting the compositor just
+     re-use a cached layer -- on a page this long that alone reads as
+     permanent scroll jank, independent of the nav/.d90-box
+     backdrop-filter cost fixed elsewhere today. A plain position:fixed
+     element behind the content produces the identical "anchored to the
+     viewport, never scrolls" look but gets its own GPU-composited
+     layer, so scrolling no longer repaints it at all. */
+  body::before{
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+      radial-gradient(120% 55% at 50% 0%, rgba(76,110,245,.08), transparent 62%),
+      radial-gradient(70% 45% at 88% 105%, rgba(76,110,245,.05), transparent 60%);
+    background-size: 28px 28px, auto, auto;
+    background-repeat: repeat, no-repeat, no-repeat;
   }
 
   .skip-link{
