@@ -220,8 +220,13 @@
     pointer-events: none;
   }
 
+  /* Scaled down 2026-09-19 (~0.7x) from the reference file's literal
+     72/106px clamp -- faithful to the source made the whole hero read
+     as oversized on an actual screen, so heading + card stack (the two
+     dominant "huge" elements) both shrink by the same factor together,
+     keeping their relative proportions intact. */
   #top h1.hero-h1{
-    font-size: clamp(72px, 6.3vw, 106px);
+    font-size: clamp(50px, 4.4vw, 74px);
     line-height: .94;
     letter-spacing: -0.055em;
     font-weight: 620;
@@ -268,67 +273,73 @@
     box-shadow: 0 12px 34px rgba(72,98,229,.18), inset 0 1px 0 rgba(255,255,255,.25);
   }
 
-  /* Card stack: fixed px (600x375), not fluid -- matches the reference
-     exactly, which scales the whole stack down as one unit at smaller
-     widths (see the two @media blocks below) rather than resizing each
-     card. backdrop-filter is back here deliberately, unlike the fixed
+  /* Card stack: fixed px (420x263, ~0.7x the reference file's literal
+     600x375 -- see the heading comment above), not fluid. Scales the
+     whole stack down as one unit at smaller widths (see the two @media
+     blocks below) rather than resizing each card individually.
+     backdrop-filter is back here deliberately, unlike the fixed
      nav/.d90-box cases fixed earlier today: these cards scroll away
      with the page instead of staying pinned on screen, so they only
      cost anything during the brief moment the hero itself is on
      screen, not for the rest of the page's scroll distance. */
-  .hero-stack{ position: relative; min-height: 780px; }
+  .hero-stack{ position: relative; min-height: 546px; }
   .hero-stack-glow{
-    position: absolute; width: 620px; height: 480px;
-    right: -140px; bottom: -60px;
+    position: absolute; width: 434px; height: 336px;
+    right: -98px; bottom: -42px;
     background: radial-gradient(circle, rgba(64,86,196,.2), transparent 67%);
-    filter: blur(38px); pointer-events: none;
+    filter: blur(27px); pointer-events: none;
   }
   .hero-stack-card{
-    position: absolute; width: 600px; height: 375px;
-    border-radius: 24px; overflow: hidden;
+    position: absolute; width: 420px; height: 263px;
+    border-radius: 17px; overflow: hidden;
     transform: rotate(-10.5deg);
-    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 30px 60px rgba(0,0,0,.18);
+    backdrop-filter: blur(13px); -webkit-backdrop-filter: blur(13px);
+    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 21px 42px rgba(0,0,0,.18);
   }
   .hero-stack-card::before{
-    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.7px;
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.2px;
     background: linear-gradient(115deg, rgba(234,240,255,.88) 0%, rgba(174,192,236,.46) 36%, rgba(100,129,255,.78) 72%, rgba(96,130,255,.32) 100%);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor; mask-composite: exclude;
     pointer-events: none;
   }
   .hero-stack-card::after{
-    content: ""; position: absolute; width: 390px; height: 390px;
-    right: -120px; bottom: -180px; border-radius: 50%;
+    content: ""; position: absolute; width: 273px; height: 273px;
+    right: -84px; bottom: -126px; border-radius: 50%;
     background: radial-gradient(circle, rgba(71,99,220,.22), transparent 67%);
-    filter: blur(5px);
+    filter: blur(4px);
   }
   .hero-stack-label{
-    position: absolute; left: 72px; top: 115px;
-    font-size: 26px; font-weight: 480; color: #ecf0f8; letter-spacing: -0.03em;
+    position: absolute; left: 50px; top: 81px;
+    font-size: 18px; font-weight: 480; color: #ecf0f8; letter-spacing: -0.03em;
   }
   .hero-stack-num{
-    position: absolute; right: 36px; top: 31px;
-    color: rgba(154,169,205,.6); font-size: 21px; font-weight: 400;
+    position: absolute; right: 25px; top: 22px;
+    color: rgba(154,169,205,.6); font-size: 15px; font-weight: 400;
   }
   .hero-stack-card-1{
-    top: 46px; left: 35px; z-index: 1;
+    top: 32px; left: 25px; z-index: 1;
     background: linear-gradient(135deg, rgba(31,38,49,.65) 0%, rgba(18,23,31,.55) 56%, rgba(17,31,66,.62) 100%);
   }
   .hero-stack-card-2{
-    top: 214px; left: 164px; z-index: 2;
+    top: 150px; left: 115px; z-index: 2;
     background: linear-gradient(135deg, rgba(31,38,48,.67) 0%, rgba(22,27,35,.62) 52%, rgba(24,39,78,.68) 100%);
   }
   .hero-stack-card-3{
-    top: 405px; left: 304px; z-index: 3;
+    top: 284px; left: 213px; z-index: 3;
     background: linear-gradient(135deg, rgba(35,43,57,.74) 0%, rgba(24,31,43,.68) 50%, rgba(37,58,116,.82) 100%);
-    box-shadow: inset 0 0 0 1px rgba(186,200,239,.28), 0 30px 65px rgba(0,0,0,.2), 30px 20px 90px rgba(68,92,208,.13);
+    box-shadow: inset 0 0 0 1px rgba(186,200,239,.28), 0 21px 46px rgba(0,0,0,.2), 21px 14px 63px rgba(68,92,208,.13);
   }
+  /* Scale-down factors recalibrated for the smaller 2026-09-19 base
+     size above (the reference file's own .84/.58 were tuned for the
+     original, larger 600px-wide card -- applied unchanged on top of an
+     already-shrunk base they'd make mobile card labels unreadably
+     tiny). */
   @media (max-width: 1200px){
-    .hero-stack{ transform: scale(.84); transform-origin: top center; }
+    .hero-stack{ transform: scale(.95); transform-origin: top center; }
   }
   @media (max-width: 720px){
-    .hero-stack{ transform: scale(.58); transform-origin: top left; width: 900px; margin-left: 14px; }
+    .hero-stack{ transform: scale(.8); transform-origin: top left; width: 630px; margin-left: 14px; }
     .hero-actions{ flex-direction: column; align-items: stretch; max-width: 320px; }
     .hero-btn{ width: 100%; }
   }
@@ -2617,7 +2628,7 @@
 <section id="top" class="relative w-full overflow-hidden">
   <span id="top-content" class="sr-only"></span>
 
-  <div class="relative z-10 mx-auto grid grid-cols-1 lg:grid-cols-[42%_58%] gap-16 lg:gap-0 py-28 sm:py-32 lg:py-40 items-start">
+  <div class="relative z-10 mx-auto grid grid-cols-1 lg:grid-cols-[42%_58%] gap-10 lg:gap-0 py-16 sm:py-20 lg:py-24 items-start">
     <div class="hero-copy px-6 sm:px-10 lg:px-0" style="padding-left: max(1.5rem, 6.15vw);">
       <p class="hero-eyebrow"><span>01</span><span class="hero-eyebrow-line"></span></p>
 
