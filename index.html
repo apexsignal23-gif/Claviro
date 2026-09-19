@@ -182,6 +182,17 @@
      somewhere). .text-shine's gradient fill is untouched by this — it's
      purely a font swap, color treatment stays as it was per heading. */
   .hero-h1{ font-family: 'Manrope', 'Inter Tight', ui-sans-serif, system-ui, sans-serif; font-weight: 600; }
+  /* Hero H1 specifically, per an explicit reference (mzmedia.digital's
+     own hero, "Product videos that just work") -- a lighter weight and
+     tighter tracking than every other section's .hero-h1 (which stays
+     at the usual 600 sitewide), just for this one headline, to match
+     that lighter/cleaner look. NOT a font swap: mzmedia sets theirs in
+     Sherika, a commercial webfont they self-host a purchased .otf
+     file for -- reusing that specific file on a different paying
+     client's site would very likely violate its license, so this
+     approximates the same weight/spacing character in the fonts this
+     site already has rights to use instead. */
+  #top h1.hero-h1{ font-weight: 500; letter-spacing: -0.02em; }
 
   /* Blue gradient (originally a gray-to-white sheen matching
      consulting.com's hero treatment, replaced 2026-08-25) — colors picked
@@ -766,30 +777,33 @@
   /* Liquid-glass treatment, per explicit request to match `#nav-chrome`'s
      frosted-header look (see that CSS comment for the full technique
      writeup — this is the same recipe, just reused on these 3 boxes
-     instead of the nav): a soft corner sheen (radial-gradient) layered
-     over a vertical glass-tint gradient, backdrop blur/saturate for the
-     "frost", and a bright inset top edge + dim inset bottom edge to read
-     as a curved glass rim — all replacing the plain flat `var(--ink-900)`
-     fill `.card` gives every other box on the page. Scoped to `.d90-box`
-     specifically (not the shared `.card` class itself), so this doesn't
-     ripple out to Mirror/Pricing/Testimonials/etc, which all stay flat.
+     instead of the nav) — MINUS the actual blur now (see the FIX
+     comment right below for why): a soft corner sheen (radial-gradient)
+     layered over a vertical glass-tint gradient, and a bright inset top
+     edge + dim inset bottom edge to read as a curved glass rim, over a
+     near-solid fill instead of a frosted backdrop-filter — all still
+     replacing the plain flat `var(--ink-900)` fill `.card` gives every
+     other box on the page. Scoped to `.d90-box` specifically (not the
+     shared `.card` class itself), so this doesn't ripple out to Mirror/
+     Pricing/Testimonials/etc, which all stay flat.
      Selector is `.card.d90-box`, not plain `.d90-box` — the generic
      `.card` rule (background/border/box-shadow) is declared LATER in
      this stylesheet, and at equal specificity a later same-specificity
      rule wins regardless of which one is "more specific to the
      component"; the compound selector's higher specificity (0,0,2,0 vs
      `.card`'s 0,0,1,0) is what actually guarantees this wins, not
-     source order. Needs backdrop-filter support (all modern evergreen
-     browsers); falls back to the semi-opaque base fill on older ones,
-     which still reads fine, just without blur. */
+     source order. */
+  /* FIX 2026-09-19: backdrop-filter:blur removed here too, same reason
+     as `#nav-chrome` -- 3 large blurred boxes stacked down a scrolling
+     section is real, meaningful compositing cost on every frame while
+     they're anywhere near the viewport. Base fill bumped from .5 to
+     .94 opacity to compensate (see the `#nav-chrome` comment for why). */
   .card.d90-box{
     min-height: 19rem; display: flex; flex-direction: column; justify-content: center;
     background:
       radial-gradient(120% 160% at 12% -20%, rgba(255,255,255,.12), transparent 55%),
       linear-gradient(180deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,.02) 45%, rgba(8,8,8,.35) 100%),
-      rgba(16,16,16,.5);
-    -webkit-backdrop-filter: blur(22px) saturate(180%);
-    backdrop-filter: blur(22px) saturate(180%);
+      rgba(16,16,16,.94);
     border-color: rgba(255,255,255,.14);
     box-shadow:
       var(--shadow-card),
@@ -2134,26 +2148,35 @@
      order, without touching .nav-link itself. */
   #nav-chrome .nav-link, #nav-chrome .nav-link:hover{ color: #fff; }
 
-  /* Liquid-glass header: translucent frosted panel over blurred page
-     content instead of the old solid #141414 fill — a soft corner sheen
+  /* Liquid-glass header, MINUS the actual blur (see the FIX comment
+     right above the rule below for why) — a soft corner sheen
      (radial-gradient, standing in for a specular highlight) layered over
-     a vertical glass-tint gradient, backdrop blur/saturate for the
-     "frost", and a bright inset top edge + dim inset bottom edge to read
-     as a curved glass rim. All layered directly in the `background`
+     a vertical glass-tint gradient, and a bright inset top edge + dim
+     inset bottom edge to read as a curved glass rim, on top of a
+     near-solid fill instead of the frosted-see-through backdrop-filter
+     this used to have. All layered directly in the `background`
      shorthand (not a ::before) — a pseudo-element here would paint OVER
      the in-flow <nav> content per CSS stacking order (positioned,
      z-index:auto descendants paint after non-positioned in-flow ones),
      dulling the nav; folding it into the background avoids that entirely.
-     Needs backdrop-filter support (all modern evergreen browsers); falls
-     back to the semi-opaque base background on older ones, which still
-     reads fine, just without blur. */
+     Still reads as "glass" from the gradient/rim alone even at 94%
+     opacity; the difference is barely visible, but the frame-rate
+     difference from dropping the blur is not. */
+  /* FIX 2026-09-19: backdrop-filter:blur removed here (was blur(22px)
+     saturate(180%)) -- this element is `position:fixed` (see the
+     <header> in the markup), so that blur had to be recomposited on
+     EVERY scroll frame, for the ENTIRE page, permanently -- a
+     textbook cause of scroll stutter/lag, and a much likelier culprit
+     than the Lenis script this was first blamed on (which is now fully
+     removed and didn't fix it). Base fill bumped from .52 to .94
+     opacity to compensate -- without the blur softening it, a mostly-
+     transparent fill would look like a broken double-exposure ghosting
+     over whatever scrolls underneath instead of a clean dark bar. */
   #nav-chrome{
     background:
       radial-gradient(120% 160% at 12% -40%, rgba(255,255,255,.16), transparent 55%),
       linear-gradient(180deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.02) 45%, rgba(8,8,8,.4) 100%),
-      rgba(16,16,16,.52);
-    -webkit-backdrop-filter: blur(22px) saturate(180%);
-    backdrop-filter: blur(22px) saturate(180%);
+      rgba(16,16,16,.94);
     border: 1px solid rgba(255,255,255,.14);
     box-shadow:
       0 20px 45px -20px rgba(0,0,0,.65),
@@ -2454,8 +2477,7 @@
   <div class="relative z-10 flex h-full min-h-[100dvh] items-center justify-center px-6 sm:px-10 lg:px-20 text-center">
     <div class="max-w-[64rem]">
       <h1 class="text-white hero-h1 text-[1.9rem] leading-[1.2] tracking-[-0.01em] sm:text-[2.75rem] lg:text-[3.4rem]">
-        Content Production Agency<br />
-        Built for B2B Tech Companies
+        Tech content handled
       </h1>
 
       <p class="mt-6 max-w-[28rem] mx-auto text-[1rem] leading-[1.6] text-[var(--hero-fg-dim)]">
