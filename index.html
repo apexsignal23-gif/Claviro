@@ -302,10 +302,11 @@
   .hero-stack-card{
     position: absolute; width: 420px; height: 263px;
     border-radius: 17px; overflow: hidden;
-    /* rotateY tilts the card's right edge back/away from the viewer
+    /* rotateX(8deg) is the slight backward lean (top edge recedes);
+       rotateY(10deg) tilts the right edge back/away from the viewer
        (positive angle = right side moves to negative z); rotate() after
-       is the original flat in-plane spin, kept on top of that. */
-    transform: rotateY(10deg) rotate(-10.5deg);
+       is the original flat in-plane spin, kept on top of both. */
+    transform: rotateX(8deg) rotateY(10deg) rotate(-10.5deg);
     backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 21px 42px rgba(0,0,0,.18), 0 0 30px rgba(120,150,255,.1);
     transition: transform .4s var(--ease-spring), box-shadow .4s ease;
@@ -314,7 +315,7 @@
      transitions back to the resting position on mouse-out automatically
      since it's the same transform property, not a separate animation. */
   .hero-stack-card:hover{
-    transform: translateY(-16px) rotateY(10deg) rotate(-10.5deg);
+    transform: translateY(-16px) rotateX(8deg) rotateY(10deg) rotate(-10.5deg);
   }
   .hero-stack-card::before{
     content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
