@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="preconnect" href="https://api.fontshare.com" />
 <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,600,500,400&display=swap" rel="stylesheet" />
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@600;700;800&family=Inter:wght@100..900&display=swap" rel="stylesheet" />
 
 <!-- Icons: Phosphor -->
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
@@ -197,70 +197,140 @@
      somewhere). .text-shine's gradient fill is untouched by this — it's
      purely a font swap, color treatment stays as it was per heading. */
   .hero-h1{ font-family: 'Manrope', 'Inter Tight', ui-sans-serif, system-ui, sans-serif; font-weight: 600; }
-  /* Hero H1 specifically, per an explicit reference (mzmedia.digital's
-     own hero, "Product videos that just work") -- a lighter weight and
-     tighter tracking than every other section's .hero-h1 (which stays
-     at the usual 600 sitewide), just for this one headline, to match
-     that lighter/cleaner look. Font-family reverted 2026-09-19 back to
-     the shared .hero-h1 stack (Manrope) per explicit request -- the
-     Sora swap tried above was undone; NOT a font swap, just weight/
-     tracking on the existing Manrope stack. */
-  /* Weight bumped 700 (was 500) 2026-09-19: that lighter 500 was tuned
-     for a since-replaced hero concept matching mzmedia.digital's thin
-     headline. The current two-column hero copies a different, bolder
-     reference instead, so the old lighter weight was leftover cruft
-     fighting the new one -- 700 (a weight this stylesheet already
-     loads, unlike the old 500) matches this reference's heavier strokes. */
-  #top h1.hero-h1{ font-weight: 700; letter-spacing: -0.02em; }
+  /* ============ HERO v2 -- ported directly from a supplied ground-
+     truth file (Downloads/preview (10).html), replacing the earlier
+     screenshot-based approximation above/below. Every value here is
+     copied from that file, not eyeballed. #top{font-family:Inter}
+     below wins over .hero-h1's Manrope for everything inside the hero
+     (an ID selector always beats a class selector's specificity,
+     regardless of source order) -- Inter is what the reference file
+     actually uses, loaded as a variable range (100..900) specifically
+     so its odd non-standard weights (620, 480) render exactly instead
+     of snapping to the nearest static cut. */
+  #top{
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    background:
+      radial-gradient(circle at 74% 67%, rgba(89,117,255,.1), transparent 28%),
+      radial-gradient(circle at 38% 22%, rgba(90,98,115,.08), transparent 34%),
+      linear-gradient(135deg, #0c1016 0%, #080b10 43%, #030406 100%);
+  }
+  #top::before{
+    content: ""; position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(90deg, rgba(10,16,25,.38), transparent 42%, rgba(0,0,0,.16));
+    pointer-events: none;
+  }
 
-  /* Hero eyebrow ("01 ———") and the right-side rotated card stack, both
-     added 2026-09-19 for the two-column hero redesign. Card "glass" look
-     reuses the same near-solid-fill technique as .card.d90-box/
-     #nav-chrome -- no backdrop-filter, see those comments for why that's
-     a real scroll-jank cost on this page, not just a style choice. */
+  #top h1.hero-h1{
+    font-size: clamp(72px, 6.3vw, 106px);
+    line-height: .94;
+    letter-spacing: -0.055em;
+    font-weight: 620;
+  }
+  .hero-solved{
+    background: linear-gradient(180deg, #98b0ff 0%, #7f9cff 42%, #6386fb 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-shadow: 0 0 22px rgba(91,123,255,.08);
+  }
+
   .hero-eyebrow{
-    display: flex; align-items: center; gap: .9rem;
-    font-size: .85rem; font-weight: 600; color: var(--cream-dimmer);
-    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 27px;
+    margin-bottom: 42px;
+    color: #8e97aa; font-size: 18px; font-weight: 400; letter-spacing: .02em;
   }
-  .hero-eyebrow-line{ display: block; width: 2.75rem; height: 1px; background: var(--ink-border); }
+  .hero-eyebrow-line{ display: block; width: 103px; height: 1px; background: rgba(157,165,179,.52); }
 
-  .hero-stack{
-    position: relative; width: 100%; max-width: 33rem;
-    aspect-ratio: 1 / 0.95; margin: 0 auto;
+  .hero-sub{
+    max-width: 510px; margin-top: 26px;
+    color: #aeb6c4;
+    font-size: clamp(19px, 1.42vw, 25px);
+    line-height: 1.42; letter-spacing: -0.025em;
   }
-  /* Reference is flat/matte, not glassy -- a plain near-flat fill plus a
-     faint top sheen, no big radial hotspot. Depth reads through three
-     things instead: rotation/offset (below), a lightness fade (card 1,
-     furthest back, is the lightest/lowest-contrast; card 3, frontmost,
-     is the darkest/richest), and a blue rim-glow that's faint on card 1
-     and strongest on card 3. */
+
+  .hero-actions{ display: flex; flex-wrap: wrap; gap: 26px; margin-top: 44px; }
+  .hero-btn{
+    height: 66px; padding: 0 38px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 999px; text-decoration: none;
+    font-size: 17px; font-weight: 500; white-space: nowrap;
+    transition: transform .3s ease;
+  }
+  .hero-btn:hover{ transform: translateY(-2px); }
+  .hero-btn:active{ transform: translateY(0) scale(.98); }
+  .hero-btn-secondary{
+    min-width: 232px; color: #f2f3f6;
+    border: 1px solid rgba(180,188,200,.28);
+    background: rgba(16,19,24,.3);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.015);
+  }
+  .hero-btn-primary{
+    min-width: 216px; color: #07101d; font-weight: 600;
+    background: linear-gradient(135deg, #90aaff 0%, #7e9dff 52%, #718ef8 100%);
+    box-shadow: 0 12px 34px rgba(72,98,229,.18), inset 0 1px 0 rgba(255,255,255,.25);
+  }
+
+  /* Card stack: fixed px (600x375), not fluid -- matches the reference
+     exactly, which scales the whole stack down as one unit at smaller
+     widths (see the two @media blocks below) rather than resizing each
+     card. backdrop-filter is back here deliberately, unlike the fixed
+     nav/.d90-box cases fixed earlier today: these cards scroll away
+     with the page instead of staying pinned on screen, so they only
+     cost anything during the brief moment the hero itself is on
+     screen, not for the rest of the page's scroll distance. */
+  .hero-stack{ position: relative; min-height: 780px; }
+  .hero-stack-glow{
+    position: absolute; width: 620px; height: 480px;
+    right: -140px; bottom: -60px;
+    background: radial-gradient(circle, rgba(64,86,196,.2), transparent 67%);
+    filter: blur(38px); pointer-events: none;
+  }
   .hero-stack-card{
-    position: absolute; width: 78%; aspect-ratio: 1 / 0.95;
-    border-radius: 22px;
-    background: linear-gradient(180deg, rgba(255,255,255,.05) 0%, transparent 40%), var(--stack-fill);
-    box-shadow: var(--shadow-card), 0 1px 0 rgba(140,165,255,var(--stack-glow)) inset, 0 0 40px -10px rgba(76,110,245,var(--stack-glow));
-    border: 1px solid rgba(140,165,255,var(--stack-border));
+    position: absolute; width: 600px; height: 375px;
+    border-radius: 24px; overflow: hidden;
+    transform: rotate(-10.5deg);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 30px 60px rgba(0,0,0,.18);
   }
-  .hero-stack-num{
-    position: absolute; top: 1.5rem; right: 1.75rem;
-    font-size: .85rem; color: var(--cream-dimmer);
+  .hero-stack-card::before{
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.7px;
+    background: linear-gradient(115deg, rgba(234,240,255,.88) 0%, rgba(174,192,236,.46) 36%, rgba(100,129,255,.78) 72%, rgba(96,130,255,.32) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    pointer-events: none;
+  }
+  .hero-stack-card::after{
+    content: ""; position: absolute; width: 390px; height: 390px;
+    right: -120px; bottom: -180px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(71,99,220,.22), transparent 67%);
+    filter: blur(5px);
   }
   .hero-stack-label{
-    position: absolute; left: 2rem; bottom: 2.25rem;
-    font-size: 1.35rem; font-weight: 600; color: var(--cream);
+    position: absolute; left: 72px; top: 115px;
+    font-size: 26px; font-weight: 480; color: #ecf0f8; letter-spacing: -0.03em;
+  }
+  .hero-stack-num{
+    position: absolute; right: 36px; top: 31px;
+    color: rgba(154,169,205,.6); font-size: 21px; font-weight: 400;
   }
   .hero-stack-card-1{
-    top: 0; left: 0; transform: rotate(-9deg); z-index: 1;
-    --stack-fill: rgba(58,58,62,.85); --stack-border: .1; --stack-glow: .1;
+    top: 46px; left: 35px; z-index: 1;
+    background: linear-gradient(135deg, rgba(31,38,49,.65) 0%, rgba(18,23,31,.55) 56%, rgba(17,31,66,.62) 100%);
   }
   .hero-stack-card-2{
-    top: 15%; left: 13%; transform: rotate(-3deg); z-index: 2;
-    --stack-fill: rgba(38,38,42,.9); --stack-border: .18; --stack-glow: .2;
+    top: 214px; left: 164px; z-index: 2;
+    background: linear-gradient(135deg, rgba(31,38,48,.67) 0%, rgba(22,27,35,.62) 52%, rgba(24,39,78,.68) 100%);
   }
   .hero-stack-card-3{
-    top: 30%; left: 26%; transform: rotate(3deg); z-index: 3;
-    --stack-fill: rgba(16,16,18,.96); --stack-border: .35; --stack-glow: .45;
+    top: 405px; left: 304px; z-index: 3;
+    background: linear-gradient(135deg, rgba(35,43,57,.74) 0%, rgba(24,31,43,.68) 50%, rgba(37,58,116,.82) 100%);
+    box-shadow: inset 0 0 0 1px rgba(186,200,239,.28), 0 30px 65px rgba(0,0,0,.2), 30px 20px 90px rgba(68,92,208,.13);
+  }
+  @media (max-width: 1200px){
+    .hero-stack{ transform: scale(.84); transform-origin: top center; }
+  }
+  @media (max-width: 720px){
+    .hero-stack{ transform: scale(.58); transform-origin: top left; width: 900px; margin-left: 14px; }
+    .hero-actions{ flex-direction: column; align-items: stretch; max-width: 320px; }
+    .hero-btn{ width: 100%; }
   }
 
   /* Blue gradient (originally a gray-to-white sheen matching
@@ -2535,55 +2605,51 @@
 </div>
 
 <!-- ================= HERO =================
-     Redesigned 2026-09-19 to a two-column layout (copy left, a stack of
-     3 rotated "process step" cards right) per an explicit reference
-     screenshot -- replaces the old single-column centered hero and the
-     velaris WebGL background canvas. That canvas's init call
-     (DOMContentLoaded handler further down the page) already
-     early-returns when #velaris-host/#velaris-canvas aren't found, so
-     removing these two elements is enough; no script changes needed. -->
+     Ported 2026-09-19 directly from a supplied ground-truth file
+     (Downloads/preview (10).html), not eyeballed from a screenshot --
+     every color/px offset/blur value below is copied from that file.
+     Deliberately keeps this site's real <header> (mobile menu, real
+     section anchors) instead of the reference's own plain nav markup,
+     per explicit instruction to leave the header alone; the reference's
+     own spacing that assumed its in-flow 124px nav is dropped in favor
+     of this site's existing py-* clearance for the actual floating
+     fixed nav. -->
 <section id="top" class="relative w-full overflow-hidden">
   <span id="top-content" class="sr-only"></span>
-  <!-- Localized glow behind the card stack -- the page-wide dot-grid/glow
-       backdrop already comes from body::before (see its comment), this
-       is just the extra concentrated blue light the reference shows
-       pooling behind the cards specifically. -->
-  <div class="pointer-events-none absolute right-[-8%] top-1/2 -translate-y-1/2 h-[38rem] w-[38rem] rounded-full" style="background: radial-gradient(closest-side, rgba(76,110,245,.3), transparent 72%); filter: blur(64px);" aria-hidden="true"></div>
 
-  <div class="relative z-10 mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-20 py-28 sm:py-32 lg:py-40 grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-16 lg:gap-10 items-center">
-    <div>
+  <div class="relative z-10 mx-auto grid grid-cols-1 lg:grid-cols-[42%_58%] gap-16 lg:gap-0 py-28 sm:py-32 lg:py-40 items-start">
+    <div class="hero-copy px-6 sm:px-10 lg:px-0" style="padding-left: max(1.5rem, 6.15vw);">
       <p class="hero-eyebrow"><span>01</span><span class="hero-eyebrow-line"></span></p>
 
-      <h1 class="text-white hero-h1 text-[2.6rem] leading-[1.05] tracking-[-0.02em] sm:text-[3.4rem] lg:text-[4.25rem]">
+      <h1 class="text-white hero-h1">
         Tech<br />
         content<br />
-        <span style="color: var(--accent);">Solved</span>
+        <span class="hero-solved">Solved</span>
       </h1>
 
-      <p class="mt-6 max-w-[28rem] text-[1rem] leading-[1.6] text-[var(--hero-fg-dim)]">
+      <p class="hero-sub">
         In a fast-moving landscape, we don&rsquo;t trade standard for speed.
       </p>
 
-      <div class="mt-9 flex flex-wrap items-center gap-5">
-        <a href="#industry-standard" class="btn-glow rounded-full border border-white/15 bg-white/[0.03] px-6 py-3 text-[0.92rem] font-medium text-[var(--hero-fg)] transition-[transform,border-color,background-color] duration-300 hover:border-white/30 hover:bg-white/[0.06] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]">
-          See How It Works
-        </a>
-        <a href="#cta" class="btn-primary">Book a Call</a>
+      <div class="hero-actions">
+        <a href="#industry-standard" class="hero-btn hero-btn-secondary">See How It Works</a>
+        <a href="#cta" class="hero-btn hero-btn-primary">Book a Call</a>
       </div>
     </div>
 
     <div class="hero-stack" aria-hidden="true">
+      <div class="hero-stack-glow"></div>
       <div class="hero-stack-card hero-stack-card-1">
-        <span class="hero-stack-num">01</span>
         <span class="hero-stack-label">Strategy</span>
+        <span class="hero-stack-num">01</span>
       </div>
       <div class="hero-stack-card hero-stack-card-2">
-        <span class="hero-stack-num">02</span>
         <span class="hero-stack-label">Production</span>
+        <span class="hero-stack-num">02</span>
       </div>
       <div class="hero-stack-card hero-stack-card-3">
-        <span class="hero-stack-num">03</span>
         <span class="hero-stack-label">Distribution</span>
+        <span class="hero-stack-num">03</span>
       </div>
     </div>
   </div>
