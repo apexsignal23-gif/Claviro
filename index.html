@@ -229,15 +229,18 @@
     position: relative; width: 100%; max-width: 33rem;
     aspect-ratio: 1 / 0.95; margin: 0 auto;
   }
+  /* Reference is flat/matte, not glassy -- a plain near-flat fill plus a
+     faint top sheen, no big radial hotspot. Depth reads through three
+     things instead: rotation/offset (below), a lightness fade (card 1,
+     furthest back, is the lightest/lowest-contrast; card 3, frontmost,
+     is the darkest/richest), and a blue rim-glow that's faint on card 1
+     and strongest on card 3. */
   .hero-stack-card{
-    position: absolute; width: 78%; aspect-ratio: 1 / 0.92;
+    position: absolute; width: 78%; aspect-ratio: 1 / 0.95;
     border-radius: 22px;
-    border: 1px solid rgba(255,255,255,.14);
-    background:
-      radial-gradient(120% 160% at 15% -15%, rgba(255,255,255,.1), transparent 55%),
-      linear-gradient(180deg, rgba(255,255,255,.06) 0%, rgba(255,255,255,.015) 45%, rgba(8,8,8,.4) 100%),
-      rgba(20,20,20,.94);
-    box-shadow: var(--shadow-card);
+    background: linear-gradient(180deg, rgba(255,255,255,.05) 0%, transparent 40%), var(--stack-fill);
+    box-shadow: var(--shadow-card), 0 1px 0 rgba(140,165,255,var(--stack-glow)) inset, 0 0 40px -10px rgba(76,110,245,var(--stack-glow));
+    border: 1px solid rgba(140,165,255,var(--stack-border));
   }
   .hero-stack-num{
     position: absolute; top: 1.5rem; right: 1.75rem;
@@ -245,14 +248,19 @@
   }
   .hero-stack-label{
     position: absolute; left: 2rem; bottom: 2.25rem;
-    font-size: 1.35rem; font-weight: 500; color: var(--cream);
+    font-size: 1.35rem; font-weight: 600; color: var(--cream);
   }
-  .hero-stack-card-1{ top: 0; left: 0; transform: rotate(-9deg); z-index: 1; }
-  .hero-stack-card-2{ top: 15%; left: 13%; transform: rotate(-3deg); z-index: 2; }
+  .hero-stack-card-1{
+    top: 0; left: 0; transform: rotate(-9deg); z-index: 1;
+    --stack-fill: rgba(58,58,62,.85); --stack-border: .1; --stack-glow: .1;
+  }
+  .hero-stack-card-2{
+    top: 15%; left: 13%; transform: rotate(-3deg); z-index: 2;
+    --stack-fill: rgba(38,38,42,.9); --stack-border: .18; --stack-glow: .2;
+  }
   .hero-stack-card-3{
     top: 30%; left: 26%; transform: rotate(3deg); z-index: 3;
-    border-color: rgba(140,165,255,.35);
-    box-shadow: var(--shadow-card), 0 25px 70px -15px rgba(76,110,245,.45);
+    --stack-fill: rgba(16,16,18,.96); --stack-border: .35; --stack-glow: .45;
   }
 
   /* Blue gradient (originally a gray-to-white sheen matching
