@@ -1916,12 +1916,36 @@
     flex: none; width: 34px; height: 34px; border-radius: 50%;
     object-fit: cover; display: block;
   }
+  /* Company-page post variant (ClickUp, per an explicit reference
+     screenshot replacing what used to be Adam Robinson's personal-
+     profile post) — a square logo instead of a round headshot, matching
+     how LinkedIn itself renders a Page's avatar vs. a person's. */
+  .li-avatar-square{ border-radius: 6px; }
   .li-who{ flex: 1; min-width: 0; }
   .li-name{ font-size: .82rem; font-weight: 700; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .li-name .li-degree{ font-weight: 500; color: var(--cream-dimmer); }
+  /* Verified-page checkmark badge, next to a company name (LinkedIn
+     shows this on Pages, never on a person's "· 2nd" connection-degree
+     line — the two are mutually exclusive on real LinkedIn, so this
+     post uses `.li-verified` instead of `.li-degree`). */
+  .li-verified{ margin-left: .25rem; font-size: .78rem; color: var(--cream-dimmer); }
   .li-title{ margin-top: 1px; font-size: .72rem; color: var(--cream-dimmer); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .li-time{ margin-top: 1px; font-size: .68rem; color: var(--cream-dimmer); }
+  /* "2mo · 🌐" line a Page post shows instead of a person's job title +
+     separate timestamp line. */
+  .li-meta{ margin-top: 1px; display: flex; align-items: center; gap: .3rem; font-size: .68rem; color: var(--cream-dimmer); }
+  .li-meta i{ font-size: .75rem; }
   .li-brand{ flex: none; font-size: 1.15rem; color: #0a66c2; margin-top: 2px; }
+  /* "+ Follow" (Pages show Follow, not the plain "in" brand mark
+     person-posts use) + the "…" overflow-menu icon beside it. */
+  .li-follow{
+    flex: none; display: inline-flex; align-items: center; gap: .2rem;
+    font-size: .78rem; font-weight: 700; color: #57a3f2;
+    transition: color .2s var(--ease-spring);
+  }
+  .li-follow:hover, .li-follow:focus-visible{ color: #7fbaf5; }
+  .li-follow:active{ color: #4a8fd6; }
+  .li-more{ flex: none; margin-top: .2rem; font-size: .85rem; color: var(--cream-dimmer); }
   .li-text{
     font-size: .78rem; line-height: 1.5; color: var(--cream-dim);
     display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
@@ -2551,15 +2575,15 @@
             </article>
             <article class="li-post">
               <div class="li-post-top">
-                <img class="li-avatar" src="avatars/adam.png" alt="" width="34" height="34" loading="lazy">
+                <img class="li-avatar li-avatar-square" src="avatars/clickup.png" alt="" width="34" height="34" loading="lazy">
                 <div class="li-who">
-                  <p class="li-name">Adam Robinson <span class="li-degree">&middot; 2nd</span></p>
-                  <p class="li-title">CEO @ RB2B &amp; Retention.com | Unli&hellip;</p>
-                  <p class="li-time">2mo</p>
+                  <p class="li-name">ClickUp <i class="ph-fill ph-seal-check li-verified" aria-hidden="true"></i></p>
+                  <p class="li-meta">2mo <i class="ph-fill ph-globe-hemisphere-west" aria-hidden="true"></i></p>
                 </div>
-                <i class="ph-fill ph-linkedin-logo li-brand" aria-hidden="true"></i>
+                <a href="#" class="li-follow">+ Follow</a>
+                <i class="ph-bold ph-dots-three li-more" aria-hidden="true"></i>
               </div>
-              <p class="li-text">What actually IS an autonomous business? I started noticing the term &ldquo;autonomous business&rdquo; when Amos E&hellip;more</p>
+              <p class="li-text">The world&rsquo;s first Company Brain just dropped. Meet Brain&sup2; 👇<br><br>🧠 Every model, one price: Brain&sup2; picks the best AI for the job, with full&hellip;more</p>
               <div class="li-stats">
                 <span class="li-reacts"><span class="li-react-stack" aria-hidden="true"><span class="li-react-badge li-react-badge-like"><i class="ph-fill ph-thumbs-up"></i></span><span class="li-react-badge li-react-badge-love"><i class="ph-fill ph-heart"></i></span><span class="li-react-badge li-react-badge-celebrate"><i class="ph-fill ph-hands-clapping"></i></span></span><span class="li-reacts-num">116</span></span>
                 <span>49 Comments</span>
