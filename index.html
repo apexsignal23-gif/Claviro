@@ -284,7 +284,7 @@
   /* perspective here (not on each card) is what makes rotateY below
      read as the cards' right edge receding in shared 3D space, on one
      vanishing point, instead of each card tilting independently. */
-  .hero-stack{ position: relative; min-height: 546px; perspective: 1400px; }
+  .hero-stack{ position: relative; min-height: 628px; perspective: 1400px; }
   @media (min-width: 1024px){
     .hero-stack{ margin-left: 100px; }
   }
@@ -299,10 +299,10 @@
      -- this element is a plain sibling div, not subject to that clip,
      so it can spread past the card into the surrounding dark area. */
   .hero-stack-glow{
-    position: absolute; width: 480px; height: 380px;
-    left: 393px; top: 357px;
+    position: absolute; width: 552px; height: 437px;
+    left: 452px; top: 411px;
     background: radial-gradient(circle, rgba(70,110,240,.55), transparent 65%);
-    filter: blur(30px); pointer-events: none;
+    filter: blur(34px); pointer-events: none;
   }
   /* Sized back up 2026-09-19 (reversing the earlier 0.75x pass) and
      fills shifted from a dark navy tint to a white one, per an explicit
@@ -310,15 +310,15 @@
      treatment as before, just a lighter/whiter base color instead of a
      dark blue-gray one. */
   .hero-stack-card{
-    position: absolute; width: 420px; height: 263px;
-    border-radius: 17px; overflow: hidden;
+    position: absolute; width: 483px; height: 302px;
+    border-radius: 20px; overflow: hidden;
     /* rotateX(8deg) is the slight backward lean (top edge recedes);
        rotateY(10deg) tilts the right edge back/away from the viewer
        (positive angle = right side moves to negative z); rotate() after
        is the original flat in-plane spin, kept on top of both. */
     transform: rotateX(8deg) rotateY(10deg) rotate(-10.5deg);
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 21px 42px rgba(0,0,0,.18), 0 0 30px rgba(120,150,255,.1);
+    backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px);
+    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 24px 48px rgba(0,0,0,.18), 0 0 34px rgba(120,150,255,.1);
     transition: transform .4s var(--ease-spring), box-shadow .4s ease;
   }
   /* Hover lift: same tilt as the resting state, just translated up --
@@ -335,18 +335,18 @@
     pointer-events: none;
   }
   .hero-stack-card::after{
-    content: ""; position: absolute; width: 273px; height: 273px;
-    right: -84px; bottom: -126px; border-radius: 50%;
+    content: ""; position: absolute; width: 314px; height: 314px;
+    right: -97px; bottom: -145px; border-radius: 50%;
     background: radial-gradient(circle, rgba(71,99,220,.22), transparent 67%);
-    filter: blur(4px);
+    filter: blur(5px);
   }
   .hero-stack-label{
-    position: absolute; left: 50px; top: 55px;
-    font-size: 18px; font-weight: 300; color: #ecf0f8; letter-spacing: -0.03em;
+    position: absolute; left: 57px; top: 63px;
+    font-size: 21px; font-weight: 300; color: #ecf0f8; letter-spacing: -0.03em;
   }
   .hero-stack-num{
-    position: absolute; right: 25px; top: 22px;
-    color: rgba(154,169,205,.6); font-size: 15px; font-weight: 400;
+    position: absolute; right: 29px; top: 25px;
+    color: rgba(154,169,205,.6); font-size: 17px; font-weight: 400;
   }
   /* Glow rebalanced 2026-09-19 -- the earlier passes glowed the whole
      BOX (one big soft box-shadow cloud spreading across the card),
@@ -358,20 +358,20 @@
      ranking as before. Each card also keeps a white bloom at its own
      top-left corner (radial-gradient layered into the background). */
   .hero-stack-card-1{
-    top: 32px; left: 25px; z-index: 1;
+    top: 37px; left: 29px; z-index: 1;
     background:
-      radial-gradient(90px 90px at 0% 0%, rgba(255,255,255,.22), transparent 65%),
+      radial-gradient(103px 103px at 0% 0%, rgba(255,255,255,.22), transparent 65%),
       linear-gradient(135deg, rgba(255,255,255,.1) 0%, rgba(255,255,255,.04) 56%, rgba(210,222,255,.08) 100%);
-    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 21px 42px rgba(0,0,0,.18), 0 0 8px rgba(150,180,255,.25);
+    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 24px 48px rgba(0,0,0,.18), 0 0 9px rgba(150,180,255,.25);
     -webkit-mask-image: linear-gradient(to bottom, #000 94%, transparent 100%);
     mask-image: linear-gradient(to bottom, #000 94%, transparent 100%);
   }
   .hero-stack-card-2{
-    top: 150px; left: 115px; z-index: 2;
+    top: 172px; left: 132px; z-index: 2;
     background:
-      radial-gradient(90px 90px at 0% 0%, rgba(255,255,255,.26), transparent 65%),
+      radial-gradient(103px 103px at 0% 0%, rgba(255,255,255,.26), transparent 65%),
       linear-gradient(135deg, rgba(255,255,255,.12) 0%, rgba(255,255,255,.05) 52%, rgba(205,220,255,.1) 100%);
-    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 21px 42px rgba(0,0,0,.18), 0 0 6px rgba(160,195,255,.9), 0 0 16px rgba(130,175,255,.6), 0 0 30px rgba(110,160,255,.35);
+    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 24px 48px rgba(0,0,0,.18), 0 0 7px rgba(160,195,255,.9), 0 0 18px rgba(130,175,255,.6), 0 0 35px rgba(110,160,255,.35);
     -webkit-mask-image: linear-gradient(to bottom, #000 90%, transparent 100%);
     mask-image: linear-gradient(to bottom, #000 90%, transparent 100%);
   }
@@ -379,11 +379,11 @@
     background: linear-gradient(115deg, #fff 0%, rgba(225,238,255,.95) 30%, rgba(150,190,255,1) 65%, rgba(130,175,255,.95) 100%);
   }
   .hero-stack-card-3{
-    top: 284px; left: 213px; z-index: 3;
+    top: 327px; left: 245px; z-index: 3;
     background:
-      radial-gradient(100px 100px at 0% 0%, rgba(255,255,255,.28), transparent 65%),
+      radial-gradient(115px 115px at 0% 0%, rgba(255,255,255,.28), transparent 65%),
       linear-gradient(135deg, rgba(255,255,255,.15) 0%, rgba(255,255,255,.06) 50%, rgba(195,215,255,.14) 100%);
-    box-shadow: inset 0 0 0 1px rgba(186,200,239,.28), 0 21px 46px rgba(0,0,0,.2), 0 0 5px rgba(145,180,255,.7), 0 0 14px rgba(115,155,255,.4), 0 0 24px rgba(95,135,255,.2);
+    box-shadow: inset 0 0 0 1px rgba(186,200,239,.28), 0 24px 53px rgba(0,0,0,.2), 0 0 6px rgba(145,180,255,.7), 0 0 16px rgba(115,155,255,.4), 0 0 28px rgba(95,135,255,.2);
     -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
     mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
   }
