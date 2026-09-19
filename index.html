@@ -1658,7 +1658,10 @@
     grid-template-columns: 1fr;
   }
   @media (min-width: 1024px){
-    .pricing-cards{ grid-template-columns: repeat(3, 1fr); align-items: stretch; }
+    /* 2 columns, not 3 -- the Launch plan was removed (only Core/Studio
+       remain), and repeat(3,1fr) would leave a stretched-empty third
+       track with just 2 cards in it. */
+    .pricing-cards{ grid-template-columns: repeat(2, 1fr); align-items: stretch; }
   }
   .pricing-card{
     background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
@@ -3328,9 +3331,12 @@
      per a shadcn "pricing-card" component reference: soft outer shell,
      inset glass-highlighted header (plan name/badge/price/CTA), feature
      list below. Core is the "Most Popular" highlighted plan (solid CTA +
-     accent-tinted border); Launch/Studio use the outline CTA. Single
+     accent-tinted border); Studio uses the outline CTA. Single
      responsive grid — no separate desktop/mobile markup needed anymore.
-     Launch's price is $999 (bumped up from $3500 per request). ================= -->
+     The Launch plan was removed entirely per explicit request (2026-09-
+     19) — only Core and Studio remain, and `.pricing-cards`' desktop
+     grid is 2 columns now, not 3 (see its CSS comment). Don't re-add
+     Launch without being asked. ================= -->
 <section class="relative py-24 sm:py-28">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
 
@@ -3343,23 +3349,6 @@
     </div>
 
     <div class="pricing-cards reveal mt-12">
-
-      <div class="pricing-card">
-        <div class="pc-header">
-          <div class="pc-plan-row">
-            <span class="pc-plan-name"><i class="ph-bold ph-rocket-launch" aria-hidden="true"></i>Launch</span>
-          </div>
-          <p class="pc-duration">1 month</p>
-          <a href="#cta" class="pc-btn pc-btn-outline">Apply</a>
-        </div>
-        <ul class="pc-features">
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Pre-Launch Content Planning</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>20 Produced Content</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Flagship Launch Video</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Filming Assistance</li>
-          <li><i class="ph-bold ph-check-circle" aria-hidden="true"></i>Made for Pre-Launch Companies</li>
-        </ul>
-      </div>
 
       <div class="pricing-card pricing-card-popular">
         <div class="pc-header">
