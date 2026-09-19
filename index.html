@@ -237,13 +237,6 @@
     text-shadow: 0 0 22px rgba(91,123,255,.08);
   }
 
-  .hero-eyebrow{
-    display: flex; align-items: center; gap: 27px;
-    margin-bottom: 42px;
-    color: #8e97aa; font-size: 18px; font-weight: 400; letter-spacing: .02em;
-  }
-  .hero-eyebrow-line{ display: block; width: 103px; height: 1px; background: rgba(157,165,179,.52); }
-
   .hero-sub{
     max-width: 510px; margin-top: 26px;
     color: #aeb6c4;
@@ -282,53 +275,53 @@
      with the page instead of staying pinned on screen, so they only
      cost anything during the brief moment the hero itself is on
      screen, not for the rest of the page's scroll distance. */
-  .hero-stack{ position: relative; min-height: 546px; }
+  .hero-stack{ position: relative; min-height: 410px; }
   .hero-stack-glow{
-    position: absolute; width: 434px; height: 336px;
-    right: -98px; bottom: -42px;
+    position: absolute; width: 326px; height: 252px;
+    right: -74px; bottom: -32px;
     background: radial-gradient(circle, rgba(64,86,196,.2), transparent 67%);
-    filter: blur(27px); pointer-events: none;
+    filter: blur(20px); pointer-events: none;
   }
   .hero-stack-card{
-    position: absolute; width: 420px; height: 263px;
-    border-radius: 17px; overflow: hidden;
+    position: absolute; width: 315px; height: 197px;
+    border-radius: 13px; overflow: hidden;
     transform: rotate(-10.5deg);
-    backdrop-filter: blur(13px); -webkit-backdrop-filter: blur(13px);
-    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 21px 42px rgba(0,0,0,.18);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 16px 32px rgba(0,0,0,.18);
   }
   .hero-stack-card::before{
-    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.2px;
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
     background: linear-gradient(115deg, rgba(234,240,255,.88) 0%, rgba(174,192,236,.46) 36%, rgba(100,129,255,.78) 72%, rgba(96,130,255,.32) 100%);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor; mask-composite: exclude;
     pointer-events: none;
   }
   .hero-stack-card::after{
-    content: ""; position: absolute; width: 273px; height: 273px;
-    right: -84px; bottom: -126px; border-radius: 50%;
+    content: ""; position: absolute; width: 205px; height: 205px;
+    right: -63px; bottom: -95px; border-radius: 50%;
     background: radial-gradient(circle, rgba(71,99,220,.22), transparent 67%);
-    filter: blur(4px);
+    filter: blur(3px);
   }
   .hero-stack-label{
-    position: absolute; left: 50px; top: 81px;
-    font-size: 18px; font-weight: 480; color: #ecf0f8; letter-spacing: -0.03em;
+    position: absolute; left: 38px; top: 61px;
+    font-size: 14px; font-weight: 480; color: #ecf0f8; letter-spacing: -0.03em;
   }
   .hero-stack-num{
-    position: absolute; right: 25px; top: 22px;
-    color: rgba(154,169,205,.6); font-size: 15px; font-weight: 400;
+    position: absolute; right: 19px; top: 17px;
+    color: rgba(154,169,205,.6); font-size: 12px; font-weight: 400;
   }
   .hero-stack-card-1{
-    top: 32px; left: 25px; z-index: 1;
+    top: 24px; left: 19px; z-index: 1;
     background: linear-gradient(135deg, rgba(31,38,49,.65) 0%, rgba(18,23,31,.55) 56%, rgba(17,31,66,.62) 100%);
   }
   .hero-stack-card-2{
-    top: 150px; left: 115px; z-index: 2;
+    top: 113px; left: 86px; z-index: 2;
     background: linear-gradient(135deg, rgba(31,38,48,.67) 0%, rgba(22,27,35,.62) 52%, rgba(24,39,78,.68) 100%);
   }
   .hero-stack-card-3{
-    top: 284px; left: 213px; z-index: 3;
+    top: 213px; left: 160px; z-index: 3;
     background: linear-gradient(135deg, rgba(35,43,57,.74) 0%, rgba(24,31,43,.68) 50%, rgba(37,58,116,.82) 100%);
-    box-shadow: inset 0 0 0 1px rgba(186,200,239,.28), 0 21px 46px rgba(0,0,0,.2), 21px 14px 63px rgba(68,92,208,.13);
+    box-shadow: inset 0 0 0 1px rgba(186,200,239,.28), 0 16px 35px rgba(0,0,0,.2), 16px 11px 47px rgba(68,92,208,.13);
   }
   /* Below 1024px the grid stacks to one column (see the lg:grid-cols
      class on the wrapper) -- text and cards then share vertical space
@@ -339,8 +332,6 @@
      tuned for two-column desktop, not a stacked mobile column. */
   @media (max-width: 1023px){
     #top h1.hero-h1{ font-size: clamp(26px, 6.5vw, 36px); }
-    .hero-eyebrow{ margin-bottom: 18px; font-size: 13px; }
-    .hero-eyebrow-line{ width: 60px; }
     .hero-sub{ margin-top: 12px; font-size: clamp(12px, 2.6vw, 13px); }
     .hero-actions{ margin-top: 20px; gap: 12px; }
     .hero-btn{ height: 42px; padding: 0 18px; font-size: 12.5px; }
@@ -2650,8 +2641,6 @@
 
   <div class="relative z-10 mx-auto max-w-[1280px] min-h-[100dvh] grid grid-cols-1 lg:grid-cols-[42%_58%] gap-6 lg:gap-0 py-16 sm:py-20 lg:py-24 items-center">
     <div class="hero-copy px-6 sm:px-10 lg:px-0" style="padding-left: max(1.5rem, 6.15vw);">
-      <p class="hero-eyebrow"><span>01</span><span class="hero-eyebrow-line"></span></p>
-
       <h1 class="text-white hero-h1">
         Tech<br />
         content<br />
