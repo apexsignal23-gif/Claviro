@@ -341,9 +341,9 @@
     #top h1.hero-h1{ font-size: clamp(26px, 6.5vw, 36px); }
     .hero-eyebrow{ margin-bottom: 18px; font-size: 13px; }
     .hero-eyebrow-line{ width: 60px; }
-    .hero-sub{ margin-top: 12px; font-size: clamp(13px, 3vw, 15px); }
-    .hero-actions{ margin-top: 20px; gap: 16px; }
-    .hero-btn{ height: 50px; padding: 0 26px; font-size: 14px; }
+    .hero-sub{ margin-top: 12px; font-size: clamp(12px, 2.6vw, 13px); }
+    .hero-actions{ margin-top: 20px; gap: 12px; }
+    .hero-btn{ height: 42px; padding: 0 18px; font-size: 12.5px; }
     .hero-btn-secondary{ min-width: 0; }
     .hero-btn-primary{ min-width: 0; }
     /* min-height shrinks along with the transform, not just the visual
@@ -357,8 +357,10 @@
     .hero-stack{ min-height: 340px; transform: scale(.62); transform-origin: top left; width: 630px; }
   }
   @media (max-width: 480px){
-    .hero-actions{ flex-direction: column; align-items: stretch; max-width: 320px; }
-    .hero-btn{ width: 100%; }
+    /* Buttons stay side-by-side here now (no more flex-direction:column/
+       width:100%) -- at 42px tall with no forced min-width they're
+       small enough to fit a row even at narrow phone widths, and
+       stacking them was what made them read as oversized before. */
     .hero-stack{ min-height: 250px; transform: scale(.46); }
   }
 
