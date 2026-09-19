@@ -291,16 +291,23 @@
     background: radial-gradient(circle, rgba(64,86,196,.2), transparent 67%);
     filter: blur(20px); pointer-events: none;
   }
+  /* Made far more transparent + glow-bordered 2026-09-19 per a supplied
+     reference: fills dropped from ~.65-.82 alpha (opaque-looking dark
+     cards) to ~.15-.3 (barely-there glass, background shows through),
+     with the border/outer glow brightened to carry the visual weight
+     instead -- strongest on card 3, matching how the reference's front
+     card visibly radiates light along its edge while cards 1/2 only
+     have a faint glow. */
   .hero-stack-card{
     position: absolute; width: 315px; height: 197px;
     border-radius: 13px; overflow: hidden;
     transform: rotate(-10.5deg);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 16px 32px rgba(0,0,0,.18);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 16px 32px rgba(0,0,0,.18), 0 0 24px rgba(120,150,255,.1);
   }
   .hero-stack-card::before{
-    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
-    background: linear-gradient(115deg, rgba(234,240,255,.88) 0%, rgba(174,192,236,.46) 36%, rgba(100,129,255,.78) 72%, rgba(96,130,255,.32) 100%);
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.4px;
+    background: linear-gradient(115deg, rgba(255,255,255,.95) 0%, rgba(200,215,255,.6) 36%, rgba(130,160,255,.95) 72%, rgba(120,150,255,.5) 100%);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor; mask-composite: exclude;
     pointer-events: none;
@@ -321,16 +328,17 @@
   }
   .hero-stack-card-1{
     top: 24px; left: 19px; z-index: 1;
-    background: linear-gradient(135deg, rgba(31,38,49,.65) 0%, rgba(18,23,31,.55) 56%, rgba(17,31,66,.62) 100%);
+    background: linear-gradient(135deg, rgba(31,38,49,.18) 0%, rgba(18,23,31,.13) 56%, rgba(17,31,66,.16) 100%);
   }
   .hero-stack-card-2{
     top: 113px; left: 86px; z-index: 2;
-    background: linear-gradient(135deg, rgba(31,38,48,.67) 0%, rgba(22,27,35,.62) 52%, rgba(24,39,78,.68) 100%);
+    background: linear-gradient(135deg, rgba(31,38,48,.2) 0%, rgba(22,27,35,.15) 52%, rgba(24,39,78,.18) 100%);
+    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 16px 32px rgba(0,0,0,.18), 0 0 30px rgba(120,150,255,.18);
   }
   .hero-stack-card-3{
     top: 213px; left: 160px; z-index: 3;
-    background: linear-gradient(135deg, rgba(35,43,57,.74) 0%, rgba(24,31,43,.68) 50%, rgba(37,58,116,.82) 100%);
-    box-shadow: inset 0 0 0 1px rgba(186,200,239,.28), 0 16px 35px rgba(0,0,0,.2), 16px 11px 47px rgba(68,92,208,.13);
+    background: linear-gradient(135deg, rgba(35,43,57,.24) 0%, rgba(24,31,43,.17) 50%, rgba(37,58,116,.26) 100%);
+    box-shadow: inset 0 0 0 1px rgba(186,200,239,.28), 0 16px 35px rgba(0,0,0,.2), 0 0 60px rgba(90,130,255,.4);
   }
   /* Below 1024px the grid stacks to one column (see the lg:grid-cols
      class on the wrapper) -- text and cards then share vertical space
