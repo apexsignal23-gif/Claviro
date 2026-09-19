@@ -207,6 +207,48 @@
      tracking on the existing Manrope stack. */
   #top h1.hero-h1{ font-weight: 500; letter-spacing: -0.02em; }
 
+  /* Hero eyebrow ("01 ———") and the right-side rotated card stack, both
+     added 2026-09-19 for the two-column hero redesign. Card "glass" look
+     reuses the same near-solid-fill technique as .card.d90-box/
+     #nav-chrome -- no backdrop-filter, see those comments for why that's
+     a real scroll-jank cost on this page, not just a style choice. */
+  .hero-eyebrow{
+    display: flex; align-items: center; gap: .9rem;
+    font-size: .85rem; font-weight: 600; color: var(--cream-dimmer);
+    margin-bottom: 1.5rem;
+  }
+  .hero-eyebrow-line{ display: block; width: 2.75rem; height: 1px; background: var(--ink-border); }
+
+  .hero-stack{
+    position: relative; width: 100%; max-width: 26rem;
+    aspect-ratio: 1 / 0.95; margin: 0 auto;
+  }
+  .hero-stack-card{
+    position: absolute; width: 78%; aspect-ratio: 1 / 0.92;
+    border-radius: 22px;
+    border: 1px solid rgba(255,255,255,.14);
+    background:
+      radial-gradient(120% 160% at 15% -15%, rgba(255,255,255,.1), transparent 55%),
+      linear-gradient(180deg, rgba(255,255,255,.06) 0%, rgba(255,255,255,.015) 45%, rgba(8,8,8,.4) 100%),
+      rgba(20,20,20,.94);
+    box-shadow: var(--shadow-card);
+  }
+  .hero-stack-num{
+    position: absolute; top: 1.5rem; right: 1.75rem;
+    font-size: .85rem; color: var(--cream-dimmer);
+  }
+  .hero-stack-label{
+    position: absolute; left: 2rem; bottom: 2.25rem;
+    font-size: 1.35rem; font-weight: 500; color: var(--cream);
+  }
+  .hero-stack-card-1{ top: 0; left: 0; transform: rotate(-9deg); z-index: 1; }
+  .hero-stack-card-2{ top: 15%; left: 13%; transform: rotate(-3deg); z-index: 2; }
+  .hero-stack-card-3{
+    top: 30%; left: 26%; transform: rotate(3deg); z-index: 3;
+    border-color: rgba(140,165,255,.35);
+    box-shadow: var(--shadow-card), 0 25px 70px -15px rgba(76,110,245,.45);
+  }
+
   /* Blue gradient (originally a gray-to-white sheen matching
      consulting.com's hero treatment, replaced 2026-08-25) — colors picked
      to match user-supplied screenshots of kortex.co's own gradient
@@ -2478,31 +2520,56 @@
   </div>
 </div>
 
-<!-- ================= HERO ================= -->
-<section id="top" class="relative min-h-[100dvh] w-full overflow-hidden">
+<!-- ================= HERO =================
+     Redesigned 2026-09-19 to a two-column layout (copy left, a stack of
+     3 rotated "process step" cards right) per an explicit reference
+     screenshot -- replaces the old single-column centered hero and the
+     velaris WebGL background canvas. That canvas's init call
+     (DOMContentLoaded handler further down the page) already
+     early-returns when #velaris-host/#velaris-canvas aren't found, so
+     removing these two elements is enough; no script changes needed. -->
+<section id="top" class="relative w-full overflow-hidden">
   <span id="top-content" class="sr-only"></span>
-  <div id="velaris-host" class="absolute inset-0" style="background: #0e0f11;">
-    <canvas id="velaris-canvas" aria-hidden="true" class="absolute inset-0 h-full w-full"></canvas>
-  </div>
-  <!-- Centered scrim so the copy stays readable wherever the moving gradient drifts. -->
-  <div class="pointer-events-none absolute inset-0" style="background: radial-gradient(58% 55% at 50% 44%, rgba(8,8,10,.82) 0%, rgba(8,8,10,.58) 45%, rgba(8,8,10,.22) 74%, transparent 100%);"></div>
+  <!-- Localized glow behind the card stack -- the page-wide dot-grid/glow
+       backdrop already comes from body::before (see its comment), this
+       is just the extra concentrated blue light the reference shows
+       pooling behind the cards specifically. -->
+  <div class="pointer-events-none absolute right-[-8%] top-1/2 -translate-y-1/2 h-[34rem] w-[34rem] rounded-full" style="background: radial-gradient(closest-side, rgba(76,110,245,.3), transparent 72%); filter: blur(64px);" aria-hidden="true"></div>
 
-  <div class="relative z-10 flex h-full min-h-[100dvh] items-center justify-center px-6 sm:px-10 lg:px-20 text-center">
-    <div class="max-w-[64rem]">
-      <h1 class="text-white hero-h1 text-[2.4rem] leading-[1.15] tracking-[-0.02em] sm:text-[3.5rem] lg:text-[4.5rem]">
-        Tech content<br />
-        Solved
+  <div class="relative z-10 mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-20 py-28 sm:py-32 lg:py-40 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-10 items-center">
+    <div>
+      <p class="hero-eyebrow"><span>01</span><span class="hero-eyebrow-line"></span></p>
+
+      <h1 class="text-white hero-h1 text-[2.6rem] leading-[1.05] tracking-[-0.02em] sm:text-[3.4rem] lg:text-[4.25rem]">
+        Tech<br />
+        content<br />
+        <span style="color: var(--accent);">Solved</span>
       </h1>
 
-      <p class="mt-6 max-w-[28rem] mx-auto text-[1rem] leading-[1.6] text-[var(--hero-fg-dim)]">
+      <p class="mt-6 max-w-[28rem] text-[1rem] leading-[1.6] text-[var(--hero-fg-dim)]">
         In a fast-moving landscape, we don&rsquo;t trade standard for speed.
       </p>
 
-      <div class="mt-9 flex flex-wrap items-center justify-center gap-5">
+      <div class="mt-9 flex flex-wrap items-center gap-5">
         <a href="#industry-standard" class="btn-glow rounded-full border border-white/15 bg-white/[0.03] px-6 py-3 text-[0.92rem] font-medium text-[var(--hero-fg)] transition-[transform,border-color,background-color] duration-300 hover:border-white/30 hover:bg-white/[0.06] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]">
           See How It Works
         </a>
         <a href="#cta" class="btn-primary">Book a Call</a>
+      </div>
+    </div>
+
+    <div class="hero-stack" aria-hidden="true">
+      <div class="hero-stack-card hero-stack-card-1">
+        <span class="hero-stack-num">01</span>
+        <span class="hero-stack-label">Strategy</span>
+      </div>
+      <div class="hero-stack-card hero-stack-card-2">
+        <span class="hero-stack-num">02</span>
+        <span class="hero-stack-label">Production</span>
+      </div>
+      <div class="hero-stack-card hero-stack-card-3">
+        <span class="hero-stack-num">03</span>
+        <span class="hero-stack-label">Distribution</span>
       </div>
     </div>
   </div>
