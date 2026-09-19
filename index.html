@@ -281,7 +281,10 @@
      with the page instead of staying pinned on screen, so they only
      cost anything during the brief moment the hero itself is on
      screen, not for the rest of the page's scroll distance. */
-  .hero-stack{ position: relative; min-height: 546px; }
+  /* perspective here (not on each card) is what makes rotateX below
+     read as the cards leaning back in 3D space, on a shared vanishing
+     point, instead of each one flattening independently. */
+  .hero-stack{ position: relative; min-height: 546px; perspective: 1400px; }
   @media (min-width: 1024px){
     .hero-stack{ margin-left: 100px; }
   }
@@ -299,7 +302,10 @@
   .hero-stack-card{
     position: absolute; width: 420px; height: 263px;
     border-radius: 17px; overflow: hidden;
-    transform: rotate(-10.5deg);
+    /* rotateX first = the backward 3D lean (top edge recedes away from
+       the viewer); rotate(-10.5deg) after is the original flat in-plane
+       spin, kept on top of that lean. */
+    transform: rotateX(18deg) rotate(-10.5deg);
     backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 21px 42px rgba(0,0,0,.18), 0 0 30px rgba(120,150,255,.1);
   }
