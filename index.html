@@ -319,14 +319,14 @@
      card was carrying background/overflow/border-ring/glow all in one
      place). isolation:isolate scopes ::after's z-index:-1 to just this
      card, so it tucks behind THIS card's own glass instead of jumping
-     behind a different card in the shared stack. --glow-x/--glow-y/
-     --glow-size/--glow-strength are plain custom properties so any
-     card can move, resize or mute its own corner light with just a
-     couple of declarations -- see the per-card blocks below. */
+     behind a different card in the shared stack. --glow-x/--glow-y
+     drive the border ring's hot spot below and are plain custom
+     properties so any card can move its own corner light with just one
+     declaration -- see the per-card blocks below. */
   .hero-stack-card{
     position: absolute; width: 435px; height: 272px; border-radius: 18px;
     isolation: isolate;
-    --glow-x: 100%; --glow-y: 0%; --glow-size: 120px; --glow-strength: 0;
+    --glow-x: 100%; --glow-y: 0%; --glow-strength: 0;
     /* rotateX(8deg) is the slight backward lean (top edge recedes);
        rotateY(10deg) tilts the right edge back/away from the viewer
        (positive angle = right side moves to negative z); rotate() after
@@ -366,24 +366,26 @@
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor; mask-composite: exclude;
   }
-  /* Soft atmospheric bleed, pinned to that same --glow-x/--glow-y point
-     and sitting behind the glass (z-index:-1, scoped to this one card
-     by isolation:isolate above) so it can spill outside the card into
-     the dark background instead of being trapped inside it. Living on
-     the outer (unclipped) card is what lets it show past the edge at
-     all. --glow-size/--glow-strength make this reusable per card --
-     card 1 sets strength to 0 (no atmosphere, plain card), 2 and 3 dial
-     it in below. */
+  /* Soft atmospheric bleed, centered just past the card's own corner
+     (mostly outside the box, a sliver tucked under the glass edge) and
+     sitting behind the glass (z-index:-1, scoped to this one card by
+     isolation:isolate above) so it can spill into the dark background
+     instead of being trapped inside it. Living on the outer (unclipped)
+     card is what lets it show past the edge at all. Position/size are
+     literal px per card below (not var()-driven off --glow-x/--glow-y
+     like ::before's hot spot) so this stays trivially eyeballable and
+     isn't riding on a calc() chain if a browser ever resolves one of
+     those oddly. --glow-strength (opacity) still makes intensity
+     reusable -- card 1 is 0 (no atmosphere, plain card). */
   .hero-stack-card::after{
     content: ""; position: absolute; z-index: -1; pointer-events: none;
-    width: var(--glow-size); height: var(--glow-size);
-    left: calc(var(--glow-x) - (var(--glow-size) / 2));
-    top: calc(var(--glow-y) - (var(--glow-size) / 2));
     border-radius: 50%;
     opacity: var(--glow-strength);
     background: radial-gradient(circle, rgba(80,130,255,.9) 0%, rgba(70,110,240,.4) 42%, transparent 72%);
     filter: blur(20px);
   }
+  .hero-stack-card-2::after{ width: 140px; height: 140px; left: 380px; top: -80px; }
+  .hero-stack-card-3::after{ width: 125px; height: 125px; left: 385px; top: -72px; }
   .hero-stack-label{
     position: absolute; left: 51px; top: 57px;
     font-size: 19px; font-weight: 300; color: #ecf0f8; letter-spacing: -0.03em;
@@ -410,7 +412,7 @@
   }
   .hero-stack-card-2{
     top: 155px; left: 119px; z-index: 2;
-    --glow-x: 100%; --glow-y: 0%; --glow-size: 130px; --glow-strength: .85;
+    --glow-x: 100%; --glow-y: 0%; --glow-strength: .85;
     box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 22px 43px rgba(0,0,0,.18);
   }
   .hero-stack-card-2 .hero-stack-card-inner{
@@ -422,7 +424,7 @@
   }
   .hero-stack-card-3{
     top: 294px; left: 221px; z-index: 3;
-    --glow-x: 100%; --glow-y: 0%; --glow-size: 120px; --glow-strength: .65;
+    --glow-x: 100%; --glow-y: 0%; --glow-strength: .65;
     box-shadow: inset 0 0 0 1px rgba(186,200,239,.28), 0 22px 48px rgba(0,0,0,.2);
   }
   .hero-stack-card-3 .hero-stack-card-inner{
