@@ -388,8 +388,16 @@
     -webkit-mask-image: linear-gradient(to bottom, #000 90%, transparent 100%);
     mask-image: linear-gradient(to bottom, #000 90%, transparent 100%);
   }
+  /* Border-line glow, concentrated at the top-right corner: a radial
+     (not linear) gradient centered at 100% 0% peaks brightness exactly
+     there and falls off along both adjacent edges, matching the
+     reference's close-up. drop-shadow (not box-shadow) is what makes
+     the glow hug the actual ring shape this pseudo-element draws --
+     box-shadow only glows the rectangular bounding box, ignoring the
+     ring's hollow center and rounded corners entirely. */
   .hero-stack-card-2::before{
-    background: linear-gradient(115deg, #fff 0%, rgba(225,238,255,.95) 30%, rgba(150,190,255,1) 65%, rgba(130,175,255,.95) 100%);
+    background: radial-gradient(140% 140% at 100% 0%, #fff 0%, rgba(170,205,255,.95) 15%, rgba(140,175,255,.7) 35%, rgba(200,215,255,.55) 65%, rgba(180,195,230,.45) 100%);
+    filter: drop-shadow(0 0 6px rgba(150,190,255,.85)) drop-shadow(0 0 16px rgba(120,165,255,.55));
   }
   .hero-stack-card-3{
     top: 294px; left: 221px; z-index: 3;
@@ -401,7 +409,8 @@
     mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
   }
   .hero-stack-card-3::before{
-    background: linear-gradient(115deg, rgba(255,255,255,.9) 0%, rgba(210,225,250,.55) 34%, rgba(130,165,245,.85) 70%, rgba(120,155,235,.6) 100%);
+    background: radial-gradient(140% 140% at 100% 0%, rgba(255,255,255,.9) 0%, rgba(170,200,250,.7) 15%, rgba(120,155,240,.5) 35%, rgba(180,195,230,.4) 65%, rgba(160,175,215,.35) 100%);
+    filter: drop-shadow(0 0 5px rgba(145,180,255,.6)) drop-shadow(0 0 12px rgba(115,155,255,.35));
   }
   /* Below 1024px the grid stacks to one column (see the lg:grid-cols
      class on the wrapper) -- text and cards then share vertical space
