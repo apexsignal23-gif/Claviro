@@ -325,6 +325,14 @@
      "glow floating above the button" bug reported. */
   .glow-btn-block{ display: block; width: 100%; border-radius: 6px; margin-top: 1.5rem; }
   .glow-btn-block .pc-btn{ margin-top: 0; }
+  /* Same technique again, this time wrapping the whole Core pricing
+     card instead of its Apply button -- per a follow-up request moving
+     the glow off the button and onto the card's own border. Flex +
+     height:100% so the wrapper (now the actual grid item inside
+     .pricing-cards) still passes through the grid's align-items:
+     stretch to the real .pricing-card nested one level in. */
+  .glow-card{ display: flex; height: 100%; border-radius: 6px; }
+  .glow-card .pricing-card{ flex: 1; }
   .hero-cardsvg{ position: absolute; inset: 0; width: 1672px; height: 940px; pointer-events: none; }
   /* Hover-lift on the 3 SVG cards, brought back per explicit request
      (this existed on the old CSS-div version of these cards earlier in
@@ -3731,7 +3739,10 @@
 
     <div class="pricing-cards reveal mt-12">
 
-      <div class="pricing-card pricing-card-popular">
+      <div class="glow-btn glow-card">
+        <span class="glow-btn-ambient"></span>
+        <span class="glow-btn-ring-mask"><span class="glow-btn-ring-spin"></span></span>
+        <div class="pricing-card pricing-card-popular">
         <div class="pc-header">
           <div class="pc-plan-row">
             <span class="pc-plan-name"><i class="ph-bold ph-briefcase" aria-hidden="true"></i>Core</span>
@@ -3743,11 +3754,7 @@
             <span class="pc-price">$3,499</span>
             <span class="pc-period">/mo</span>
           </div>
-          <span class="glow-btn glow-btn-block">
-            <span class="glow-btn-ambient"></span>
-            <span class="glow-btn-ring-mask"><span class="glow-btn-ring-spin"></span></span>
-            <a href="#cta" class="pc-btn pc-btn-solid">Apply</a>
-          </span>
+          <a href="#cta" class="pc-btn pc-btn-solid">Apply</a>
         </div>
         <p class="pc-features-label">Package Includes</p>
         <ul class="pc-features">
@@ -3765,6 +3772,7 @@
           <li><i class="ph-bold ph-check" aria-hidden="true"></i>Upcoming Month Optimization</li>
           <li><i class="ph-bold ph-check" aria-hidden="true"></i>Made for Early to Mid-Stage Companies</li>
         </ul>
+        </div>
       </div>
 
       <div class="pricing-card">
