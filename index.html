@@ -1847,8 +1847,12 @@
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
   .pc-price-struck{ font-size: 1.25rem; opacity: .65; text-decoration: line-through; }
+  /* Inline now (same row as the price, not stacked below it) per
+     explicit request -- moved into .pc-price-row as its last flex
+     child, so the margin-top/align-self that used to position it as a
+     standalone block underneath are gone. */
   .pc-save-badge{
-    position: relative; margin-top: .6rem; display: inline-flex; align-items: center; align-self: flex-start;
+    display: inline-flex; align-items: center;
     font-size: .72rem; font-weight: 600;
     color: #c5d9ff; background: rgba(96,119,248,.24);
     padding: .3rem .65rem; border-radius: 4px;
@@ -3687,8 +3691,8 @@
           <div class="pc-price-row">
             <span class="pc-price pc-price-struck">$15,000</span>
             <span class="pc-price">$12,000</span>
+            <span class="pc-save-badge">SAVE $3,000</span>
           </div>
-          <span class="pc-save-badge">SAVE $3,000</span>
           <a href="#cta" class="pc-btn pc-btn-solid">Apply</a>
         </div>
         <p class="pc-features-label">Package Includes</p>
