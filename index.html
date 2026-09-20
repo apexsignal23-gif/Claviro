@@ -315,7 +315,16 @@
      pill like the hero one), so this variant swaps the wrapper to a
      full-width block and matches .pc-btn's own 6px radius instead of
      the hero button's 33px pill. */
-  .glow-btn-block{ display: block; width: 100%; border-radius: 6px; }
+  /* margin-top moved here from .pc-btn itself and zeroed out there
+     (see the .glow-btn-block .pc-btn override below) -- .pc-btn's own
+     margin-top was getting trapped inside .glow-btn's overflow:hidden
+     box instead of collapsing out above it, inflating the wrapper's
+     effective height at the top and throwing off the glow layers'
+     top:50%/left:50% centering (they centered on that inflated box,
+     not on the button's own visible rectangle) -- exactly the
+     "glow floating above the button" bug reported. */
+  .glow-btn-block{ display: block; width: 100%; border-radius: 6px; margin-top: 1.5rem; }
+  .glow-btn-block .pc-btn{ margin-top: 0; }
   .hero-cardsvg{ position: absolute; inset: 0; width: 1672px; height: 940px; pointer-events: none; }
   /* Hover-lift on the 3 SVG cards, brought back per explicit request
      (this existed on the old CSS-div version of these cards earlier in
