@@ -2637,15 +2637,17 @@
           <radialGradient id="wash3" cx="0" cy="0" r="1" gradientTransform="translate(1200 655) rotate(16) scale(370 270)" gradientUnits="userSpaceOnUse"><stop stop-color="#727784" stop-opacity=".15"/><stop offset="1" stop-color="#727784" stop-opacity="0"/></radialGradient>
           <linearGradient id="stroke3" x1="1068" y1="587" x2="1600" y2="540" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#edf2ff" stop-opacity=".98"/><stop offset=".38" stop-color="#b4bfd5" stop-opacity=".72"/><stop offset=".72" stop-color="#859dff" stop-opacity=".82"/><stop offset="1" stop-color="#6987ff" stop-opacity=".95"/></linearGradient>
 
-          <linearGradient id="prodEdgeGlow" x1="1328" y1="327" x2="1442" y2="412" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#3347c9" stop-opacity="0"/>
-            <stop offset=".18" stop-color="#4157dc" stop-opacity=".86"/>
-            <stop offset=".38" stop-color="#536cf0" stop-opacity="1"/>
-            <stop offset=".54" stop-color="#768cff" stop-opacity="1"/>
-            <stop offset=".64" stop-color="#d7dfff" stop-opacity="1"/>
-            <stop offset=".73" stop-color="#8d9fff" stop-opacity="1"/>
-            <stop offset=".86" stop-color="#5f73ec" stop-opacity=".96"/>
-            <stop offset="1" stop-color="#3e52ce" stop-opacity=".24"/>
+          <linearGradient id="prodTopBlueGlow" x1="1290" y1="336" x2="1392.4" y2="313.7" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#5f73ef" stop-opacity="0"/>
+            <stop offset=".46" stop-color="#6b80f7" stop-opacity=".34"/>
+            <stop offset=".80" stop-color="#8498ff" stop-opacity=".86"/>
+            <stop offset="1" stop-color="#b7c2ff" stop-opacity="1"/>
+          </linearGradient>
+          <linearGradient id="prodRightBlueGlow" x1="1392.4" y1="313.7" x2="1443" y2="426" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#b7c2ff" stop-opacity="1"/>
+            <stop offset=".18" stop-color="#91a3ff" stop-opacity=".95"/>
+            <stop offset=".56" stop-color="#7186fb" stop-opacity=".46"/>
+            <stop offset="1" stop-color="#5c71ee" stop-opacity="0"/>
           </linearGradient>
 
           <filter id="glowBlue" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="18"/></filter>
@@ -2683,19 +2685,6 @@
           <filter id="softShadow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#000" flood-opacity=".16"/></filter>
         </defs>
 
-        <path d="M 1312 331.0 L 1392.4 313.7 Q 1410 310 1414.8 327.3 L 1445 435"
-              fill="none" stroke="#3448c7" stroke-width="24"
-              stroke-linecap="round" stroke-linejoin="round" opacity=".28" filter="url(#edgeBloomStrong)"/>
-        <path d="M 1318 329.5 L 1392.4 313.7 Q 1410 310 1414.8 327.3 L 1442 424"
-              fill="none" stroke="url(#prodEdgeGlow)" stroke-width="18"
-              stroke-linecap="round" stroke-linejoin="round" opacity=".62" filter="url(#edgeBloom)"/>
-        <path d="M 1328 327.3 L 1392.4 313.7 Q 1410 310 1414.8 327.3 L 1439 414"
-              fill="none" stroke="#536cf0" stroke-width="9"
-              stroke-linecap="round" stroke-linejoin="round" opacity=".88" filter="url(#edgeBloom)"/>
-        <path d="M 1338 325.3 L 1392.4 313.7 Q 1410 310 1414.8 327.3 L 1436 403"
-              fill="none" stroke="url(#prodEdgeGlow)" stroke-width="4.4"
-              stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
-
         <path d="M 1482 512.2 L 1526.3 504.2 Q 1544 501 1548.5 518.4 L 1566 586"
               fill="none" stroke="#607aff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
               opacity=".10" filter="url(#edgeBloom)"/>
@@ -2727,15 +2716,13 @@
         <path d="M 916.6 414.3 Q 899 418 903.8 435.3 L 952 610" fill="none" stroke="url(#prodLeftWhiteGlow)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity=".58" filter="url(#whiteEdgeBloom)"/>
         <path d="M 916.6 414.3 Q 899 418 903.8 435.3 L 952 610" fill="none" stroke="url(#prodLeftWhiteGlow)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity=".98"/>
 
-        <path d="M 1337 325.5 L 1392.4 313.7 Q 1410 310 1414.8 327.3 L 1434.5 398"
-              fill="none" stroke="#7388ff" stroke-width="3.3"
-              stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
-        <path d="M 1350 322.7 L 1392.4 313.7 Q 1410 310 1414.8 327.3 L 1431 385"
-              fill="none" stroke="#aebcff" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
-        <path d="M 1363 319.9 L 1392.4 313.7 Q 1410 310 1414.8 327.3 L 1426.5 369"
-              fill="none" stroke="#e2e7ff" stroke-width="1.05"
-              stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+        <path d="M 1288 336.0 L 1392.4 313.7" fill="none" stroke="#7186fb" stroke-width="18" stroke-linecap="round" opacity=".18" filter="url(#whiteEdgeBloomSoft)"/>
+        <path d="M 1288 336.0 L 1392.4 313.7" fill="none" stroke="url(#prodTopBlueGlow)" stroke-width="8" stroke-linecap="round" opacity=".64" filter="url(#whiteEdgeBloom)"/>
+        <path d="M 1288 336.0 L 1392.4 313.7" fill="none" stroke="url(#prodTopBlueGlow)" stroke-width="2.8" stroke-linecap="round" opacity="1"/>
+
+        <path d="M 1392.4 313.7 Q 1410 310 1414.8 327.3 L 1443 426" fill="none" stroke="#7186fb" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" opacity=".18" filter="url(#whiteEdgeBloomSoft)"/>
+        <path d="M 1392.4 313.7 Q 1410 310 1414.8 327.3 L 1443 426" fill="none" stroke="url(#prodRightBlueGlow)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" opacity=".64" filter="url(#whiteEdgeBloom)"/>
+        <path d="M 1392.4 313.7 Q 1410 310 1414.8 327.3 L 1443 426" fill="none" stroke="url(#prodRightBlueGlow)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
 
         <g font-family="Inter Display, Inter, sans-serif" font-weight="400">
           <text x="841" y="332" fill="#edf0f7" font-size="27" letter-spacing="-.6" transform="rotate(-12.5 841 332)">Strategy</text>
