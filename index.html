@@ -330,7 +330,17 @@
      the glow off the button and onto the card's own border. Flex +
      height:100% so the wrapper (now the actual grid item inside
      .pricing-cards) still passes through the grid's align-items:
-     stretch to the real .pricing-card nested one level in. */
+     stretch to the real .pricing-card nested one level in.
+
+     FIX: this markup deliberately skips .glow-btn-ambient (present on
+     every other .glow-btn instance) -- .pricing-card's own background
+     is nearly transparent (rgba(255,255,255,.02)), so that blurred
+     rotating circle showed straight through the card's content area as
+     an obvious moving light patch ("looks like a radar"), instead of
+     staying an unnoticed soft wash the way it does behind the much
+     more opaque hero button/card fills. Only the ring-mask layer
+     (already clipped to just the 1px border) is used here, so the
+     glow only ever traces the border line itself. */
   .glow-card{ display: flex; height: 100%; border-radius: 6px; }
   .glow-card .pricing-card{ flex: 1; }
   .hero-cardsvg{ position: absolute; inset: 0; width: 1672px; height: 940px; pointer-events: none; }
@@ -3740,7 +3750,6 @@
     <div class="pricing-cards reveal mt-12">
 
       <div class="glow-btn glow-card">
-        <span class="glow-btn-ambient"></span>
         <span class="glow-btn-ring-mask"><span class="glow-btn-ring-spin"></span></span>
         <div class="pricing-card pricing-card-popular">
         <div class="pc-header">
