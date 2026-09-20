@@ -310,6 +310,12 @@
   @media (prefers-reduced-motion: reduce){
     .glow-btn-ambient, .glow-btn-ring-spin{ animation: none; }
   }
+  /* Same moving border-glow, reused on the Core plan's Apply button --
+     that button is width:100% inside its card (not a content-sized
+     pill like the hero one), so this variant swaps the wrapper to a
+     full-width block and matches .pc-btn's own 6px radius instead of
+     the hero button's 33px pill. */
+  .glow-btn-block{ display: block; width: 100%; border-radius: 6px; }
   .hero-cardsvg{ position: absolute; inset: 0; width: 1672px; height: 940px; pointer-events: none; }
   /* Hover-lift on the 3 SVG cards, brought back per explicit request
      (this existed on the old CSS-div version of these cards earlier in
@@ -3728,7 +3734,11 @@
             <span class="pc-price">$3,499</span>
             <span class="pc-period">/mo</span>
           </div>
-          <a href="#cta" class="pc-btn pc-btn-solid">Apply</a>
+          <span class="glow-btn glow-btn-block">
+            <span class="glow-btn-ambient"></span>
+            <span class="glow-btn-ring-mask"><span class="glow-btn-ring-spin"></span></span>
+            <a href="#cta" class="pc-btn pc-btn-solid">Apply</a>
+          </span>
         </div>
         <p class="pc-features-label">Package Includes</p>
         <ul class="pc-features">
