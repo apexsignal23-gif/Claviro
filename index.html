@@ -276,6 +276,40 @@
     background: linear-gradient(180deg, #91adff 0%, #7f9efc 100%);
     box-shadow: 0 12px 31px rgba(76,100,220,.14), inset 0 1px 0 rgba(255,255,255,.30);
   }
+  /* Moving border-glow on "See How It Works" only, adapted from
+     contentfloww.com's hero button (curled its CSS via curl to get the
+     exact technique, not eyeballed). A conic-gradient with one bright
+     ~55deg arc (the rest transparent) spins continuously behind the
+     real button; rendered twice -- once full-size and blurred as a
+     faint ambient wash (.glow-btn-ambient, opacity .12 like the
+     source), once clipped down to just the button's own 1px border
+     ring via the padding + mask-composite:exclude technique (same one
+     used on the hero cards) so the sweep reads as a crisp light
+     chasing the border specifically (.glow-btn-ring-spin, inside
+     .glow-btn-ring-mask). The real button (a sibling, later in the
+     DOM) paints on top of both layers with its own static border/fill
+     unchanged, same as the source's real button sitting above its
+     glow layers. */
+  .glow-btn{ position: relative; display: inline-flex; border-radius: 33px; overflow: hidden; }
+  .glow-btn-ambient, .glow-btn-ring-spin{
+    content: ""; position: absolute; left: 50%; top: 50%;
+    width: 220%; aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    background-image: conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,.5) 0deg, rgba(255,255,255,0) 60deg, rgba(255,255,255,0) 310deg, rgba(255,255,255,.5) 360deg);
+    animation: glow-btn-spin 2.5s infinite linear;
+    pointer-events: none;
+  }
+  .glow-btn-ambient{ opacity: .12; filter: blur(8px); }
+  .glow-btn-ring-mask{
+    position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+    overflow: hidden; pointer-events: none;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+  }
+  @keyframes glow-btn-spin{ to{ transform: translate(-50%, -50%) rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce){
+    .glow-btn-ambient, .glow-btn-ring-spin{ animation: none; }
+  }
   .hero-cardsvg{ position: absolute; inset: 0; width: 1672px; height: 940px; pointer-events: none; }
   @media (max-width: 900px){
     .hero-copy2{ left: 40px; }
@@ -2623,7 +2657,11 @@
         </h1>
         <p class="hero-sub2">In a fast-moving landscape, we don&rsquo;t trade<br>standard for speed.</p>
         <div class="hero-actions2">
-          <a href="#industry-standard" class="hero-btn2 hero-btn2-secondary">See How It Works</a>
+          <span class="glow-btn">
+            <span class="glow-btn-ambient"></span>
+            <span class="glow-btn-ring-mask"><span class="glow-btn-ring-spin"></span></span>
+            <a href="#industry-standard" class="hero-btn2 hero-btn2-secondary">See How It Works</a>
+          </span>
           <a href="#cta" class="hero-btn2 hero-btn2-primary">Book a Call</a>
         </div>
       </div>
