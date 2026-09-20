@@ -2538,38 +2538,32 @@
   .pw-point-icon i{ font-size: clamp(1.15rem, 1.6vw, 1.4rem); color: var(--accent-hot); }
   .pw-point-label{ font-size: clamp(.78rem, 1.3vw, .92rem); font-weight: 600; line-height: 1.35; color: var(--cream-dim); white-space: nowrap; }
 
-  /* testimonial carousel — revived 2026-09-08 (was built at some point,
-     never wired to any markup until now); only .t-dot's inactive color
-     needed changing, from a dark-on-dark tone made for a light card to
-     a light-on-dark one visible against this theme's actual dark
-     cards. */
-  .t-slide{ display:none; }
-  .t-slide.is-active{ display:block; }
-  .t-dot{
-    width:8px; height:8px; border-radius:999px; background: rgba(255,255,255,.18); border: none; padding: 0; cursor: pointer;
-    transition: background .3s var(--ease-spring), transform .3s var(--ease-spring);
+  /* Testimonials grid — replaced the old single-slide carousel
+     (2026-09-20, "the testimonial sections seems very odd"). The
+     carousel's center-aligned text and pure-white circular arrow
+     buttons were the only center-aligned, white-accented UI on the
+     entire page — everything else here is left-aligned copy on dark
+     .cs-card-style gradient cards (case-studies grid, the "mirror"
+     features grid). `.t-grid`/`.t-card` mirror `.cs-grid`/`.cs-card`'s
+     exact mechanics (same gradient, border, radius, 3-up breakpoint)
+     as its own class pair so this section stays independently
+     editable, per the same rationale already used for the mirror
+     section's grid. */
+  .t-grid{ display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  @media (min-width: 768px){ .t-grid{ grid-template-columns: repeat(3, 1fr); } }
+  .t-card{
+    background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 16px;
+    padding: 1.75rem 1.5rem;
+    display: flex; flex-direction: column; gap: 1.5rem;
   }
-  .t-dot.is-active{ background: var(--accent); transform: scale(1.2); }
-  /* Vertical centering (translateY(-50%), for sitting at top:50%) lives
-     in `transform` here rather than a Tailwind `-translate-y-1/2`
-     utility class in the markup, because `:hover`/`:active` below need
-     to layer their own transform on top — a plain CSS transform rule
-     fully REPLACES the previous value rather than composing with it,
-     so if the centering came from a separate utility class, hovering
-     or clicking would wipe it out and the button would visibly jump
-     out of its centered position. Same fix as the day90-dot-pop
-     keyframe elsewhere on this page for the identical reason. */
-  .t-arrow{
-    display:flex; align-items:center; justify-content:center;
-    width: 44px; height: 44px; border-radius: 999px; border: none; padding: 0; cursor: pointer;
-    background: #ffffff; color: var(--accent-deep); font-size: 1.1rem;
-    box-shadow: 0 12px 24px -10px rgba(76,110,245,.35);
-    touch-action: manipulation;
-    transform: translateY(-50%);
-    transition: transform .3s var(--ease-spring), box-shadow .3s var(--ease-spring);
-  }
-  .t-arrow:hover{ transform: translateY(-50%) translateY(-2px); box-shadow: 0 16px 30px -10px rgba(22,50,79,.45); }
-  .t-arrow:active{ transform: translateY(-50%) scale(.94); }
+  .t-quote-icon{ font-size: 1.6rem; color: var(--accent-hot); opacity: .55; }
+  .t-quote{ flex: 1; font-size: .92rem; line-height: 1.7; color: var(--cream-dim); }
+  .t-person{ display: flex; align-items: center; gap: .7rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,.08); }
+  .t-avatar{ border-radius: 999px; flex-shrink: 0; }
+  .t-name{ font-weight: 600; font-size: .88rem; color: var(--cream); }
+  .t-role{ font-size: .78rem; color: var(--cream-dimmer); }
 
   /* mobile nav */
   /* Full-viewport takeover panel, not a content-sized dropdown: the header
@@ -3824,15 +3818,15 @@
   </div>
 </section>
 
-<!-- ================= TESTIMONIALS (replaced "Built For") — layout
-     modeled on steadyrev.ca's own testimonial section per explicit
-     request: a centered card, bold client-company wordmark at top, a
-     quote, prev/next circular arrows either side, avatar+name+title at
-     the bottom. Reskinned to this site's dark theme instead of
-     steadyrev's light-blue-background/white-card look (this is still
-     the same dark `.card` used everywhere else on the page).
-     Revives `.t-slide`/`.t-dot`/`.t-arrow` (CSS already existed,
-     unused anywhere until now) rather than writing new classes.
+<!-- ================= TESTIMONIALS =================
+     Rebuilt 2026-09-20 ("the testimonial section seems very odd") from
+     a centered single-slide carousel with pure-white circular arrow
+     buttons — the only centered, white-accented UI on the whole page —
+     into a 3-up left-aligned card grid, matching the visual language
+     already established twice elsewhere (the case-studies grid and the
+     "mirror" features grid): same dark gradient card, same border/
+     radius, same 3-col/1-col breakpoint. No carousel JS needed since
+     all 3 show at once.
      CONTENT IS AI-GENERATED PLACEHOLDER, per explicit request, for
      visualizing the layout — every name/company/quote (Priya Raman,
      Marcus Webb, Daniela Ortiz and their companies) is fictional, not
@@ -3842,63 +3836,48 @@
      AI-generated ones, before this goes live along with the rest of
      this placeholder content; do not ship any of it as real. -->
 <section id="testimonials" class="relative py-24 sm:py-28">
-  <div class="max-w-[1100px] mx-auto px-6 lg:px-10">
-    <div class="text-left"><p class="en-eyebrow">Testimonial</p></div>
-    <h2 class="reveal text-left text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em] w-full">
+  <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
+    <p class="reveal en-eyebrow">Testimonial</p>
+    <h2 class="reveal text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
       Don&rsquo;t take <span class="text-shine inline-block">our word for it.</span>
     </h2>
-    <p class="reveal mt-5 text-left text-[1rem] leading-[1.65] text-[var(--cream-dim)]">Hear from their experience.</p>
+    <p class="reveal mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">Hear from their experience.</p>
 
-    <div class="reveal mt-11 relative">
-      <button type="button" class="t-arrow absolute left-[-6px] sm:left-[-56px] top-1/2 z-10" data-t-prev aria-label="Previous testimonial">
-        <i class="ph-bold ph-arrow-left" aria-hidden="true"></i>
-      </button>
-      <button type="button" class="t-arrow absolute right-[-6px] sm:right-[-56px] top-1/2 z-10" data-t-next aria-label="Next testimonial">
-        <i class="ph-bold ph-arrow-right" aria-hidden="true"></i>
-      </button>
-
-      <div class="card p-10 sm:p-16 text-center">
-        <div class="t-slide is-active" data-t-slide>
-          <p class="font-display font-bold text-[1.15rem] tracking-[0.02em] text-[var(--cream)] uppercase">Northbound Analytics</p>
-          <p class="mt-7 text-[1.15rem] leading-[1.75] text-[var(--cream-dim)]">&ldquo;Before Claviro, my LinkedIn presence was whatever I managed to post at midnight before a launch. Ten months in, three closed deals started as a comment on one of our posts, and my sales team sends prospects to my profile before they ever see a deck.&rdquo;</p>
-          <div class="mt-8 flex items-center justify-center gap-3">
-            <img src="https://i.pravatar.cc/128?img=48" alt="" width="64" height="64" class="rounded-full" />
-            <div class="text-left">
-              <p class="font-semibold text-[0.92rem] text-[var(--cream)]">Priya Raman</p>
-              <p class="text-[0.82rem] text-[var(--cream-dimmer)]">Founder &amp; CEO, Northbound Analytics</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="t-slide" data-t-slide>
-          <p class="font-display font-bold text-[1.15rem] tracking-[0.02em] text-[var(--cream)] uppercase">Fielder Robotics</p>
-          <p class="mt-7 text-[1.15rem] leading-[1.75] text-[var(--cream-dim)]">&ldquo;We'd tried two other agencies before this, and both wanted us to sound like everyone else in the industry. Claviro sat down with our own engineers, pulled out opinions we'd never bothered writing down, and turned it into a posting schedule I don't have to think about anymore.&rdquo;</p>
-          <div class="mt-8 flex items-center justify-center gap-3">
-            <img src="https://i.pravatar.cc/128?img=14" alt="" width="64" height="64" class="rounded-full" />
-            <div class="text-left">
-              <p class="font-semibold text-[0.92rem] text-[var(--cream)]">Marcus Webb</p>
-              <p class="text-[0.82rem] text-[var(--cream-dimmer)]">VP of Marketing, Fielder Robotics</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="t-slide" data-t-slide>
-          <p class="font-display font-bold text-[1.15rem] tracking-[0.02em] text-[var(--cream)] uppercase">Ledgerline</p>
-          <p class="mt-7 text-[1.15rem] leading-[1.75] text-[var(--cream-dim)]">&ldquo;We went from around 1,900 followers to just over 14,000 in ten months, but the number that actually mattered was the 22 sales calls booked directly from people who found us through a post. That's pipeline we didn't have before.&rdquo;</p>
-          <div class="mt-8 flex items-center justify-center gap-3">
-            <img src="https://i.pravatar.cc/128?img=29" alt="" width="64" height="64" class="rounded-full" />
-            <div class="text-left">
-              <p class="font-semibold text-[0.92rem] text-[var(--cream)]">Daniela Ortiz</p>
-              <p class="text-[0.82rem] text-[var(--cream-dimmer)]">Co-Founder, Ledgerline</p>
-            </div>
+    <div class="t-grid reveal mt-12">
+      <div class="t-card">
+        <i class="ph-fill ph-quotes t-quote-icon" aria-hidden="true"></i>
+        <p class="t-quote">&ldquo;Before Claviro, my LinkedIn presence was whatever I managed to post at midnight before a launch. Ten months in, three closed deals started as a comment on one of our posts, and my sales team sends prospects to my profile before they ever see a deck.&rdquo;</p>
+        <div class="t-person">
+          <img src="https://i.pravatar.cc/128?img=48" alt="" width="44" height="44" class="t-avatar" />
+          <div>
+            <p class="t-name">Priya Raman</p>
+            <p class="t-role">Founder &amp; CEO, Northbound Analytics</p>
           </div>
         </div>
       </div>
 
-      <div class="mt-6 flex items-center justify-center gap-2">
-        <button type="button" class="t-dot is-active" data-t-dot aria-label="Show testimonial 1"></button>
-        <button type="button" class="t-dot" data-t-dot aria-label="Show testimonial 2"></button>
-        <button type="button" class="t-dot" data-t-dot aria-label="Show testimonial 3"></button>
+      <div class="t-card">
+        <i class="ph-fill ph-quotes t-quote-icon" aria-hidden="true"></i>
+        <p class="t-quote">&ldquo;We'd tried two other agencies before this, and both wanted us to sound like everyone else in the industry. Claviro sat down with our own engineers, pulled out opinions we'd never bothered writing down, and turned it into a posting schedule I don't have to think about anymore.&rdquo;</p>
+        <div class="t-person">
+          <img src="https://i.pravatar.cc/128?img=14" alt="" width="44" height="44" class="t-avatar" />
+          <div>
+            <p class="t-name">Marcus Webb</p>
+            <p class="t-role">VP of Marketing, Fielder Robotics</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="t-card">
+        <i class="ph-fill ph-quotes t-quote-icon" aria-hidden="true"></i>
+        <p class="t-quote">&ldquo;We went from around 1,900 followers to just over 14,000 in ten months, but the number that actually mattered was the 22 sales calls booked directly from people who found us through a post. That's pipeline we didn't have before.&rdquo;</p>
+        <div class="t-person">
+          <img src="https://i.pravatar.cc/128?img=29" alt="" width="44" height="44" class="t-avatar" />
+          <div>
+            <p class="t-name">Daniela Ortiz</p>
+            <p class="t-role">Co-Founder, Ledgerline</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -4381,30 +4360,6 @@ void main() {
       item.setAttribute('data-open', String(willOpen));
       btn.setAttribute('aria-expanded', String(willOpen));
     });
-  });
-})();
-
-// Testimonials carousel — prev/next arrows + dot navigation toggling
-// `.is-active` on slides and dots. Reuses .t-slide/.t-dot/.t-arrow,
-// CSS that already existed in this file but had never been wired to
-// any markup or script until now.
-(function () {
-  var slides = Array.prototype.slice.call(document.querySelectorAll('[data-t-slide]'));
-  var dots = Array.prototype.slice.call(document.querySelectorAll('[data-t-dot]'));
-  var prevBtn = document.querySelector('[data-t-prev]');
-  var nextBtn = document.querySelector('[data-t-next]');
-  if (!slides.length) return;
-  var index = 0;
-
-  function show(i) {
-    index = (i + slides.length) % slides.length;
-    slides.forEach(function (el, n) { el.classList.toggle('is-active', n === index); });
-    dots.forEach(function (el, n) { el.classList.toggle('is-active', n === index); });
-  }
-  if (prevBtn) prevBtn.addEventListener('click', function () { show(index - 1); });
-  if (nextBtn) nextBtn.addEventListener('click', function () { show(index + 1); });
-  dots.forEach(function (dot, n) {
-    dot.addEventListener('click', function () { show(n); });
   });
 })();
 
