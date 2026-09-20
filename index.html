@@ -1849,10 +1849,25 @@
   @media (min-width: 768px){
     .en-cards{ grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
   }
+  /* Liquid-glass treatment, same recipe as `.card.d90-box` above (see
+     that comment for the full writeup): a soft corner sheen layered
+     over a vertical glass-tint gradient, plus a bright inset top edge/
+     dim inset bottom edge to read as a curved glass rim -- over a
+     near-solid fill rather than an actual backdrop-filter blur, since
+     these 4 cards sit in a scrolling section too and blur here would be
+     the same real per-frame compositing cost that got removed from
+     `.d90-box` and `#nav-chrome`. */
   .en-card{
     display: flex; flex-direction: column; gap: 1.4rem;
-    border: 1px solid var(--ink-border); border-radius: 20px;
-    background: rgba(255,255,255,.015);
+    border: 1px solid rgba(255,255,255,.14); border-radius: 20px;
+    background:
+      radial-gradient(120% 160% at 12% -20%, rgba(255,255,255,.12), transparent 55%),
+      linear-gradient(180deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,.02) 45%, rgba(8,8,8,.35) 100%),
+      rgba(16,16,16,.94);
+    box-shadow:
+      var(--shadow-card),
+      inset 0 1px 0 rgba(255,255,255,.16),
+      inset 0 -1px 0 rgba(255,255,255,.04);
     padding: 1.6rem 1.6rem 0;
     overflow: hidden;
   }
