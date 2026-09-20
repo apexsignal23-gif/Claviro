@@ -3921,7 +3921,19 @@
    'resize') instead of window.innerWidth/innerHeight, which would
    wrongly include the fixed floating header and any other page chrome
    that isn't actually part of this section's own box.
-   ===================================================================== */
+
+   FIX 2026-09-20: on some refreshes the very first measurement landed
+   before layout had actually settled (e.g. web fonts still swapping,
+   which can shift #top's rendered box by enough to throw the scale off
+   before the fonts finish and nothing re-triggers a fix), leaving
+   --hero-s stuck too large -- the hero then rendered close to its true
+   1672x940 size, badly overflowing #top's much smaller real box and
+   getting cropped by .hero-stagewrap's overflow:hidden, i.e. exactly
+   the "cards huge and '01' floating disconnected" bug reported. A
+   single synchronous call right after the DOM parses isn't enough of a
+   guarantee by itself, so this now also re-checks on 'load' (images/
+   fonts finished) and across a couple of animation frames right after,
+   on top of the ongoing ResizeObserver correction for later changes. */
 (function(){
   const section = document.getElementById('top');
   if(!section) return;
@@ -3938,6 +3950,11 @@
     addEventListener('resize', fitHeroStage);
   }
   fitHeroStage();
+  addEventListener('load', fitHeroStage);
+  requestAnimationFrame(function(){
+    fitHeroStage();
+    requestAnimationFrame(fitHeroStage);
+  });
 })();
 
 /* =====================================================================
