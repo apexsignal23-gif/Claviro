@@ -1866,6 +1866,9 @@
   .pc-plan-row{ position: relative; display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
   .pc-plan-name{ display: flex; align-items: center; gap: .55rem; font-weight: 700; font-size: 1.05rem; letter-spacing: -.01em; color: var(--cream); }
   .pc-plan-name i{ font-size: 1.15rem; color: var(--accent-hot); }
+  /* Studio's icon specifically, white instead of the shared blue --
+     per explicit request, Core's briefcase icon is untouched. */
+  .pc-plan-name i.ph-buildings{ color: #fff; }
   .pc-badge{
     font-size: .72rem; font-weight: 600; letter-spacing: .02em;
     color: var(--accent-hot);
@@ -3723,6 +3726,7 @@
           <p class="pc-starting-label">Starting at</p>
           <div class="pc-price-row">
             <span class="pc-price">$3,499</span>
+            <span class="pc-period">/mo</span>
           </div>
           <a href="#cta" class="pc-btn pc-btn-solid">Apply</a>
         </div>
