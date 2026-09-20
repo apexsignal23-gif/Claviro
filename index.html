@@ -236,12 +236,6 @@
     transform: translate(-50%, -50%) scale(var(--hero-s, 1));
     transform-origin: center;
   }
-  .hero-marker{
-    position: absolute; left: 94px; top: 257px;
-    display: flex; align-items: center; gap: 28px;
-    color: #969eac; font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 400;
-  }
-  .hero-marker-line{ width: 103px; height: 1px; background: rgba(148,157,171,.49); }
   .hero-copy2{ position: absolute; left: 101px; top: 318px; width: 550px; }
   .hero-headline2{
     margin: 0 0 0 2px; color: #fff;
@@ -285,7 +279,6 @@
   .hero-cardsvg{ position: absolute; inset: 0; width: 1672px; height: 940px; pointer-events: none; }
   @media (max-width: 900px){
     .hero-copy2{ left: 40px; }
-    .hero-marker{ left: 40px; }
     .hero-cardsvg{ opacity: .78; }
     .hero-sub2{ width: 430px; }
     .hero-headline2{ font-size: 88px; }
@@ -2596,8 +2589,6 @@
 
   <div class="hero-stagewrap">
     <div class="hero-stage" id="heroStage">
-      <div class="hero-marker"><span>01</span><span class="hero-marker-line"></span></div>
-
       <div class="hero-copy2">
         <h1 class="hero-headline2">
           <span class="hero-word-tech">Tech</span>
