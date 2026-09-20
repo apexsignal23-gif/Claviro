@@ -2412,7 +2412,7 @@
     display: flex; flex-direction: column; align-items: center; gap: .55rem;
     text-align: center;
     opacity: 0; transform: translateY(10px);
-    transition: opacity .5s var(--ease-spring), transform .5s var(--ease-spring);
+    transition: opacity .35s var(--ease-spring), transform .35s var(--ease-spring);
   }
   .pw-point.is-visible .pw-point-inner{ opacity: 1; transform: translateY(0); }
   @media (prefers-reduced-motion: reduce){
@@ -4687,8 +4687,18 @@ void main() {
 
   // Reveal thresholds spread across the middle of the wheel's scroll-
   // through (not the full 0-1 range) so all 5 have finished appearing
-  // while the wheel is still comfortably on screen, not right at its edges.
-  var revealAt = [0.22, 0.34, 0.46, 0.58, 0.70];
+  // while the wheel is still comfortably on screen, not right at its
+  // edges. Tightened from a 0.12 to a 0.08 step 2026-09-20 per explicit
+  // "spawn a little more faster" feedback -- same start, but all 5 are
+  // done by 0.54 instead of 0.70, a noticeably quicker cascade.
+  var revealAt = [0.22, 0.30, 0.38, 0.46, 0.54];
+  // Reveal SEQUENCE, as DOM indices of .pw-point (0=Investor Access,
+  // 1=Recruiting Talent, 2=Strategic Partnerships, 3=Media
+  // Opportunities, 4=Acquisition Visibility) -- per explicit request,
+  // Recruiting Talent goes first instead of Investor Access, continuing
+  // the same clockwise order around the wheel from there and wrapping
+  // back to Investor Access last.
+  var revealOrder = [1, 2, 3, 4, 0];
 
   var ticking = false;
   function updateWheel() {
@@ -4704,7 +4714,8 @@ void main() {
     // un-reveals the points in reverse, same as scrolling down reveals them.
     var progress = Math.max(0, Math.min(1, (vh - rect.top) / (vh + rect.height)));
     pointEls.forEach(function (pt, idx) {
-      pt.classList.toggle('is-visible', progress >= revealAt[idx]);
+      var seq = revealOrder.indexOf(idx);
+      pt.classList.toggle('is-visible', progress >= revealAt[seq]);
     });
   }
   function onWheelScroll() {
