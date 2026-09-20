@@ -3952,47 +3952,35 @@
 <script>
 /* =====================================================================
    Hero stage scale-to-fit -- the hero (ported from a fixed 1672x940
-   design) scales as one rigid unit to fit whatever space #top's own
-   box has, same idea as the reference file's own fit() script, but
-   measured off #top itself (via ResizeObserver, so it also reacts to
-   e.g. a dvh viewport-height change on mobile, not just window
-   'resize') instead of window.innerWidth/innerHeight, which would
-   wrongly include the fixed floating header and any other page chrome
-   that isn't actually part of this section's own box.
+   design) scales as one rigid unit to fit the viewport, same idea as
+   the reference file's own fit() script.
 
-   FIX 2026-09-20: on some refreshes the very first measurement landed
-   before layout had actually settled (e.g. web fonts still swapping,
-   which can shift #top's rendered box by enough to throw the scale off
-   before the fonts finish and nothing re-triggers a fix), leaving
-   --hero-s stuck too large -- the hero then rendered close to its true
-   1672x940 size, badly overflowing #top's much smaller real box and
-   getting cropped by .hero-stagewrap's overflow:hidden, i.e. exactly
-   the "cards huge and '01' floating disconnected" bug reported. A
-   single synchronous call right after the DOM parses isn't enough of a
-   guarantee by itself, so this now also re-checks on 'load' (images/
-   fonts finished) and across a couple of animation frames right after,
-   on top of the ongoing ResizeObserver correction for later changes. */
+   FIX 2026-09-20, take 2: an earlier version measured #top's own box
+   (clientWidth/clientHeight) instead of the viewport directly, on the
+   theory that the floating fixed header might eat into it -- it
+   doesn't, since a fixed-position header takes no space out of #top's
+   own flow either way, so that measurement added a real dependency on
+   #top's layout being fully settled with nothing to gain. That
+   dependency was very likely the actual bug: on some refreshes #top's
+   *measured* box lagged behind for a beat (layout/paint timing, not
+   anything the page's own JS could reliably preempt no matter how many
+   extra checks got layered on), so the very first scale computed wrong
+   and stuck that way until something else forced a recompute -- the
+   "huge cards, '01' floating disconnected, then it fixes itself" bug
+   reported twice now. window.innerWidth/innerHeight have no such
+   dependency -- they're available synchronously the instant this runs,
+   before any layout of #top itself even needs to have happened, so
+   there's nothing left to race. */
 (function(){
-  const section = document.getElementById('top');
-  if(!section) return;
   const root = document.documentElement;
   function fitHeroStage(){
-    const w = section.clientWidth, h = section.clientHeight;
+    const w = window.innerWidth, h = window.innerHeight;
     if(!w || !h) return;
     const s = Math.min(w / 1672, h / 940);
     root.style.setProperty('--hero-s', s);
   }
-  if('ResizeObserver' in window){
-    new ResizeObserver(fitHeroStage).observe(section);
-  } else {
-    addEventListener('resize', fitHeroStage);
-  }
+  addEventListener('resize', fitHeroStage);
   fitHeroStage();
-  addEventListener('load', fitHeroStage);
-  requestAnimationFrame(function(){
-    fitHeroStage();
-    requestAnimationFrame(fitHeroStage);
-  });
 })();
 
 /* =====================================================================
