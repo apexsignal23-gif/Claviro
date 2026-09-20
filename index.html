@@ -1863,21 +1863,22 @@
     touch-action: manipulation;
     transition: transform .35s var(--ease-spring), box-shadow .35s var(--ease-spring), background-color .35s var(--ease-spring), filter .35s var(--ease-spring);
   }
-  /* Transparent glass, not a solid fill -- per explicit request. Text
-     switched from --ink-950 (dark, meant for the old solid light-blue
-     fill) to --cream (light), since a translucent dark background
-     needs light text for contrast instead. */
+  /* Transparent glass, not a solid fill -- per explicit request, tinted
+     whitish-grey (not blue) per a follow-up correction. Text switched
+     from --ink-950 (dark, meant for the old solid light-blue fill) to
+     --cream (light), since a translucent dark background needs light
+     text for contrast instead. */
   .pc-btn-solid{
-    background: rgba(143,168,255,.14);
+    background: rgba(255,255,255,.09);
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(160,182,255,.35);
+    border: 1px solid rgba(255,255,255,.24);
     color: var(--cream);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.16), var(--shadow-btn);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), var(--shadow-btn);
   }
   .pc-btn-solid:hover{
     transform: translateY(-2px);
-    background: rgba(143,168,255,.22); border-color: rgba(160,182,255,.5);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.2), var(--shadow-btn-hover);
+    background: rgba(255,255,255,.15); border-color: rgba(255,255,255,.36);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.22), var(--shadow-btn-hover);
   }
   .pc-btn-solid:active{ transform: translateY(0) scale(.98); box-shadow: inset 0 1px 0 rgba(255,255,255,.16), var(--shadow-btn); }
   .pc-btn-outline{ background: transparent; box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); color: var(--cream); }
