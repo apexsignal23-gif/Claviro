@@ -197,258 +197,98 @@
      somewhere). .text-shine's gradient fill is untouched by this — it's
      purely a font swap, color treatment stays as it was per heading. */
   .hero-h1{ font-family: 'Manrope', 'Inter Tight', ui-sans-serif, system-ui, sans-serif; font-weight: 600; }
-  /* ============ HERO v2 -- ported directly from a supplied ground-
-     truth file (Downloads/preview (10).html), replacing the earlier
-     screenshot-based approximation above/below. Every value here is
-     copied from that file, not eyeballed. #top{font-family:Inter}
-     below wins over .hero-h1's Manrope for everything inside the hero
-     (an ID selector always beats a class selector's specificity,
-     regardless of source order) -- Inter is what the reference file
-     actually uses, loaded as a variable range (100..900) specifically
-     so its odd non-standard weights (620, 480) render exactly instead
-     of snapping to the nearest static cut. */
+  /* ============ HERO v3 -- ported directly from a supplied ground-
+     truth file (Downloads/claviro-hero-exact.html), replacing the
+     earlier v2 port. This reference is a different pattern than v2: a
+     fixed 1672x940 "stage" (not a fluid clamp()/vw layout) that scales
+     as one rigid unit to fit whatever space is available, and the 3
+     glass cards are drawn as SVG paths (gradient fills/strokes + blur
+     filters) instead of 3 separate HTML/CSS elements -- this is what
+     finally lets the corner glow follow an exact hand-tuned path
+     instead of approximating it with box-shadow/drop-shadow tricks on
+     a div. Deliberately keeps this site's real <header> (mobile menu,
+     real section anchors) instead of the reference's own plain nav
+     markup, same as v2 -- the reference's own nav row and its assumed
+     124px of top clearance are dropped; #top's own min-height/centering
+     below stands in for that. Scale-to-fit is computed off #top's own
+     box (see the fitHeroStage script near the other page scripts), not
+     window.innerWidth/innerHeight like the reference's original script
+     -- window dimensions would include the fixed floating header and
+     any other page chrome, not just this section's own space. */
   #top{
     font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    min-height: 100dvh;
     background:
-      radial-gradient(circle at 74% 67%, rgba(89,117,255,.1), transparent 28%),
-      radial-gradient(circle at 38% 22%, rgba(90,98,115,.08), transparent 34%),
-      linear-gradient(135deg, #0c1016 0%, #080b10 43%, #030406 100%);
+      radial-gradient(ellipse 500px 760px at 46% 53%, rgba(55,60,70,.16) 0%, rgba(32,36,44,.11) 38%, rgba(16,19,24,.04) 67%, transparent 84%),
+      radial-gradient(ellipse 590px 520px at 81% 77%, rgba(41,57,108,.14) 0%, rgba(21,29,50,.07) 50%, transparent 78%),
+      radial-gradient(ellipse 350px 230px at 55% 89%, rgba(76,84,96,.20) 0%, rgba(43,49,58,.09) 48%, transparent 78%),
+      linear-gradient(180deg, #101318 0%, #0c0f14 45%, #090b0f 100%);
   }
   #top::before{
-    content: ""; position: absolute; inset: 0; z-index: 1;
-    background: linear-gradient(90deg, rgba(10,16,25,.38), transparent 42%, rgba(0,0,0,.16));
+    content: ""; position: absolute; inset: 0; z-index: 9;
+    background: linear-gradient(90deg, rgba(4,6,8,.06), transparent 30%, transparent 62%, rgba(0,1,3,.18));
     pointer-events: none;
   }
-
-  /* Scaled down 2026-09-19 (~0.7x) from the reference file's literal
-     72/106px clamp -- faithful to the source made the whole hero read
-     as oversized on an actual screen, so heading + card stack (the two
-     dominant "huge" elements) both shrink by the same factor together,
-     keeping their relative proportions intact. */
-  #top h1.hero-h1{
-    font-size: clamp(50px, 4.4vw, 74px);
-    line-height: .94;
-    letter-spacing: -0.055em;
-    font-weight: 620;
+  .hero-stagewrap{ position: absolute; inset: 0; z-index: 10; overflow: hidden; }
+  .hero-stage{
+    position: absolute; width: 1672px; height: 940px;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%) scale(var(--hero-s, 1));
+    transform-origin: center;
   }
-  .hero-solved{
-    background: linear-gradient(180deg, #98b0ff 0%, #7f9cff 42%, #6386fb 100%);
+  .hero-marker{
+    position: absolute; left: 94px; top: 257px;
+    display: flex; align-items: center; gap: 28px;
+    color: #969eac; font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 400;
+  }
+  .hero-marker-line{ width: 103px; height: 1px; background: rgba(148,157,171,.49); }
+  .hero-copy2{ position: absolute; left: 101px; top: 318px; width: 550px; }
+  .hero-headline2{
+    margin: 0 0 0 2px; color: #fff;
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size: 105px; line-height: .96; font-weight: 500; letter-spacing: -5.35px;
+  }
+  .hero-headline2 span{ display: block; width: max-content; transform-origin: left center; }
+  .hero-word-tech{ transform: scaleX(1.11); }
+  .hero-word-content{ transform: scaleX(1.175); }
+  .hero-word-solved{
+    transform: scaleX(1.155);
+    background: linear-gradient(180deg, #9fb5ff 0%, #829fff 44%, #6e8efb 100%);
     -webkit-background-clip: text; background-clip: text; color: transparent;
-    text-shadow: 0 0 22px rgba(91,123,255,.08);
+    text-shadow: 0 0 20px rgba(95,125,255,.04);
   }
-
-  .hero-sub{
-    max-width: 440px; margin-top: 26px;
-    color: #aeb6c4;
-    font-size: clamp(15px, 1.1vw, 17px);
-    line-height: 1.42; letter-spacing: -0.025em;
+  .hero-sub2{
+    margin: 20px 0 0 3px; width: 525px; color: #adb5c1;
+    font-family: 'Inter', sans-serif; font-size: 25px; line-height: 1.38; letter-spacing: -.72px; font-weight: 400;
+    transform: scaleX(1.025); transform-origin: left top;
   }
-
-  .hero-actions{ display: flex; flex-wrap: wrap; gap: 26px; margin-top: 44px; }
-  /* Sized to a supplied reference screenshot showing both buttons small
-     and side-by-side -- no forced min-width (unlike the reference
-     file's original 232px/216px), so width just follows content. Kept
-     as one universal size for every breakpoint instead of a separate
-     larger desktop size, since that mismatch (small on mobile, still
-     66px/38px padding on desktop) was never asked for. */
-  .hero-btn{
-    height: 48px; padding: 0 24px;
-    display: inline-flex; align-items: center; justify-content: center;
-    border-radius: 999px; text-decoration: none;
-    font-size: 14px; font-weight: 500; white-space: nowrap;
+  .hero-actions2{ display: flex; gap: 28px; margin-top: 45px; }
+  .hero-btn2{
+    height: 66px; border-radius: 33px;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none; font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 500; letter-spacing: -.2px;
     transition: transform .3s ease;
   }
-  .hero-btn:hover{ transform: translateY(-2px); }
-  .hero-btn:active{ transform: translateY(0) scale(.98); }
-  .hero-btn-secondary{
-    color: #f2f3f6;
-    border: 1px solid rgba(180,188,200,.28);
-    background: rgba(16,19,24,.3);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.015);
+  .hero-btn2:hover{ transform: translateY(-2px); }
+  .hero-btn2:active{ transform: translateY(0) scale(.98); }
+  .hero-btn2-secondary{
+    width: 232px; color: #f4f5f7;
+    border: 1px solid rgba(177,184,197,.27);
+    background: rgba(8,11,15,.12);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.012);
   }
-  .hero-btn-primary{
-    color: #07101d; font-weight: 600;
-    background: linear-gradient(135deg, #90aaff 0%, #7e9dff 52%, #718ef8 100%);
-    box-shadow: 0 12px 34px rgba(72,98,229,.18), inset 0 1px 0 rgba(255,255,255,.25);
+  .hero-btn2-primary{
+    width: 216px; color: #07101c; font-weight: 600;
+    background: linear-gradient(180deg, #91adff 0%, #7f9efc 100%);
+    box-shadow: 0 12px 31px rgba(76,100,220,.14), inset 0 1px 0 rgba(255,255,255,.30);
   }
-
-  /* Card stack: fixed px (420x263, ~0.7x the reference file's literal
-     600x375 -- see the heading comment above), not fluid. Scales the
-     whole stack down as one unit at smaller widths (see the two @media
-     blocks below) rather than resizing each card individually.
-     backdrop-filter is back here deliberately, unlike the fixed
-     nav/.d90-box cases fixed earlier today: these cards scroll away
-     with the page instead of staying pinned on screen, so they only
-     cost anything during the brief moment the hero itself is on
-     screen, not for the rest of the page's scroll distance. */
-  /* perspective here (not on each card) is what makes rotateY below
-     read as the cards' right edge receding in shared 3D space, on one
-     vanishing point, instead of each card tilting independently. */
-  .hero-stack{ position: relative; min-height: 565px; perspective: 1400px; }
-  @media (min-width: 1024px){
-    .hero-stack{ margin-left: 100px; }
-  }
-  /* Anchored with left/top at card 3's own corner (top:284+height:263,
-     left:213+width:420) instead of right/bottom -- those were relative
-     to .hero-stack's own box, which is a much wider grid column than
-     the actual card cluster, so the glow sat disconnected out in that
-     extra space rather than at card 3's real corner. Also why it read
-     as "stuck inside the box": the other glow (.hero-stack-card::after)
-     is a pseudo-element of a card that has overflow:hidden, so it gets
-     clipped at the card's own edge and can't bleed into the background
-     -- this element is a plain sibling div, not subject to that clip,
-     so it can spread past the card into the surrounding dark area. */
-  .hero-stack-glow{
-    position: absolute; width: 497px; height: 393px;
-    left: 407px; top: 370px;
-    background: radial-gradient(circle, rgba(70,110,240,.55), transparent 65%);
-    filter: blur(31px); pointer-events: none;
-  }
-  /* Sized back up 2026-09-19 (reversing the earlier 0.75x pass) and
-     fills shifted from a dark navy tint to a white one, per an explicit
-     "bigger and whitish" request -- same low-alpha transparent-glass
-     treatment as before, just a lighter/whiter base color instead of a
-     dark blue-gray one. */
-  /* Outer card: position, size, rotation only -- no background and no
-     overflow of its own. The actual glass tint lives on
-     .hero-stack-card-inner below. Keeping THIS element free of
-     overflow:hidden is what lets ::before (the border ring)'s own
-     filter: drop-shadow (see cards 2/3's ::before overrides) bleed past
-     the card's edge -- every earlier attempt at a bleeding glow got
-     clipped invisible because it lived on a descendant of an
-     overflow:hidden element (the card used to carry background/
-     overflow/border-ring/glow all in one place, before this split).
-     Important: the drop-shadow has to go on ::before specifically, NOT
-     on .hero-stack-card itself -- putting it on the whole card made the
-     glow hug the card's full translucent-glass silhouette (a big glowing
-     BOX), because that fill is still opaque enough for the filter to
-     pick up. ::before renders nothing but the thin ring (transparent
-     center, via the padding+mask-composite:exclude technique below), so
-     a drop-shadow on it only ever hugs that thin ring shape -- bright at
-     the --glow-x/--glow-y corner, faint elsewhere, never the box. */
-  .hero-stack-card{
-    position: absolute; width: 435px; height: 272px; border-radius: 18px;
-    --glow-x: 100%; --glow-y: 0%;
-    /* rotateX(8deg) is the slight backward lean (top edge recedes);
-       rotateY(10deg) tilts the right edge back/away from the viewer
-       (positive angle = right side moves to negative z); rotate() after
-       is the original flat in-plane spin, kept on top of both. */
-    transform: rotateX(8deg) rotateY(10deg) rotate(-10.5deg);
-    transition: transform .4s var(--ease-spring);
-  }
-  /* Hover lift: same tilt as the resting state, just translated up --
-     transitions back to the resting position on mouse-out automatically
-     since it's the same transform property, not a separate animation.
-     Because the border ring and glow live on this same element (not a
-     separate synced sibling like an earlier attempt), they move with it
-     for free. */
-  .hero-stack-card:hover{
-    transform: translateY(-16px) rotateX(8deg) rotateY(10deg) rotate(-10.5deg);
-  }
-  /* The glass surface itself: background tint, blur, and overflow:hidden
-     (for the bottom mask-fade and to keep the label/number text inside
-     the rounded corners) all live one level in from the outer card, so
-     none of it clips the outer card's own border-ring/glow. */
-  .hero-stack-card-inner{
-    position: absolute; inset: 0; border-radius: inherit; overflow: hidden;
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-  }
-  /* Thin 1px border ring (padding + mask-composite:exclude cuts the
-     fill down to just the stroke, same technique as before). Two
-     layered backgrounds: a faint uniform tone everywhere, PLUS a radial
-     hot spot centered at --glow-x/--glow-y painted on top of it -- so
-     only the area right at that point goes cool-white -> pale blue,
-     instead of the whole perimeter lighting evenly. */
-  .hero-stack-card::before{
-    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
-    pointer-events: none;
-    background:
-      radial-gradient(90% 90% at var(--glow-x) var(--glow-y), rgba(230,240,255,.95) 0%, rgba(150,185,255,.55) 14%, rgba(255,255,255,.1) 30%, transparent 55%),
-      linear-gradient(115deg, rgba(255,255,255,.4) 0%, rgba(200,215,255,.22) 50%, rgba(150,170,220,.16) 100%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude;
-  }
-  .hero-stack-label{
-    position: absolute; left: 51px; top: 57px;
-    font-size: 19px; font-weight: 300; color: #ecf0f8; letter-spacing: -0.03em;
-  }
-  .hero-stack-num{
-    position: absolute; right: 26px; top: 23px;
-    color: rgba(154,169,205,.6); font-size: 15px; font-weight: 400;
-  }
-  .hero-stack-card-1{
-    top: 33px; left: 26px; z-index: 1;
-    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 22px 43px rgba(0,0,0,.18), 0 0 8px rgba(150,180,255,.25);
-  }
-  .hero-stack-card-1 .hero-stack-card-inner{
-    background:
-      radial-gradient(93px 93px at 0% 0%, rgba(255,255,255,.22), transparent 65%),
-      linear-gradient(135deg, rgba(255,255,255,.1) 0%, rgba(255,255,255,.04) 56%, rgba(210,222,255,.08) 100%);
-    -webkit-mask-image: linear-gradient(to bottom, #000 94%, transparent 100%);
-    mask-image: linear-gradient(to bottom, #000 94%, transparent 100%);
-  }
-  /* Card 1 keeps a plain, evenly faint ring -- no corner hot spot --
-     matching the reference, where only cards 2/3 catch light. */
-  .hero-stack-card-1::before{
-    background: linear-gradient(115deg, rgba(255,255,255,.95) 0%, rgba(200,215,255,.6) 36%, rgba(130,160,255,.4) 72%, rgba(120,150,255,.28) 100%);
-  }
-  .hero-stack-card-2{
-    top: 155px; left: 119px; z-index: 2;
-    --glow-x: 100%; --glow-y: 0%;
-    box-shadow: inset 0 0 0 1px rgba(176,191,229,.25), 0 22px 43px rgba(0,0,0,.18);
-  }
-  .hero-stack-card-2::before{
-    filter: drop-shadow(0 0 6px rgba(150,190,255,.9)) drop-shadow(0 0 16px rgba(110,165,255,.7)) drop-shadow(0 0 34px rgba(80,140,255,.5));
-  }
-  .hero-stack-card-2 .hero-stack-card-inner{
-    background:
-      radial-gradient(93px 93px at 0% 0%, rgba(255,255,255,.26), transparent 65%),
-      linear-gradient(135deg, rgba(255,255,255,.12) 0%, rgba(255,255,255,.05) 52%, rgba(205,220,255,.1) 100%);
-    -webkit-mask-image: linear-gradient(to bottom, #000 90%, transparent 100%);
-    mask-image: linear-gradient(to bottom, #000 90%, transparent 100%);
-  }
-  .hero-stack-card-3{
-    top: 294px; left: 221px; z-index: 3;
-    --glow-x: 100%; --glow-y: 0%;
-    box-shadow: inset 0 0 0 1px rgba(186,200,239,.28), 0 22px 48px rgba(0,0,0,.2);
-  }
-  .hero-stack-card-3::before{
-    filter: drop-shadow(0 0 5px rgba(140,180,255,.75)) drop-shadow(0 0 13px rgba(105,155,255,.55)) drop-shadow(0 0 28px rgba(80,135,255,.4));
-  }
-  .hero-stack-card-3 .hero-stack-card-inner{
-    background:
-      radial-gradient(104px 104px at 0% 0%, rgba(255,255,255,.28), transparent 65%),
-      linear-gradient(135deg, rgba(255,255,255,.15) 0%, rgba(255,255,255,.06) 50%, rgba(195,215,255,.14) 100%);
-    -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
-    mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
-  }
-  /* Below 1024px the grid stacks to one column (see the lg:grid-cols
-     class on the wrapper) -- text and cards then share vertical space
-     sequentially instead of side-by-side, so a mild scale-down wasn't
-     enough; total page height was still "very big" per direct
-     feedback. Both tiers below are noticeably more aggressive than a
-     straight port of the reference's own .84/.58 factors, which were
-     tuned for two-column desktop, not a stacked mobile column. */
-  @media (max-width: 1023px){
-    #top h1.hero-h1{ font-size: clamp(26px, 6.5vw, 36px); }
-    .hero-sub{ margin-top: 12px; font-size: clamp(12px, 2.6vw, 13px); }
-    .hero-actions{ margin-top: 20px; gap: 12px; }
-    /* min-height shrinks along with the transform, not just the visual
-       scale -- transform never affects layout/flow, so leaving the
-       desktop 546px min-height here would still reserve that full
-       height in the page's scroll flow even though the stack RENDERS
-       smaller, i.e. the exact "still very big" complaint this is
-       fixing. Cards are absolutely positioned inside, so a smaller
-       min-height on this box doesn't clip or reflow them -- it only
-       changes how much scroll space the box itself reserves. */
-    .hero-stack{ min-height: 340px; transform: scale(.62); transform-origin: top left; width: 630px; }
-  }
-  @media (max-width: 480px){
-    /* Buttons stay side-by-side here now (no more flex-direction:column/
-       width:100%) -- at 42px tall with no forced min-width they're
-       small enough to fit a row even at narrow phone widths, and
-       stacking them was what made them read as oversized before. */
-    .hero-stack{ min-height: 250px; transform: scale(.46); }
+  .hero-cardsvg{ position: absolute; inset: 0; width: 1672px; height: 940px; pointer-events: none; }
+  @media (max-width: 900px){
+    .hero-copy2{ left: 40px; }
+    .hero-marker{ left: 40px; }
+    .hero-cardsvg{ opacity: .78; }
+    .hero-sub2{ width: 430px; }
+    .hero-headline2{ font-size: 88px; }
   }
 
   /* Blue gradient (originally a gray-to-white sheen matching
@@ -2750,44 +2590,90 @@
 <section id="top" class="relative w-full overflow-hidden">
   <span id="top-content" class="sr-only"></span>
 
-  <div class="relative z-10 mx-auto max-w-[1280px] min-h-[100dvh] grid grid-cols-1 lg:grid-cols-[42%_58%] gap-6 lg:gap-0 py-16 sm:py-20 lg:py-24 items-center">
-    <div class="hero-copy px-6 sm:px-10 lg:px-0" style="padding-left: max(1.5rem, 6.15vw);">
-      <h1 class="text-white hero-h1">
-        Tech<br />
-        Content<br />
-        <span class="hero-solved">Solved</span>
-      </h1>
+  <div class="hero-stagewrap">
+    <div class="hero-stage" id="heroStage">
+      <div class="hero-marker"><span>01</span><span class="hero-marker-line"></span></div>
 
-      <p class="hero-sub">
-        In a fast-moving landscape, we don&rsquo;t trade standard for speed.
-      </p>
-
-      <div class="hero-actions">
-        <a href="#industry-standard" class="hero-btn hero-btn-secondary">See How It Works</a>
-        <a href="#cta" class="hero-btn hero-btn-primary">Book a Call</a>
-      </div>
-    </div>
-
-    <div class="hero-stack" aria-hidden="true">
-      <div class="hero-stack-glow"></div>
-      <div class="hero-stack-card hero-stack-card-1">
-        <div class="hero-stack-card-inner">
-          <span class="hero-stack-label">Strategy</span>
-          <span class="hero-stack-num">01</span>
+      <div class="hero-copy2">
+        <h1 class="hero-headline2">
+          <span class="hero-word-tech">Tech</span>
+          <span class="hero-word-content">Content</span>
+          <span class="hero-word-solved">Solved</span>
+        </h1>
+        <p class="hero-sub2">In a fast-moving landscape, we don&rsquo;t trade<br>standard for speed.</p>
+        <div class="hero-actions2">
+          <a href="#industry-standard" class="hero-btn2 hero-btn2-secondary">See How It Works</a>
+          <a href="#cta" class="hero-btn2 hero-btn2-primary">Book a Call</a>
         </div>
       </div>
-      <div class="hero-stack-card hero-stack-card-2">
-        <div class="hero-stack-card-inner">
-          <span class="hero-stack-label">Production</span>
-          <span class="hero-stack-num">02</span>
-        </div>
-      </div>
-      <div class="hero-stack-card hero-stack-card-3">
-        <div class="hero-stack-card-inner">
-          <span class="hero-stack-label">Distribution</span>
-          <span class="hero-stack-num">03</span>
-        </div>
-      </div>
+
+      <svg class="hero-cardsvg" viewBox="0 0 1672 940" aria-hidden="true">
+        <defs>
+          <linearGradient id="fill1" x1="760" y1="230" x2="1330" y2="560" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1c2027" stop-opacity=".94"/><stop offset=".48" stop-color="#12161b" stop-opacity=".95"/><stop offset="1" stop-color="#0f1623" stop-opacity=".96"/></linearGradient>
+          <radialGradient id="wash1" cx="0" cy="0" r="1" gradientTransform="translate(864 330) rotate(26) scale(330 250)" gradientUnits="userSpaceOnUse"><stop stop-color="#4b515d" stop-opacity=".14"/><stop offset="1" stop-color="#4b515d" stop-opacity="0"/></radialGradient>
+          <linearGradient id="stroke1" x1="765" y1="265" x2="1305" y2="420" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f0f4ff" stop-opacity=".96"/><stop offset=".24" stop-color="#c7d0df" stop-opacity=".82"/><stop offset=".58" stop-color="#7c879d" stop-opacity=".52"/><stop offset="1" stop-color="#52618b" stop-opacity=".42"/></linearGradient>
+
+          <linearGradient id="fill2" x1="900" y1="390" x2="1515" y2="760" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1d2229" stop-opacity=".95"/><stop offset=".51" stop-color="#13181e" stop-opacity=".96"/><stop offset="1" stop-color="#111b31" stop-opacity=".97"/></linearGradient>
+          <radialGradient id="wash2" cx="0" cy="0" r="1" gradientTransform="translate(1040 488) rotate(20) scale(390 260)" gradientUnits="userSpaceOnUse"><stop stop-color="#555b67" stop-opacity=".16"/><stop offset="1" stop-color="#555b67" stop-opacity="0"/></radialGradient>
+          <linearGradient id="stroke2" x1="900" y1="420" x2="1465" y2="360" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#dce3f0" stop-opacity=".72"/><stop offset=".52" stop-color="#8d98ae" stop-opacity=".62"/><stop offset=".78" stop-color="#7b94ff" stop-opacity=".86"/><stop offset="1" stop-color="#6f8dff" stop-opacity="1"/></linearGradient>
+
+          <linearGradient id="fill3" x1="1070" y1="560" x2="1650" y2="940" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#303642" stop-opacity=".96"/><stop offset=".40" stop-color="#212733" stop-opacity=".97"/><stop offset="1" stop-color="#192b50" stop-opacity=".98"/></linearGradient>
+          <radialGradient id="wash3" cx="0" cy="0" r="1" gradientTransform="translate(1200 655) rotate(16) scale(370 270)" gradientUnits="userSpaceOnUse"><stop stop-color="#727784" stop-opacity=".15"/><stop offset="1" stop-color="#727784" stop-opacity="0"/></radialGradient>
+          <linearGradient id="stroke3" x1="1068" y1="587" x2="1600" y2="540" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#edf2ff" stop-opacity=".98"/><stop offset=".38" stop-color="#b4bfd5" stop-opacity=".72"/><stop offset=".72" stop-color="#859dff" stop-opacity=".82"/><stop offset="1" stop-color="#6987ff" stop-opacity=".95"/></linearGradient>
+
+          <linearGradient id="prodEdgeGlow" x1="1330" y1="328" x2="1440" y2="410" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#6f84ff" stop-opacity="0"/>
+            <stop offset=".36" stop-color="#7390ff" stop-opacity=".58"/>
+            <stop offset=".60" stop-color="#8da6ff" stop-opacity="1"/>
+            <stop offset=".78" stop-color="#7794ff" stop-opacity=".96"/>
+            <stop offset="1" stop-color="#5f7cff" stop-opacity=".18"/>
+          </linearGradient>
+
+          <filter id="glowBlue" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="18"/></filter>
+          <filter id="cornerGlow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="10"/></filter>
+          <filter id="edgeBloom" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="5.5"/></filter>
+          <filter id="glowBlueBig" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="34"/></filter>
+          <filter id="softShadow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#000" flood-opacity=".16"/></filter>
+        </defs>
+
+        <path d="M 1325 328.0 L 1392.4 313.7 Q 1410 310 1414.8 327.3 L 1438 411"
+              fill="none" stroke="url(#prodEdgeGlow)" stroke-width="12"
+              stroke-linecap="round" stroke-linejoin="round" opacity=".28" filter="url(#edgeBloom)"/>
+        <path d="M 1337 325.5 L 1392.4 313.7 Q 1410 310 1414.8 327.3 L 1434 397"
+              fill="none" stroke="url(#prodEdgeGlow)" stroke-width="5"
+              stroke-linecap="round" stroke-linejoin="round" opacity=".58" filter="url(#edgeBloom)"/>
+
+        <path d="M 1482 512.2 L 1526.3 504.2 Q 1544 501 1548.5 518.4 L 1566 586"
+              fill="none" stroke="#607aff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
+              opacity=".10" filter="url(#edgeBloom)"/>
+
+        <g filter="url(#softShadow)">
+          <path d="M 776.6 258.1 L 1223.4 158.9 Q 1241 155 1245.5 172.4 L 1330.5 499.6 Q 1335 517 1317.4 520.9 L 870.6 620.1 Q 853 624 848.5 606.6 L 763.5 279.4 Q 759 262 776.6 258.1 Z" fill="url(#fill1)" stroke="url(#stroke1)" stroke-width="2"/>
+          <path d="M 776.6 258.1 L 1223.4 158.9 Q 1241 155 1245.5 172.4 L 1330.5 499.6 Q 1335 517 1317.4 520.9 L 870.6 620.1 Q 853 624 848.5 606.6 L 763.5 279.4 Q 759 262 776.6 258.1 Z" fill="url(#wash1)"/>
+
+          <path d="M 916.6 414.3 L 1392.4 313.7 Q 1410 310 1414.8 327.3 L 1516.2 691.7 Q 1521 709 1503.4 712.7 L 1027.6 813.3 Q 1010 817 1005.2 799.7 L 903.8 435.3 Q 899 418 916.6 414.3 Z" fill="url(#fill2)" stroke="url(#stroke2)" stroke-width="2"/>
+          <path d="M 916.6 414.3 L 1392.4 313.7 Q 1410 310 1414.8 327.3 L 1516.2 691.7 Q 1521 709 1503.4 712.7 L 1027.6 813.3 Q 1010 817 1005.2 799.7 L 903.8 435.3 Q 899 418 916.6 414.3 Z" fill="url(#wash2)"/>
+
+          <path d="M 1085.7 583.8 L 1526.3 504.2 Q 1544 501 1548.5 518.4 L 1655.5 932.6 Q 1660 950 1642.2 952.9 L 1199.8 1024.1 Q 1182 1027 1177.5 1009.6 L 1072.5 604.4 Q 1068 587 1085.7 583.8 Z" fill="url(#fill3)" stroke="url(#stroke3)" stroke-width="2"/>
+          <path d="M 1085.7 583.8 L 1526.3 504.2 Q 1544 501 1548.5 518.4 L 1655.5 932.6 Q 1660 950 1642.2 952.9 L 1199.8 1024.1 Q 1182 1027 1177.5 1009.6 L 1072.5 604.4 Q 1068 587 1085.7 583.8 Z" fill="url(#wash3)"/>
+        </g>
+
+        <path d="M 1344 324.0 L 1392.4 313.7 Q 1410 310 1414.8 327.3 L 1431.5 387"
+              fill="none" stroke="url(#prodEdgeGlow)" stroke-width="2.15"
+              stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+        <path d="M 1363 320.0 L 1392.4 313.7 Q 1410 310 1414.8 327.3 L 1424 360"
+              fill="none" stroke="#a9b8ff" stroke-width="1.05"
+              stroke-linecap="round" stroke-linejoin="round" opacity=".78"/>
+
+        <g font-family="Inter Display, Inter, sans-serif" font-weight="400">
+          <text x="841" y="332" fill="#edf0f7" font-size="27" letter-spacing="-.6" transform="rotate(-12.5 841 332)">Strategy</text>
+          <text x="1194" y="222" fill="#8190af" fill-opacity=".63" font-size="21" transform="rotate(-12.5 1194 222)">01</text>
+          <text x="979" y="488" fill="#d9dee8" font-size="26" letter-spacing="-.5" transform="rotate(-11.9 979 488)">Production</text>
+          <text x="1354" y="388" fill="#8797bb" fill-opacity=".72" font-size="21" transform="rotate(-11.9 1354 388)">02</text>
+          <text x="1151" y="665" fill="#e1e5ed" font-size="26" letter-spacing="-.5" transform="rotate(-10.2 1151 665)">Distribution</text>
+          <text x="1494" y="570" fill="#8495bb" fill-opacity=".76" font-size="21" transform="rotate(-10.2 1494 570)">03</text>
+        </g>
+      </svg>
     </div>
   </div>
 </section>
@@ -3962,6 +3848,34 @@
 </footer>
 
 <script>
+/* =====================================================================
+   Hero stage scale-to-fit -- the hero (ported from a fixed 1672x940
+   design) scales as one rigid unit to fit whatever space #top's own
+   box has, same idea as the reference file's own fit() script, but
+   measured off #top itself (via ResizeObserver, so it also reacts to
+   e.g. a dvh viewport-height change on mobile, not just window
+   'resize') instead of window.innerWidth/innerHeight, which would
+   wrongly include the fixed floating header and any other page chrome
+   that isn't actually part of this section's own box.
+   ===================================================================== */
+(function(){
+  const section = document.getElementById('top');
+  if(!section) return;
+  const root = document.documentElement;
+  function fitHeroStage(){
+    const w = section.clientWidth, h = section.clientHeight;
+    if(!w || !h) return;
+    const s = Math.min(w / 1672, h / 940);
+    root.style.setProperty('--hero-s', s);
+  }
+  if('ResizeObserver' in window){
+    new ResizeObserver(fitHeroStage).observe(section);
+  } else {
+    addEventListener('resize', fitHeroStage);
+  }
+  fitHeroStage();
+})();
+
 /* =====================================================================
    Mobile nav toggle
    ===================================================================== */
