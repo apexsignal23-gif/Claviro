@@ -2054,9 +2054,16 @@
   /* Left-aligned (default block alignment) — matches every other
      section's heading on this page (Pricing, Retention, etc.). */
   .iv-scroll-stack{ display: flex; flex-direction: column; align-items: center; gap: 3rem; }
-  .iv-scroll-cards{ width: 100%; display: flex; flex-direction: column; gap: 2.5rem; }
+  /* Gap controls the reveal's PACE, not just spacing: since these are
+     plain sticky flex-column siblings with no extra spacer wrappers,
+     card 1 stays cleanly pinned (before card 2 starts sliding up over
+     it) for roughly this gap's worth of scroll distance -- a bigger
+     gap means more scrolling before the next card appears. Bumped up
+     (2.5rem/7rem -> 10rem/40rem) per explicit request: "the 2nd box
+     pops up very quickly... make the scrolling slower". */
+  .iv-scroll-cards{ width: 100%; display: flex; flex-direction: column; gap: 10rem; }
   @media (min-width: 768px){
-    .iv-scroll-cards{ gap: 7rem; }
+    .iv-scroll-cards{ gap: 40rem; }
   }
   /* Static video card BELOW the sticky-stack, back per explicit request
      ("remove this long video from the slider and fix it on the below
