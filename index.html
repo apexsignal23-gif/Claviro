@@ -258,14 +258,25 @@
   .hero-word-solved{
     transform: scaleX(1.155);
     /* Liquid-glass whitish treatment (swapped from the flat blue
-       gradient per explicit request): a vertical white gradient with a
-       brighter band through the middle to read as a glossy highlight
-       catching the light across curved glass, plus a soft white bloom
-       (text-shadow) standing in for glass glow since text glyphs can't
-       host a real backdrop-blur panel behind them. */
-    background: linear-gradient(180deg, #ffffff 0%, #ffffff 36%, #eef2fa 50%, #ffffff 64%, #c9cfdc 100%);
+       gradient per explicit request): a diagonal light-grey/white
+       gradient, oversized (background-size 300%) and animated via
+       background-position, so the bright bands keep sliding through
+       the letters like light moving across liquid metal/mercury,
+       rather than a fixed static gloss band. text-shadow supplies the
+       soft glass-glow bloom, unaffected by the moving fill. */
+    background: linear-gradient(115deg, #9aa0ac 0%, #d8dbe3 14%, #ffffff 26%, #eef1f6 36%, #9aa0ac 50%, #c3c8d1 64%, #ffffff 76%, #d3d7e0 88%, #9aa0ac 100%);
+    background-size: 300% 300%;
     -webkit-background-clip: text; background-clip: text; color: transparent;
     text-shadow: 0 0 28px rgba(255,255,255,.45), 0 1px 0 rgba(255,255,255,.3);
+    animation: hero-solved-liquid 7s ease-in-out infinite;
+  }
+  @keyframes hero-solved-liquid{
+    0%{ background-position: 0% 50%; }
+    50%{ background-position: 100% 50%; }
+    100%{ background-position: 0% 50%; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .hero-word-solved{ animation: none; }
   }
   .hero-sub2{
     margin: 20px 0 0 3px; width: 525px; color: #adb5c1;
