@@ -241,9 +241,11 @@
   .hero-stage{
     position: absolute; width: 1672px; height: 940px;
     left: 50%; top: 50%;
-    transform: translate(-50%, -50%) scale(var(--hero-s, 1));
+    transform: translate(-50%, -50%);
     transform-origin: center;
+    opacity: 0;
   }
+  .hero-stage.is-fitted{ opacity: 1; }
   .hero-copy2{ position: absolute; left: 0px; top: 318px; width: 550px; }
   .hero-headline2{
     margin: 0 0 0 2px; color: #fff;
@@ -4024,14 +4026,32 @@
    reported twice now. window.innerWidth/innerHeight have no such
    dependency -- they're available synchronously the instant this runs,
    before any layout of #top itself even needs to have happened, so
-   there's nothing left to race. */
+   there's nothing left to race.
+
+   FIX 2026-09-21, take 3: reported again, this time reproducing only
+   on a Mac (never on the reporter's own Windows machine) -- same huge/
+   cropped/overlapping cards, now apparently stuck rather than settling
+   on its own. Two changes: (1) the scale no longer goes through the
+   --hero-s CSS custom property at all -- `transform: scale(var(--hero-
+   s,1))` depends on WebKit re-resolving a var() inside a transform the
+   instant the property changes, which some WebKit versions have been
+   known to delay or miss on first paint; setting el.style.transform
+   directly removes that indirection so there's nothing left to miss.
+   (2) belt-and-suspenders: .hero-stage now starts at opacity:0 in CSS
+   and only gets `.is-fitted` (opacity:1) from inside this same
+   function, right after the correct transform is applied -- so even
+   if some *other*, still-unknown timing issue delayed this script on
+   some browser, the wrongly-sized frame simply wouldn't be visible;
+   the cards only ever appear already correctly sized. */
 (function(){
-  const root = document.documentElement;
+  const stage = document.getElementById('heroStage');
   function fitHeroStage(){
     const w = window.innerWidth, h = window.innerHeight;
-    if(!w || !h) return;
-    const s = Math.min(w / 1672, h / 940);
-    root.style.setProperty('--hero-s', s);
+    if (stage && w && h) {
+      const s = Math.min(w / 1672, h / 940);
+      stage.style.transform = 'translate(-50%, -50%) scale(' + s + ')';
+    }
+    if (stage) stage.classList.add('is-fitted');
   }
   addEventListener('resize', fitHeroStage);
   fitHeroStage();
