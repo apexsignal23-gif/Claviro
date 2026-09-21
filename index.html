@@ -257,17 +257,16 @@
   .hero-word-content{ transform: scaleX(1.175); }
   .hero-word-solved{
     transform: scaleX(1.155);
-    /* Liquid-glass whitish treatment (swapped from the flat blue
-       gradient per explicit request): a diagonal light-grey/white
+    /* Back to the original blue palette per explicit request, but kept
+       in the liquid-glass structure from the grey version: a diagonal
        gradient, oversized (background-size 300%) and animated via
-       background-position, so the bright bands keep sliding through
-       the letters like light moving across liquid metal/mercury,
-       rather than a fixed static gloss band. text-shadow supplies the
-       soft glass-glow bloom, unaffected by the moving fill. */
-    background: linear-gradient(115deg, #565a62 0%, #868a92 14%, #b0b4bc 26%, #999da5 36%, #565a62 50%, #787c84 64%, #b0b4bc 76%, #868a92 88%, #565a62 100%);
+       background-position, with lighter icy-blue bands standing in for
+       glass highlights sliding across the deeper blue base, instead of
+       the original's flat static 3-stop fill. */
+    background: linear-gradient(115deg, #5f7ff0 0%, #8aa4ff 14%, #c3d1ff 26%, #9fb5ff 36%, #5f7ff0 50%, #7d99fa 64%, #c3d1ff 76%, #8aa4ff 88%, #5f7ff0 100%);
     background-size: 300% 300%;
     -webkit-background-clip: text; background-clip: text; color: transparent;
-    text-shadow: 0 0 18px rgba(170,174,182,.4), 0 1px 0 rgba(190,194,202,.3);
+    text-shadow: 0 0 20px rgba(130,159,255,.45), 0 1px 0 rgba(180,200,255,.3);
     animation: hero-solved-liquid 7s ease-in-out infinite;
   }
   @keyframes hero-solved-liquid{
