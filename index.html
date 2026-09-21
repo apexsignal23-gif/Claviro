@@ -369,6 +369,10 @@
      glow only ever traces the border line itself. */
   .glow-card{ display: flex; height: 100%; border-radius: 6px; }
   .glow-card .pricing-card{ flex: 1; }
+  /* Faster spin on this card's border specifically, per explicit
+     request -- scoped to .glow-card so the shared glow-btn-spin
+     animation (2.5s, still used by the hero button) is untouched. */
+  .glow-card .glow-btn-ring-spin{ animation-duration: 1s; }
   .hero-cardsvg{ position: absolute; inset: 0; width: 1672px; height: 940px; pointer-events: none; }
   /* Hover-lift on the 3 SVG cards, brought back per explicit request
      (this existed on the old CSS-div version of these cards earlier in
