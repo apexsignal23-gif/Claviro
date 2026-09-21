@@ -2564,25 +2564,31 @@
   .pw-point-icon i{ font-size: clamp(1.15rem, 1.6vw, 1.4rem); color: var(--accent-hot); }
   .pw-point-label{ font-size: clamp(.78rem, 1.3vw, .92rem); font-weight: 600; line-height: 1.35; color: var(--cream-dim); white-space: nowrap; }
 
-  /* Testimonials grid — replaced the old single-slide carousel
-     (2026-09-20, "the testimonial sections seems very odd"). The
-     carousel's center-aligned text and pure-white circular arrow
-     buttons were the only center-aligned, white-accented UI on the
-     entire page — everything else here is left-aligned copy on dark
-     .cs-card-style gradient cards (case-studies grid, the "mirror"
-     features grid). `.t-grid`/`.t-card` mirror `.cs-grid`/`.cs-card`'s
-     exact mechanics (same gradient, border, radius, 3-up breakpoint)
-     as its own class pair so this section stays independently
-     editable, per the same rationale already used for the mirror
-     section's grid. */
-  .t-grid{ display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
-  @media (min-width: 768px){ .t-grid{ grid-template-columns: repeat(3, 1fr); } }
+  /* Testimonials: single-card auto-rotating carousel (2026-09-21), per
+     explicit request -- was briefly a static 3-up grid (2026-09-20,
+     replacing an even earlier carousel that had center-aligned text and
+     pure-white circular arrow buttons clashing with the rest of the
+     page). This keeps that grid version's card look (`.t-card` itself
+     is unchanged) but shows one at a time, auto-advancing on a plain
+     JS interval (see the script next to the FAQ accordion) -- no
+     arrows/dots, since none were asked for. Swapping `display:none` for
+     `.is-active` (rather than absolutely-stacking all 3 with opacity)
+     means the container's height just follows whichever card happens
+     to be showing, no fixed-height juggling needed for their slightly
+     different quote lengths. */
+  .t-carousel{ max-width: 640px; margin: 0 auto; }
+  .t-carousel .t-card{ display: none; }
+  .t-carousel .t-card.is-active{ display: flex; animation: t-card-fade-in .6s var(--ease-spring); }
+  @keyframes t-card-fade-in{ from{ opacity: 0; transform: translateY(8px); } to{ opacity: 1; transform: translateY(0); } }
+  @media (prefers-reduced-motion: reduce){
+    .t-carousel .t-card.is-active{ animation: none; }
+  }
   .t-card{
     background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
     border: 1px solid rgba(255,255,255,.12);
     border-radius: 16px;
     padding: 1.75rem 1.5rem;
-    display: flex; flex-direction: column; gap: 1.5rem;
+    flex-direction: column; gap: 1.5rem;
   }
   .t-quote-icon{ font-size: 1.6rem; color: var(--accent-hot); opacity: .55; }
   .t-quote{ flex: 1; font-size: .92rem; line-height: 1.7; color: var(--cream-dim); }
@@ -3854,16 +3860,18 @@
      into a 3-up left-aligned card grid, matching the visual language
      already established twice elsewhere (the case-studies grid and the
      "mirror" features grid): same dark gradient card, same border/
-     radius, same 3-col/1-col breakpoint. No carousel JS needed since
-     all 3 show at once.
+     radius, same 3-col/1-col breakpoint.
+     Rebuilt again 2026-09-21 per explicit request into a single-card
+     auto-rotating carousel (`.t-carousel`, see its CSS comment) — same
+     `.t-card` look as the grid version, just one visible at a time,
+     auto-advancing on a loop with no arrows/dots (none were asked for).
      CONTENT IS AI-GENERATED PLACEHOLDER, per explicit request, for
      visualizing the layout — every name/company/quote (Priya Raman,
      Marcus Webb, Daniela Ortiz and their companies) is fictional, not
-     a real client. Photos are i.pravatar.cc stock headshots, not
-     actually AI-generated (no image-generation tool was available in
-     that session) — swap for real client photos, or genuinely
-     AI-generated ones, before this goes live along with the rest of
-     this placeholder content; do not ship any of it as real. -->
+     a real client (avatar photos were removed per a later request, so
+     no photo attribution note applies anymore). Swap in real client
+     names/quotes before this goes live; don't ship any of it as
+     real. -->
 <section id="testimonials" class="relative py-24 sm:py-28">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <p class="reveal en-eyebrow">Testimonial</p>
@@ -3872,8 +3880,8 @@
     </h2>
     <p class="reveal mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">Hear from their experience.</p>
 
-    <div class="t-grid reveal mt-12">
-      <div class="t-card">
+    <div class="t-carousel reveal mt-12">
+      <div class="t-card is-active">
         <i class="ph-fill ph-quotes t-quote-icon" aria-hidden="true"></i>
         <p class="t-quote">&ldquo;Before Claviro, my LinkedIn presence was whatever I managed to post at midnight before a launch. Ten months in, three closed deals started as a comment on one of our posts, and my sales team sends prospects to my profile before they ever see a deck.&rdquo;</p>
         <div class="t-person">
@@ -4586,6 +4594,22 @@ void main() {
 
     setTimeout(startCycle, 600 + i * 500 + Math.random() * 1200);
   });
+})();
+
+// Testimonials — auto-rotating single-card carousel, per explicit
+// request: card 1 shows, then card 2 automatically, then card 3, then
+// loops back to card 1, forever. No arrows/dots/pause-on-hover, since
+// none were asked for -- just a plain interval swapping `.is-active`
+// (the CSS fade-in above `.t-carousel` handles the transition).
+(function () {
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.t-carousel .t-card'));
+  if (cards.length < 2) return;
+  var index = 0;
+  setInterval(function () {
+    cards[index].classList.remove('is-active');
+    index = (index + 1) % cards.length;
+    cards[index].classList.add('is-active');
+  }, 5000);
 })();
 
 // FAQ accordion — one panel open at a time. Toggles a `data-open`
