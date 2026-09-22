@@ -2058,20 +2058,6 @@
      `position:sticky` for everything inside it. */
   /* Left-aligned (default block alignment) — matches every other
      section's heading on this page (Pricing, Retention, etc.). */
-  /* FIX 2026-09-22: the heading used to be plain normal-flow, so it
-     scrolled away almost immediately while the sticky cards below kept
-     dwelling in the viewport for a long scroll distance -- looked
-     broken/disconnected once the card gaps were lengthened (see
-     .iv-scroll-cards below). Per explicit request, matching
-     contentfloww.com's reference ("the podcast writing keeps fixed, it
-     doesn't move until the slider is finished"): the heading is now
-     ALSO sticky, at the same top offset .iv-card used to use (clears
-     the fixed header), so it stays put for as long as the whole
-     .iv-scroll-stack still has scroll room left. `.iv-card`'s own top
-     offset was pushed down (7rem -> 20rem, with its height cap adjusted
-     to match) so the cards start pinning right below the now-pinned
-     heading instead of underneath/overlapping it. */
-  .iv-scroll-head{ position: sticky; top: 7rem; }
   .iv-scroll-stack{ display: flex; flex-direction: column; align-items: center; gap: 3rem; }
   /* Gap controls the reveal's PACE, not just spacing: since these are
      plain sticky flex-column siblings with no extra spacer wrappers,
@@ -2104,7 +2090,7 @@
   .iv-static-card .iv-video{ aspect-ratio: 16 / 9; }
   .iv-card{
     position: sticky;
-    top: 20rem;
+    top: 7rem;
     background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
     border: 1px solid rgba(255,255,255,.12);
     border-radius: 20px;
@@ -2127,14 +2113,14 @@
     .iv-card{
       /* NOT a flat rem alone — a sticky element's own height still has to
          fit inside whatever's left of the actual browser viewport once it
-         locks at `top:20rem`; a taller-than-available-space sticky card
+         locks at `top:7rem`; a taller-than-available-space sticky card
          just runs off the bottom of the window with no way to scroll
          further into view (scrolling the page can't move an
          already-stuck element up more). Cap it to the smaller of 32rem
          or the real available viewport height (100vh minus the top
          offset and a bit of breathing room) so it always fits on short
          windows too. */
-      height: max(20rem, min(32rem, calc(100svh - 22rem)));
+      height: max(20rem, min(32rem, calc(100svh - 9rem)));
       overflow: hidden;
       display: flex;
       align-items: center;
