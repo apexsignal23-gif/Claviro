@@ -2141,6 +2141,18 @@
       justify-content: center;
     }
     .iv-card > *{ width: 100%; }
+    /* Card 2 (the 4-up 9:16 video row) specifically -- per explicit
+       report that the clips were visibly cropped top/bottom. Its
+       videos' height is DRIVEN by their width (aspect-ratio:9/16) at 4
+       columns across the card, which comes out taller than the shared
+       fixed-height cap above, so overflow:hidden was slicing off the
+       top/bottom of every clip. Safe to let just THIS card grow to its
+       natural, uncropped height instead, since -- now that the old
+       card 3 (the 16:9 video) moved out to a static box below the
+       stack -- card 2 is the LAST card in the sticky sequence, so
+       nothing slides up after it that needs this box to stay a fixed
+       short height to remain fully covered. */
+    .iv-card-natural{ height: auto; overflow: visible; }
   }
 
   /* Vertical (9:16) video grid used inside card 2 — all 4 clips together
@@ -3105,7 +3117,7 @@
         </div>
 
         <!-- CARD 2: all 4 vertical clips together in one card -->
-        <div class="iv-card">
+        <div class="iv-card iv-card-natural">
           <div class="iv-grid">
             <div class="iv-item">
               <div class="iv-frame">
