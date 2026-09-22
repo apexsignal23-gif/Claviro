@@ -2657,7 +2657,17 @@
      flatter than the reference at this section's real (taller) height.
      Reverted to the reference's own literal px-from-top per explicit
      "the moon is very big... make the size like this [the reference]" —
-     exact fidelity to the source file wins over adapting for height. */
+     exact fidelity to the source file wins over adapting for height.
+     Still reported too big after that fix ("it still doesn't match"),
+     comparing against a second screenshot showing a visibly smaller,
+     more tightly-curved arc with dark empty space in the bottom
+     corners (a smaller circle runs out of curve before the container's
+     edges, unlike a bigger one that reaches the corners with arc still
+     showing). Scaled every dimension here (moon/glow width, height,
+     top) down ~65% uniformly, which preserves the reference's exact
+     curvature/proportions, just smaller overall — an estimate read off
+     the screenshot, not an exact measurement, since this can't be
+     screenshotted/verified directly; flag if it still needs tuning. */
   #testimonials{
     background:
       radial-gradient(ellipse at 50% 36%, rgba(31,45,76,.1) 0%, rgba(11,17,24,.04) 40%, transparent 67%),
@@ -2673,13 +2683,13 @@
     background-position: 12px 31px, 51px 77px, 91px 12px;
   }
   .ts-moon-glow{
-    position: absolute; z-index: 1; left: 50%; top: 205px; width: min(1150px, 92%); height: 170px;
+    position: absolute; z-index: 1; left: 50%; top: 133px; width: min(745px, 92%); height: 110px;
     transform: translateX(-50%); pointer-events: none;
     background: radial-gradient(ellipse at center, rgba(96,126,235,.25) 0%, rgba(65,93,190,.12) 35%, transparent 72%);
     filter: blur(29px);
   }
   .ts-moon{
-    position: absolute; z-index: 1; left: 50%; top: 259px; width: 1520px; height: 1520px;
+    position: absolute; z-index: 1; left: 50%; top: 168px; width: 990px; height: 990px;
     transform: translateX(-50%); border-radius: 50%; overflow: hidden; pointer-events: none;
     background: radial-gradient(ellipse at 50% 4%, rgba(46,67,111,.45) 0%, rgba(26,39,67,.42) 14%, rgba(18,28,47,.74) 28%, rgba(10,17,26,.94) 49%, rgba(6,10,15,.99) 72%, #05080c 100%);
     box-shadow:
@@ -2709,11 +2719,11 @@
     background: linear-gradient(180deg, transparent 0%, rgba(7,11,15,.16) 30%, rgba(7,11,15,.65) 100%);
   }
   @media (max-width: 900px){
-    .ts-moon{ width: 1250px; height: 1250px; }
+    .ts-moon{ width: 810px; height: 810px; }
   }
   @media (max-width: 600px){
-    .ts-moon{ width: 1020px; height: 1020px; }
-    .ts-moon-glow{ width: min(700px, 92%); }
+    .ts-moon{ width: 660px; height: 660px; }
+    .ts-moon-glow{ width: min(455px, 92%); }
   }
 
   /* mobile nav */
