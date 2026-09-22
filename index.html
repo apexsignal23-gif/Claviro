@@ -3209,14 +3209,27 @@
           </div>
         </div>
 
-        <!-- CARD 2: all 4 vertical clips together in one card -->
+        <!-- CARD 2: all 4 vertical clips together in one card.
+             `scrolling="no"` on every Gumlet iframe in this section
+             (here and card 3) per explicit report: scrolling past card
+             3 once it locks didn't move the page at all, even though
+             the mouse wheel clearly did something ("the scroller goes
+             down"). Once a card 3 with 2 whole iframes started
+             covering most of the sticky card's own area, a wheel
+             scroll landing on top of an iframe was being captured by
+             THAT iframe's own embedded document instead of bubbling up
+             to scroll the actual page -- standard browser behavior
+             whenever an iframe's inner document is itself scrollable.
+             `scrolling="no"` tells the iframe not to allow its own
+             document to scroll, so the wheel event passes through to
+             the page instead. -->
         <div class="iv-card iv-card-natural">
           <div class="iv-grid">
             <div class="iv-item">
               <div class="iv-frame">
                 <div class="iv-video" data-video-slot="1">
                   <iframe
-                    loading="lazy" title="Gumlet video player"
+                    loading="lazy" title="Gumlet video player" scrolling="no"
                     src="https://play.gumlet.io/embed/6a8c22c028f2c759010e7854?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
                     referrerpolicy="origin"
                     allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
@@ -3227,7 +3240,7 @@
               <div class="iv-frame">
                 <div class="iv-video" data-video-slot="2">
                   <iframe
-                    loading="lazy" title="Gumlet video player"
+                    loading="lazy" title="Gumlet video player" scrolling="no"
                     src="https://play.gumlet.io/embed/6a8c2a06b6df3364045627b8?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
                     referrerpolicy="origin"
                     allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
@@ -3238,7 +3251,7 @@
               <div class="iv-frame">
                 <div class="iv-video" data-video-slot="3">
                   <iframe
-                    loading="lazy" title="Gumlet video player"
+                    loading="lazy" title="Gumlet video player" scrolling="no"
                     src="https://play.gumlet.io/embed/6a8c2d67c427de1345382ae8?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
                     referrerpolicy="origin"
                     allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
@@ -3249,7 +3262,7 @@
               <div class="iv-frame">
                 <div class="iv-video" data-video-slot="4">
                   <iframe
-                    loading="lazy" title="Gumlet video player"
+                    loading="lazy" title="Gumlet video player" scrolling="no"
                     src="https://play.gumlet.io/embed/6a8c2e34c427de134538311b?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
                     referrerpolicy="origin"
                     allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
@@ -3288,14 +3301,14 @@
           <div class="iv-video-pair">
             <div class="iv-video iv-video-16x9" data-video-slot="3a">
               <iframe
-                loading="lazy" title="Gumlet video player"
+                loading="lazy" title="Gumlet video player" scrolling="no"
                 src="https://play.gumlet.io/embed/6ab2ae4317eed75ce4877d43?background=false&amp;autoplay=false&amp;loop=false&amp;disable_player_controls=false"
                 referrerpolicy="origin"
                 allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
             </div>
             <div class="iv-video iv-video-16x9" data-video-slot="3b">
               <iframe
-                loading="lazy" title="Gumlet video player"
+                loading="lazy" title="Gumlet video player" scrolling="no"
                 src="https://play.gumlet.io/embed/6ab2ae4317eed75ce4877d43?background=false&amp;autoplay=false&amp;loop=false&amp;disable_player_controls=false"
                 referrerpolicy="origin"
                 allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
