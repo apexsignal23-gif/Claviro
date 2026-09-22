@@ -2686,7 +2686,23 @@
      transparent (no rule at all) lets body's own background/::before
      show through uninterrupted here exactly like every other section;
      only the decorative layers below (stars/glow/moon/fade) sit on
-     top of it. */
+     top of it.
+     `.ts-sky` wrapper added (2026-09-22): the reference file's own page
+     was a fixed 879px tall with `overflow:hidden`, so its moon (top:
+     259px, a 1520px circle) only ever shows a shallow cap near its own
+     top vertex. This section is taller (real header + heading + card +
+     padding easily clears 1000px+), so the SAME circle, unclipped,
+     reaches well past its equator -- past that point the circle is
+     nearly full-width and its box-shadow rim-light (which wraps the
+     WHOLE circle, not just the top) bleeds down the sides as vertical-
+     looking blue glows, visible well into the lower part of the
+     section. Reported as "the blue shade is still visible on the lower
+     part" with a screenshot of exactly that seam. Fix: cap the glow/
+     moon inside their own short, `overflow:hidden` wrapper positioned
+     at the very top of the section (matching the reference's own
+     clipping height), instead of letting the full (much taller)
+     section clip them. */
+  .ts-sky{ position: absolute; top: 0; left: 0; right: 0; height: 700px; overflow: hidden; z-index: 1; pointer-events: none; }
   .ts-stars{
     position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .37;
     background-image:
@@ -4043,8 +4059,10 @@
      on the background of testimonial"). -->
 <section id="testimonials" class="relative py-24 sm:py-28 overflow-hidden">
   <div class="ts-stars" aria-hidden="true"></div>
-  <div class="ts-moon-glow" aria-hidden="true"></div>
-  <div class="ts-moon" aria-hidden="true"></div>
+  <div class="ts-sky" aria-hidden="true">
+    <div class="ts-moon-glow"></div>
+    <div class="ts-moon"></div>
+  </div>
   <div class="ts-bottom-fade" aria-hidden="true"></div>
 
   <div class="relative z-[2] max-w-[1280px] mx-auto px-6 lg:px-10">
