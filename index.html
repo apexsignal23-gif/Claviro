@@ -2650,12 +2650,14 @@
      file's `.stars`/`.moon-glow`/`.moon`/`.bottom-fade`/`.page`
      layers. Only the reference's own nav/hero-copy/card markup is
      skipped — this site keeps its real header and its own existing
-     `.t-carousel` card; just the atmosphere behind them is ported. The
-     reference's composition was tuned to its own fixed 879px-tall
-     page; positioned here the same way (percentage anchors instead of
-     the reference's literal px-from-top) so the same "top sliver of a
-     huge glowing sphere" framing holds even though this section's own
-     height varies with content instead of being fixed. */
+     `.t-carousel` card; just the atmosphere behind them is ported.
+     Moon/glow `top` were briefly converted to percentages (reasoning
+     this section's height varies unlike the reference's fixed 879px
+     page), but that made the visible slice of the sphere much bigger/
+     flatter than the reference at this section's real (taller) height.
+     Reverted to the reference's own literal px-from-top per explicit
+     "the moon is very big... make the size like this [the reference]" —
+     exact fidelity to the source file wins over adapting for height. */
   #testimonials{
     background:
       radial-gradient(ellipse at 50% 36%, rgba(31,45,76,.1) 0%, rgba(11,17,24,.04) 40%, transparent 67%),
@@ -2671,13 +2673,13 @@
     background-position: 12px 31px, 51px 77px, 91px 12px;
   }
   .ts-moon-glow{
-    position: absolute; z-index: 1; left: 50%; top: 23%; width: min(1150px, 92%); height: 170px;
+    position: absolute; z-index: 1; left: 50%; top: 205px; width: min(1150px, 92%); height: 170px;
     transform: translateX(-50%); pointer-events: none;
     background: radial-gradient(ellipse at center, rgba(96,126,235,.25) 0%, rgba(65,93,190,.12) 35%, transparent 72%);
     filter: blur(29px);
   }
   .ts-moon{
-    position: absolute; z-index: 1; left: 50%; top: 29%; width: 1520px; height: 1520px;
+    position: absolute; z-index: 1; left: 50%; top: 259px; width: 1520px; height: 1520px;
     transform: translateX(-50%); border-radius: 50%; overflow: hidden; pointer-events: none;
     background: radial-gradient(ellipse at 50% 4%, rgba(46,67,111,.45) 0%, rgba(26,39,67,.42) 14%, rgba(18,28,47,.74) 28%, rgba(10,17,26,.94) 49%, rgba(6,10,15,.99) 72%, #05080c 100%);
     box-shadow:
