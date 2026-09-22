@@ -2063,13 +2063,18 @@
      plain sticky flex-column siblings with no extra spacer wrappers,
      card 1 stays cleanly pinned (before card 2 starts sliding up over
      it) for roughly this gap's worth of scroll distance -- a bigger
-     gap means more scrolling before the next card appears. Bumped up
-     (2.5rem/7rem -> 10rem/40rem) per explicit request: "the 2nd box
-     pops up very quickly... make the scrolling slower". */
-  .iv-scroll-cards{ width: 100%; display: flex; flex-direction: column; gap: 10rem; }
-  @media (min-width: 768px){
-    .iv-scroll-cards{ gap: 40rem; }
-  }
+     gap means more scrolling before the next card appears, but too big
+     a gap creates a long "nothing is pinned, everything just scrolls
+     past normally" dead zone between cards instead of a continuous
+     cover-transition, which is exactly what got reported 2026-09-22
+     ("the 2nd and 3rd box completely moves upward... like the content
+     flows"). First bumped 2.5rem/7rem -> 10rem/40rem to slow the
+     reveal down per an earlier explicit request, but 40rem (640px) is
+     5x contentfloww.com's own actual value for this exact effect --
+     re-checked their live CSS (.podcasts_content-right's
+     grid-row-gap), which uses a flat 8rem at every breakpoint, no
+     10rem/40rem split. Matched that instead of guessing again. */
+  .iv-scroll-cards{ width: 100%; display: flex; flex-direction: column; gap: 8rem; }
   /* Static video card BELOW the sticky-stack, back per explicit request
      ("remove this long video from the slider and fix it on the below
      of the slider, like how it was before"). Same dark card shell
