@@ -2211,9 +2211,18 @@
     background: linear-gradient(160deg, #1c1c1c 0%, #0a0a0a 100%);
     display: flex; align-items: center; justify-content: center;
   }
+  /* `object-fit: contain` (not `cover`), per explicit request that the
+     video boxes look "too big"/zoomed and want "zoomed out, so none of
+     the video gets cutted" while the box's own aspect-ratio and the
+     video's own aspect-ratio both stay untouched — `cover` was cropping
+     each clip to fill the 9:16/16:9 box exactly, cutting off whatever
+     didn't fit; `contain` shows the whole frame letterboxed instead.
+     Confirmed via Gumlet's own docs that this is their recommended CSS
+     for fitting their iframe embed without cropping (their player fills
+     the iframe box itself, so this is safe to set on the iframe here). */
   .iv-video video, .iv-video img, .iv-video iframe{
     position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: cover; border: 0;
+    object-fit: contain; border: 0;
   }
   /* Card 1's LinkedIn post grid. 2 columns on mobile, 3 at `sm:`+. At
      `lg:` (where .iv-card is capped to a fixed height — see .iv-card) the
