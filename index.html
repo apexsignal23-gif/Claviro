@@ -3265,29 +3265,35 @@
              boxes, but that made card 3 much SHORTER than card 2 (the
              4-up reel row) -- since these are sticky cards that slide
              over/cover each other, a shorter card 3 left card 2's own
-             clips visibly peeking out above and below it, per a
-             follow-up screenshot + "make the outer boxes size like the
-             reels". Switched both slots to plain `.iv-video` (the same
-             9:16 "reel" shape card 2 uses, no `.iv-video-16x9`), which
-             both matches the requested look AND makes card 3 tall
-             enough to fully cover card 2 again like every other pair of
-             cards in this stack. `.iv-video-pair` is a 2-col grid
-             (1-col on very narrow screens). Still inside
-             .iv-card-natural since 2 half-width 9:16 videos exceed the
-             shared fixed-height cap even more than before. Only one
-             real video id was supplied -- the 2nd slot duplicates it as
-             a placeholder; swap `data-video-slot="3b"`'s src for the
-             real second video when it's ready. -->
-        <div class="iv-card iv-card-natural">
+             clips visibly peeking out above and below it. Tried
+             switching both slots to the 9:16 "reel" shape per
+             "make the outer boxes size like the reels", but this
+             video's actual source is landscape (16:9) -- forcing a
+             tall 9:16 box on it broke Gumlet's own player rendering
+             (a blank white box, not the video, per the follow-up
+             screenshot). Reverted to the correct `.iv-video-16x9` shape
+             for the actual content, and got the "bigger, covers card 2"
+             result a different way instead: dropped `.iv-card-natural`
+             (which let the card shrink to the videos' own short natural
+             height) so card 3 now uses the SAME fixed-height treatment
+             as card 1 -- the 2 shorter 16:9 videos sit centered inside
+             that taller box instead of the box shrinking to fit them,
+             so it's back to fully covering card 2 like every other pair
+             in this stack. `.iv-video-pair` is a 2-col grid (1-col on
+             very narrow screens). Only one real video id was supplied
+             -- the 2nd slot duplicates it as a placeholder; swap
+             `data-video-slot="3b"`'s src for the real second video when
+             it's ready. -->
+        <div class="iv-card">
           <div class="iv-video-pair">
-            <div class="iv-video" data-video-slot="3a">
+            <div class="iv-video iv-video-16x9" data-video-slot="3a">
               <iframe
                 loading="lazy" title="Gumlet video player"
                 src="https://play.gumlet.io/embed/6ab2ae4317eed75ce4877d43?background=false&amp;autoplay=false&amp;loop=false&amp;disable_player_controls=false"
                 referrerpolicy="origin"
                 allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
             </div>
-            <div class="iv-video" data-video-slot="3b">
+            <div class="iv-video iv-video-16x9" data-video-slot="3b">
               <iframe
                 loading="lazy" title="Gumlet video player"
                 src="https://play.gumlet.io/embed/6ab2ae4317eed75ce4877d43?background=false&amp;autoplay=false&amp;loop=false&amp;disable_player_controls=false"
