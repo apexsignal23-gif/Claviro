@@ -2667,11 +2667,16 @@
      Reverted to the reference's own literal px-from-top per explicit
      "the moon is very big... make the size like this [the reference]" —
      exact fidelity to the source file wins over adapting for height. */
-  #testimonials{
-    background:
-      radial-gradient(ellipse at 50% 36%, rgba(31,45,76,.1) 0%, rgba(11,17,24,.04) 40%, transparent 67%),
-      linear-gradient(180deg, #0a0f15 0%, #080d12 62%, #070b0f 100%);
-  }
+  /* Base fill is the site's own --ink-950 (not the reference file's own
+     bluish page gradient) per explicit request: "the background is
+     completely changed... turned to bluish. keep the white/blue ray
+     and the blue glows... just turn the background color to the
+     website's background." Only .ts-moon-glow and .ts-moon's own rim
+     highlights (::before + box-shadow) stay blue -- those ARE the
+     "ray"/"glow" being kept; the flat fill behind everything, and the
+     sphere's own body color below, are neutral to match the rest of
+     the page instead of standing out as a distinct blue-tinted patch. */
+  #testimonials{ background: var(--ink-950); }
   .ts-stars{
     position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .37;
     background-image:
@@ -2690,7 +2695,7 @@
   .ts-moon{
     position: absolute; z-index: 1; left: 50%; top: 259px; width: 1520px; height: 1520px;
     transform: translateX(-50%); border-radius: 50%; overflow: hidden; pointer-events: none;
-    background: radial-gradient(ellipse at 50% 4%, rgba(46,67,111,.45) 0%, rgba(26,39,67,.42) 14%, rgba(18,28,47,.74) 28%, rgba(10,17,26,.94) 49%, rgba(6,10,15,.99) 72%, #05080c 100%);
+    background: radial-gradient(ellipse at 50% 4%, rgba(60,60,64,.45) 0%, rgba(38,38,42,.42) 14%, rgba(24,24,27,.74) 28%, rgba(15,15,17,.94) 49%, rgba(9,9,10,.99) 72%, #0e0f11 100%);
     box-shadow:
       0 -1px 0 rgba(208,218,255,.95),
       0 -3px 5px rgba(139,164,255,.95),
