@@ -18,6 +18,19 @@
 <!-- Icons: Phosphor -->
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 
+<!-- Smooth, velocity-capped scroll (Lenis) -- same library/version
+     contentfloww.com itself uses (curled their live HTML to confirm,
+     not guessed), per explicit request to match that site's "no matter
+     how fast you spin the wheel, it eases at a fixed max speed" scroll
+     feel. Lenis smooths the REAL native scroll position via
+     requestAnimationFrame (see the init script next to fitHeroStage)
+     rather than faking scroll with a transformed wrapper, which is why
+     it's safe here: this page leans heavily on position:sticky/fixed
+     (the header, the Industry Standard heading + card stack) and a
+     transform-based "virtual scroll" library would have broken all of
+     that. -->
+<script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.23/bundled/lenis.min.js"></script>
+
 <!-- Tailwind CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -4102,6 +4115,27 @@
   }
   addEventListener('resize', fitHeroStage);
   fitHeroStage();
+})();
+
+/* =====================================================================
+   Smooth, velocity-capped scroll (Lenis) -- per explicit request to
+   match contentfloww.com's own scroll feel (confirmed via their live
+   HTML that they load this same library/version from this same CDN).
+   Standard Lenis wiring: it smooths the REAL window scroll position
+   itself via requestAnimationFrame rather than faking scroll with a
+   transformed wrapper, so position:sticky/fixed elsewhere on this page
+   (the header, the Industry Standard heading + card stack) keep
+   working normally. Skipped entirely under prefers-reduced-motion, and
+   no-ops if the CDN script failed to load. */
+(function(){
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (typeof Lenis === 'undefined') return;
+  var lenis = new Lenis();
+  function raf(time){
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
 })();
 
 /* =====================================================================
