@@ -2075,6 +2075,12 @@
      grid-row-gap), which uses a flat 8rem at every breakpoint, no
      10rem/40rem split. Matched that instead of guessing again. */
   .iv-scroll-cards{ width: 100%; display: flex; flex-direction: column; gap: 8rem; }
+  /* See the HTML comment right above the spacer's markup for why this
+     exists: card 2 is the last child here, flush against the
+     container's own bottom edge, so without this it has zero room to
+     stick -- this height is its dwell time, same idea as the gap
+     above controlling card 1's dwell time. */
+  .iv-scroll-spacer{ height: 24rem; }
   /* Static video card BELOW the sticky-stack, back per explicit request
      ("remove this long video from the slider and fix it on the below
      of the slider, like how it was before"). Same dark card shell
@@ -3156,6 +3162,19 @@
             </div>
           </div>
         </div>
+
+        <!-- Trailing spacer, no visual content -- per explicit report
+             card 2 wasn't locking/sticking at all. A sticky element
+             needs trailing ROOM inside its own containing block to
+             stick through; card 2 is otherwise the LAST child of
+             .iv-scroll-cards, flush against its bottom edge, so it had
+             zero room to stick (the exact moment it would start
+             sticking is also the moment its container's bottom edge
+             catches up, so it never visibly locks -- it just scrolls
+             straight through). Card 1 gets this "room" for free from
+             the gap + card 2's own height after it; card 2 needed this
+             spacer to get the same treatment. -->
+        <div class="iv-scroll-spacer" aria-hidden="true"></div>
       </div>
 
       <!-- Static (non-sticky) video card below the sliding stack, per
