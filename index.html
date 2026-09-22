@@ -2675,8 +2675,18 @@
      highlights (::before + box-shadow) stay blue -- those ARE the
      "ray"/"glow" being kept; the flat fill behind everything, and the
      sphere's own body color below, are neutral to match the rest of
-     the page instead of standing out as a distinct blue-tinted patch. */
-  #testimonials{ background: var(--ink-950); }
+     the page instead of standing out as a distinct blue-tinted patch.
+     Then dropped entirely (2026-09-22): an explicit opaque fill here,
+     even the exact same --ink-950 hex as `body`, still blocked out
+     `body::before`'s fixed viewport-anchored grain/vignette layer (see
+     that rule) for this section's own box, creating a visible seam
+     right at the section boundary where that texture cuts off --
+     reported as "a color difference between two pages" with a
+     screenshot pointing right at that seam. Leaving #testimonials
+     transparent (no rule at all) lets body's own background/::before
+     show through uninterrupted here exactly like every other section;
+     only the decorative layers below (stars/glow/moon/fade) sit on
+     top of it. */
   .ts-stars{
     position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .37;
     background-image:
