@@ -2224,6 +2224,14 @@
     position: absolute; inset: 0; width: 100%; height: 100%;
     object-fit: contain; border: 0;
   }
+  /* Card 3: 2 videos side by side instead of 1, per explicit request
+     with a mockup showing the same overall box just split in half.
+     1 column (stacked) below 640px so each video keeps a sane width on
+     narrow phones instead of being squeezed to a sliver. */
+  .iv-video-pair{ display: grid; grid-template-columns: 1fr; gap: 1rem; }
+  @media (min-width: 640px){
+    .iv-video-pair{ grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+  }
   /* Card 1's LinkedIn post grid. 2 columns on mobile, 3 at `sm:`+. At
      `lg:` (where .iv-card is capped to a fixed height — see .iv-card) the
      grid fills that height exactly via height:100% + 3 equal `1fr` rows,
@@ -3251,20 +3259,35 @@
           </div>
         </div>
 
-        <!-- CARD 3: one 16:9 video, moved back into the sticky stack
-             per explicit request ("do lock the 3rd box") -- this used
-             to be a plain position:static card below the stack, but
-             the user wants it to lock in place the same way cards 1
-             and 2 do. Reuses .iv-card-natural (same as card 2) since a
-             single full-width 16:9 video also exceeds the shared
-             fixed-height cap. -->
+        <!-- CARD 3: TWO 16:9 videos side by side, per explicit request
+             ("i want you to build a system where in that box 2 videos
+             will play side by side") with a mockup showing the same
+             overall box, just split into 2 equal side-by-side videos
+             instead of 1. `.iv-video-pair` is a 2-col grid (1-col on
+             very narrow screens) of two `.iv-video.iv-video-16x9`
+             slots, same wrapper class as before so each keeps its own
+             16:9 shape + object-fit:contain treatment. Still inside
+             .iv-card-natural since 2 half-width 16:9 videos stacked
+             this way still exceed the shared fixed-height cap. Only
+             one real video id was supplied -- the 2nd slot duplicates
+             it as a placeholder; swap `data-video-slot="3b"`'s src for
+             the real second video when it's ready. -->
         <div class="iv-card iv-card-natural">
-          <div class="iv-video iv-video-16x9">
-            <iframe
-              loading="lazy" title="Gumlet video player"
-              src="https://play.gumlet.io/embed/6ab2ae4317eed75ce4877d43?background=false&amp;autoplay=false&amp;loop=false&amp;disable_player_controls=false"
-              referrerpolicy="origin"
-              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
+          <div class="iv-video-pair">
+            <div class="iv-video iv-video-16x9" data-video-slot="3a">
+              <iframe
+                loading="lazy" title="Gumlet video player"
+                src="https://play.gumlet.io/embed/6ab2ae4317eed75ce4877d43?background=false&amp;autoplay=false&amp;loop=false&amp;disable_player_controls=false"
+                referrerpolicy="origin"
+                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
+            </div>
+            <div class="iv-video iv-video-16x9" data-video-slot="3b">
+              <iframe
+                loading="lazy" title="Gumlet video player"
+                src="https://play.gumlet.io/embed/6ab2ae4317eed75ce4877d43?background=false&amp;autoplay=false&amp;loop=false&amp;disable_player_controls=false"
+                referrerpolicy="origin"
+                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
+            </div>
           </div>
         </div>
 
