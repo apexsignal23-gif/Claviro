@@ -2081,24 +2081,14 @@
      stick -- this height is its dwell time, same idea as the gap
      above controlling card 1's dwell time. */
   .iv-scroll-spacer{ height: 24rem; }
-  /* Static video card BELOW the sticky-stack, back per explicit request
-     ("remove this long video from the slider and fix it on the below
-     of the slider, like how it was before"). Same dark card shell
-     (background gradient, border, radius, padding) as `.iv-card`, but
-     plain `position:static` (the default), so it just sits in normal
-     document flow after the stack instead of locking in place while
-     scrolling. Its video keeps a plain 16:9 box (no stretch-to-fill-
-     height override), which sidesteps the pillarboxing problem that
-     forced it into the sticky stack the first time around — the box
-     already matches the video's real aspect ratio. */
-  .iv-static-card{
-    width: 100%;
-    background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
-    border: 1px solid rgba(255,255,255,.12);
-    border-radius: 20px;
-    padding: 1rem;
-  }
-  .iv-static-card .iv-video{ aspect-ratio: 16 / 9; }
+  /* Card 3's 16:9 video, moved back into the sticky stack per explicit
+     request ("do lock the 3rd box") -- was briefly a plain
+     position:static card below the stack instead (see git history if
+     that's ever wanted again). Un-stretched 16:9 wrapper, same as
+     before, paired with .iv-card-natural on the card itself so a
+     single full-width video isn't cropped by the shared fixed-height
+     cap. */
+  .iv-video-16x9{ aspect-ratio: 16 / 9; }
   .iv-card{
     position: sticky;
     top: 7rem;
@@ -2978,19 +2968,22 @@
      .podcast-trailers-component / .sticky-wrapper / .podcast_wrapper /
      .portfolio-video-wrapper), re-themed onto Claviro's dark ink tokens.
      See the CSS comment above `.iv-scroll-stack` for how the effect works.
-     2 sticky/sliding cards: (1) a grid of raw LinkedIn post screenshots,
-     (2) all 4 vertical clips together. A 3rd, full-width 16:9 video has
-     bounced between the sticky stack and a static box below it several
-     times (2026-08-24 through 2026-09-21): stretched to fill the sticky
-     card's height -> Gumlet's own player pillarboxed with white bars ->
-     moved to a static card below the stack (plain 16:9, no stretch, no
-     pillarbox) -> moved back into the stack per a later request, using
-     `.iv-card-natural` to opt that one card out of the shared fixed
-     height so it wouldn't crop -> and now, 2026-09-21, back to the
-     static box below the stack per explicit request ("remove this long
-     video from the slider... like how it was before") — see the CSS
-     comment above `.iv-static-card`. Don't move it back into the
-     sliding stack without being asked. -->
+     3 sticky/sliding cards: (1) a grid of raw LinkedIn post screenshots,
+     (2) all 4 vertical clips together, (3) one full-width 16:9 video.
+     Card 3 has bounced between the sticky stack and a static box below
+     it several times (2026-08-24 through 2026-09-22): stretched to
+     fill the sticky card's height -> Gumlet's own player pillarboxed
+     with white bars -> moved to a static card below the stack (plain
+     16:9, no stretch, no pillarbox) -> moved back into the stack ->
+     moved back OUT to a static box again ("remove this long video from
+     the slider... like how it was before") -> and now, 2026-09-22,
+     back in the stack one more time per explicit request ("do lock the
+     3rd box") — every card needs `position:sticky` plus enough
+     trailing room in `.iv-scroll-cards` to actually stick (see the CSS
+     comments above `.iv-scroll-spacer` and `.iv-card-natural`); only
+     the truly LAST card needs the trailing spacer, since every other
+     card already gets that room for free from the next card + gap
+     after it. -->
 <section id="industry-standard" class="relative py-24 sm:py-28">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="iv-scroll-head reveal max-w-[36rem]">
@@ -3163,31 +3156,35 @@
           </div>
         </div>
 
+        <!-- CARD 3: one 16:9 video, moved back into the sticky stack
+             per explicit request ("do lock the 3rd box") -- this used
+             to be a plain position:static card below the stack, but
+             the user wants it to lock in place the same way cards 1
+             and 2 do. Reuses .iv-card-natural (same as card 2) since a
+             single full-width 16:9 video also exceeds the shared
+             fixed-height cap. -->
+        <div class="iv-card iv-card-natural">
+          <div class="iv-video iv-video-16x9">
+            <iframe
+              loading="lazy" title="Gumlet video player"
+              src="https://play.gumlet.io/embed/6a8c294cb6df33640456242c?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
+              referrerpolicy="origin"
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
+          </div>
+        </div>
+
         <!-- Trailing spacer, no visual content -- per explicit report
              card 2 wasn't locking/sticking at all. A sticky element
              needs trailing ROOM inside its own containing block to
-             stick through; card 2 is otherwise the LAST child of
-             .iv-scroll-cards, flush against its bottom edge, so it had
-             zero room to stick (the exact moment it would start
-             sticking is also the moment its container's bottom edge
-             catches up, so it never visibly locks -- it just scrolls
-             straight through). Card 1 gets this "room" for free from
-             the gap + card 2's own height after it; card 2 needed this
-             spacer to get the same treatment. -->
+             stick through; whichever card is LAST in .iv-scroll-cards
+             is flush against its bottom edge, so it has zero room to
+             stick (the exact moment it would start sticking is also
+             the moment its container's bottom edge catches up, so it
+             never visibly locks -- it just scrolls straight through).
+             Every card gets this "room" for free from the gap + the
+             NEXT card's own height after it; only the truly last card
+             (now card 3) needs this spacer to get the same treatment. -->
         <div class="iv-scroll-spacer" aria-hidden="true"></div>
-      </div>
-
-      <!-- Static (non-sticky) video card below the sliding stack, per
-           explicit request to bring this back -- see the CSS comment
-           above .iv-static-card. -->
-      <div class="iv-static-card reveal">
-        <div class="iv-video">
-          <iframe
-            loading="lazy" title="Gumlet video player"
-            src="https://play.gumlet.io/embed/6a8c294cb6df33640456242c?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
-            referrerpolicy="origin"
-            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
-        </div>
       </div>
     </div>
   </div>
