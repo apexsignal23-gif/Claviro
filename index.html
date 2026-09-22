@@ -3259,29 +3259,35 @@
           </div>
         </div>
 
-        <!-- CARD 3: TWO 16:9 videos side by side, per explicit request
-             ("i want you to build a system where in that box 2 videos
-             will play side by side") with a mockup showing the same
-             overall box, just split into 2 equal side-by-side videos
-             instead of 1. `.iv-video-pair` is a 2-col grid (1-col on
-             very narrow screens) of two `.iv-video.iv-video-16x9`
-             slots, same wrapper class as before so each keeps its own
-             16:9 shape + object-fit:contain treatment. Still inside
-             .iv-card-natural since 2 half-width 16:9 videos stacked
-             this way still exceed the shared fixed-height cap. Only
-             one real video id was supplied -- the 2nd slot duplicates
-             it as a placeholder; swap `data-video-slot="3b"`'s src for
-             the real second video when it's ready. -->
+        <!-- CARD 3: TWO videos side by side, per explicit request ("i
+             want you to build a system where in that box 2 videos will
+             play side by side"). First built as 2 half-width 16:9
+             boxes, but that made card 3 much SHORTER than card 2 (the
+             4-up reel row) -- since these are sticky cards that slide
+             over/cover each other, a shorter card 3 left card 2's own
+             clips visibly peeking out above and below it, per a
+             follow-up screenshot + "make the outer boxes size like the
+             reels". Switched both slots to plain `.iv-video` (the same
+             9:16 "reel" shape card 2 uses, no `.iv-video-16x9`), which
+             both matches the requested look AND makes card 3 tall
+             enough to fully cover card 2 again like every other pair of
+             cards in this stack. `.iv-video-pair` is a 2-col grid
+             (1-col on very narrow screens). Still inside
+             .iv-card-natural since 2 half-width 9:16 videos exceed the
+             shared fixed-height cap even more than before. Only one
+             real video id was supplied -- the 2nd slot duplicates it as
+             a placeholder; swap `data-video-slot="3b"`'s src for the
+             real second video when it's ready. -->
         <div class="iv-card iv-card-natural">
           <div class="iv-video-pair">
-            <div class="iv-video iv-video-16x9" data-video-slot="3a">
+            <div class="iv-video" data-video-slot="3a">
               <iframe
                 loading="lazy" title="Gumlet video player"
                 src="https://play.gumlet.io/embed/6ab2ae4317eed75ce4877d43?background=false&amp;autoplay=false&amp;loop=false&amp;disable_player_controls=false"
                 referrerpolicy="origin"
                 allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
             </div>
-            <div class="iv-video iv-video-16x9" data-video-slot="3b">
+            <div class="iv-video" data-video-slot="3b">
               <iframe
                 loading="lazy" title="Gumlet video player"
                 src="https://play.gumlet.io/embed/6ab2ae4317eed75ce4877d43?background=false&amp;autoplay=false&amp;loop=false&amp;disable_player_controls=false"
