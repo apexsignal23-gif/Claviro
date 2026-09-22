@@ -2653,65 +2653,33 @@
   .t-name{ font-weight: 600; font-size: .88rem; color: var(--cream); }
   .t-role{ font-size: .78rem; color: var(--cream-dimmer); }
 
-  /* Testimonials background (2026-09-22) — ported directly from a
-     supplied ground-truth file (Downloads/preview (12).html), not
-     eyeballed: every color/blur/px offset below is copied from that
-     file's `.stars`/`.moon-glow`/`.moon`/`.bottom-fade`/`.page`
-     layers. Only the reference's own nav/hero-copy/card markup is
-     skipped — this site keeps its real header and its own existing
-     `.t-carousel` card; just the atmosphere behind them is ported.
-     Moon/glow `top` were briefly converted to percentages (reasoning
-     this section's height varies unlike the reference's fixed 879px
-     page), but that made the visible slice of the sphere much bigger/
-     flatter than the reference at this section's real (taller) height.
-     Reverted to the reference's own literal px-from-top per explicit
-     "the moon is very big... make the size like this [the reference]" —
-     exact fidelity to the source file wins over adapting for height. */
-  /* Base fill is the site's own --ink-950 (not the reference file's own
-     bluish page gradient) per explicit request: "the background is
-     completely changed... turned to bluish. keep the white/blue ray
-     and the blue glows... just turn the background color to the
-     website's background." Only .ts-moon-glow and .ts-moon's own rim
-     highlights (::before + box-shadow) stay blue -- those ARE the
-     "ray"/"glow" being kept; the flat fill behind everything, and the
-     sphere's own body color below, are neutral to match the rest of
-     the page instead of standing out as a distinct blue-tinted patch.
-     Then dropped entirely (2026-09-22): an explicit opaque fill here,
-     even the exact same --ink-950 hex as `body`, still blocked out
-     `body::before`'s fixed viewport-anchored grain/vignette layer (see
-     that rule) for this section's own box, creating a visible seam
-     right at the section boundary where that texture cuts off --
-     reported as "a color difference between two pages" with a
-     screenshot pointing right at that seam. Leaving #testimonials
-     transparent (no rule at all) lets body's own background/::before
-     show through uninterrupted here exactly like every other section;
-     only the decorative layers below (stars/glow/moon/fade) sit on
-     top of it.
-     `.ts-sky` wrapper added (2026-09-22): the reference file's own page
-     was a fixed 879px tall with `overflow:hidden`, so its moon (top:
-     259px, a 1520px circle) only ever shows a shallow cap near its own
-     top vertex. This section is taller (real header + heading + card +
-     padding easily clears 1000px+), so the SAME circle, unclipped,
-     reaches well past its equator -- past that point the circle is
-     nearly full-width and its box-shadow rim-light (which wraps the
-     WHOLE circle, not just the top) bleeds down the sides as vertical-
-     looking blue glows, visible well into the lower part of the
-     section. Reported as "the blue shade is still visible on the lower
-     part" with a screenshot of exactly that seam. Fix: cap the glow/
-     moon inside their own short, `overflow:hidden` wrapper positioned
-     at the very top of the section (matching the reference's own
-     clipping height), instead of letting the full (much taller)
-     section clip them. */
+  /* Testimonials background (2026-09-22), final form after several
+     rounds of visible-seam reports ("still a difference of shade").
+     Every earlier attempt kept SOME kind of separate fill layer behind
+     the arc (the reference file's bluish gradient, then a flattened
+     --ink-950 copy, then that plus a dot-texture overlay) and tried to
+     color-match it to the page pixel-for-pixel -- each one left a
+     detectable seam (hue, then flat-vs-gradient shading, then leftover
+     grain) wherever that fill's edge met the real page background.
+     Root fix: stop giving the "sphere" any fill of its own at all.
+     `.ts-moon` is fully transparent now -- only its `box-shadow` (the
+     rim-light line) paints anything, and box-shadow doesn't need an
+     opaque fill to render. With no separate surface to mismatch, there
+     is nothing left to seam against; the plain page shows through
+     everywhere except the rim-light line and `.ts-moon-glow`'s blurred
+     ambient wash above it -- literally just "the blue line and its
+     glow", per the explicit ask. `.ts-stars` and `.ts-bottom-fade`
+     (decorative extras from the reference file, not "the line or the
+     glow") are dropped for the same reason -- one more source of
+     visible texture/darkening that the plain page doesn't otherwise
+     have. `.ts-sky` (a short, `overflow:hidden` wrapper pinned to the
+     section's top) still exists because the reference's own page was a
+     fixed 879px tall, so its moon only ever showed a shallow cap; this
+     section is much taller, and an unclipped 1520px circle reaches
+     well past its own equator, where its rim-light box-shadow (which
+     wraps the WHOLE circle) would bleed down the sides as vertical
+     glows deep into the section. */
   .ts-sky{ position: absolute; top: 0; left: 0; right: 0; height: 700px; overflow: hidden; z-index: 1; pointer-events: none; }
-  .ts-stars{
-    position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .37;
-    background-image:
-      radial-gradient(circle, rgba(129,146,188,.4) .65px, transparent .8px),
-      radial-gradient(circle, rgba(143,158,198,.24) .55px, transparent .75px),
-      radial-gradient(circle, rgba(103,121,163,.2) .5px, transparent .65px);
-    background-size: 92px 92px, 143px 143px, 211px 211px;
-    background-position: 12px 31px, 51px 77px, 91px 12px;
-  }
   .ts-moon-glow{
     position: absolute; z-index: 1; left: 50%; top: 205px; width: min(1150px, 92%); height: 170px;
     transform: translateX(-50%); pointer-events: none;
@@ -2720,45 +2688,14 @@
   }
   .ts-moon{
     position: absolute; z-index: 1; left: 50%; top: 259px; width: 1520px; height: 1520px;
-    transform: translateX(-50%); border-radius: 50%; overflow: hidden; pointer-events: none;
-    /* Flat --ink-950 (not a lighter-near-top gradient) per explicit
-       request: the sphere's own "surface" shading was still a visibly
-       different shade than the plain page background around it,
-       showing as a seam wherever the sphere's edge (or the .ts-sky
-       clip boundary) met the flat page -- a flat, exact-match fill
-       removes that mismatch entirely; only the rim highlights
-       (::before + box-shadow) still carry any color/shading. */
-    background: var(--ink-950);
+    transform: translateX(-50%); border-radius: 50%; pointer-events: none;
+    background: transparent;
     box-shadow:
       0 -1px 0 rgba(208,218,255,.95),
       0 -3px 5px rgba(139,164,255,.95),
       0 -8px 18px rgba(100,131,255,.63),
       0 -22px 45px rgba(71,99,207,.36),
       0 -50px 105px rgba(57,83,167,.18);
-  }
-  /* .ts-moon::before (a soft radial blue "spotlight" wash near the
-     sphere's top) removed entirely (2026-09-22), per explicit "the
-     middle part is still not matching. Completely remove this blue
-     shade" -- it showed up as a diffuse mismatched patch behind the
-     card, distinct from (and in addition to) the crisp rim-light
-     (box-shadow above) and the ambient wash (.ts-moon-glow) that were
-     explicitly asked to stay. */
-  /* .ts-moon::after (a fine dot-texture overlay on the sphere's surface,
-     fading out only by 54% of its own 1520px height = ~820px down) was
-     removed too -- at the .ts-sky clip line (700px, i.e. only 29% down)
-     it was still clearly visible, adding a subtly different "grain"
-     right where the sphere meets the plain page and undermining the
-     flat exact-match fill above. Moving `.ts-stars` inside `.ts-sky`
-     (see the markup) closes the matching second seam this same
-     screenshot showed further down: `.ts-stars` used to span the WHOLE
-     (much taller) section via `inset:0` on #testimonials, so its own
-     dot grain ran all the way to this section's real bottom and then
-     stopped dead against FAQ's plain background -- a second, separate
-     seam at the actual section boundary, not just at the moon's clip
-     line. Confining it to the same 700px sky band fixes both at once. */
-  .ts-bottom-fade{
-    position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: 230px; pointer-events: none;
-    background: linear-gradient(180deg, transparent 0%, rgba(7,11,15,.16) 30%, rgba(7,11,15,.65) 100%);
   }
   @media (max-width: 900px){
     .ts-moon{ width: 1250px; height: 1250px; }
@@ -4071,11 +4008,9 @@
      on the background of testimonial"). -->
 <section id="testimonials" class="relative py-24 sm:py-28 overflow-hidden">
   <div class="ts-sky" aria-hidden="true">
-    <div class="ts-stars"></div>
     <div class="ts-moon-glow"></div>
     <div class="ts-moon"></div>
   </div>
-  <div class="ts-bottom-fade" aria-hidden="true"></div>
 
   <div class="relative z-[2] max-w-[1280px] mx-auto px-6 lg:px-10">
     <p class="reveal en-eyebrow">Testimonial</p>
