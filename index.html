@@ -2736,10 +2736,13 @@
       0 -22px 45px rgba(71,99,207,.36),
       0 -50px 105px rgba(57,83,167,.18);
   }
-  .ts-moon::before{
-    content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
-    background: radial-gradient(ellipse at 50% -2%, rgba(150,174,255,.26) 0%, rgba(83,114,213,.13) 17%, transparent 38%);
-  }
+  /* .ts-moon::before (a soft radial blue "spotlight" wash near the
+     sphere's top) removed entirely (2026-09-22), per explicit "the
+     middle part is still not matching. Completely remove this blue
+     shade" -- it showed up as a diffuse mismatched patch behind the
+     card, distinct from (and in addition to) the crisp rim-light
+     (box-shadow above) and the ambient wash (.ts-moon-glow) that were
+     explicitly asked to stay. */
   .ts-moon::after{
     content: ""; position: absolute; inset: 0; opacity: .32;
     background-image:
