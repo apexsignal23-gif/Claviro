@@ -4126,14 +4126,11 @@
    transformed wrapper, so position:sticky/fixed elsewhere on this page
    (the header, the Industry Standard heading + card stack) keep
    working normally. Skipped entirely under prefers-reduced-motion, and
-   no-ops if the CDN script failed to load.
-   `duration`/`wheelMultiplier` tuned down/up from Lenis's defaults
-   (~1.2 / 1) per explicit follow-up that the default felt too delayed
-   -- shorter duration means each scroll eases to its target faster. */
+   no-ops if the CDN script failed to load. */
 (function(){
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if (typeof Lenis === 'undefined') return;
-  var lenis = new Lenis({ duration: 0.7, wheelMultiplier: 1.15 });
+  var lenis = new Lenis();
   function raf(time){
     lenis.raf(time);
     requestAnimationFrame(raf);
