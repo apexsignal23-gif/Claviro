@@ -2087,8 +2087,17 @@
      that's ever wanted again). Un-stretched 16:9 wrapper, same as
      before, paired with .iv-card-natural on the card itself so a
      single full-width video isn't cropped by the shared fixed-height
-     cap. */
-  .iv-video-16x9{ aspect-ratio: 16 / 9; }
+     cap.
+     FIX: compound selector (.iv-video.iv-video-16x9), not a bare
+     .iv-video-16x9 -- both this and the base `.iv-video` rule below
+     have equal specificity, and `.iv-video` (which sets aspect-ratio:
+     9/16 for the vertical clips) comes AFTER this one in source order,
+     so a bare class here was silently losing and the video was
+     rendering at 9:16 instead of 16:9 -- a huge, mostly-blank vertical
+     box with Gumlet's actual video squeezed into a sliver at the top.
+     The compound selector's higher specificity wins regardless of
+     source order. */
+  .iv-video.iv-video-16x9{ aspect-ratio: 16 / 9; }
   .iv-card{
     position: sticky;
     top: 7rem;
