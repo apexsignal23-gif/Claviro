@@ -2055,9 +2055,34 @@
      CSS, no JS/IntersectionObserver needed.
      IMPORTANT: no ancestor of `.iv-card` may have
      `overflow:hidden/auto/scroll` — that silently breaks
-     `position:sticky` for everything inside it. */
+     `position:sticky` for everything inside it.
+
+     FIX 2026-09-22: per explicit request, the heading now scrolls up
+     and tucks itself BEHIND the fixed header (negative sticky `top`,
+     see `.iv-scroll-head` below) instead of scrolling all the way past
+     and out of view before the card stack even starts. It locks in
+     that hidden-behind-the-header position and STAYS there for the
+     card stack's entire scroll duration, only continuing to scroll
+     away once the last card finishes -- this falls out naturally from
+     `.iv-scroll-head` and `.iv-scroll-stack` being siblings under the
+     same parent: a sticky element stays stuck for as long as scrolling
+     remains within its own parent's box, and that parent now spans the
+     whole card sequence. This sidesteps the clearance/overlap problem
+     an earlier attempt at "keep the heading visible AND sticky" ran
+     into (that one needed the heading to stay fully visible above the
+     cards, which meant guessing its exact rendered height to avoid
+     text peeking through gaps -- reverted per explicit request after
+     two guesses were both wrong). Hiding it behind the opaque header
+     instead means the exact height doesn't need to be exact -- being
+     off by a bit just means it locks a little before/after fully
+     disappearing, not a visible overlap bug. */
   /* Left-aligned (default block alignment) — matches every other
-     section's heading on this page (Pricing, Retention, etc.). */
+     section's heading on this page (Pricing, Retention, etc.). Negative
+     top: keeps scrolling up normally past the header's own ~7rem
+     clearance line and doesn't lock until it's roughly this far ABOVE
+     the viewport top -- i.e. fully tucked behind the opaque fixed
+     header -- rather than locking while still visible. */
+  .iv-scroll-head{ position: sticky; top: -12rem; }
   .iv-scroll-stack{ display: flex; flex-direction: column; align-items: center; gap: 3rem; }
   /* Gap controls the reveal's PACE, not just spacing: since these are
      plain sticky flex-column siblings with no extra spacer wrappers,
