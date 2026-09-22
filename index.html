@@ -2743,17 +2743,19 @@
      card, distinct from (and in addition to) the crisp rim-light
      (box-shadow above) and the ambient wash (.ts-moon-glow) that were
      explicitly asked to stay. */
-  .ts-moon::after{
-    content: ""; position: absolute; inset: 0; opacity: .32;
-    background-image:
-      radial-gradient(circle, rgba(151,165,201,.14) .55px, transparent .8px),
-      radial-gradient(circle, rgba(87,111,162,.12) .5px, transparent .75px),
-      radial-gradient(circle, rgba(116,136,180,.09) .45px, transparent .7px);
-    background-size: 13px 13px, 22px 22px, 34px 34px;
-    background-position: 0 0, 8px 9px, 11px 14px;
-    mask-image: linear-gradient(to bottom, black, rgba(0,0,0,.5) 20%, transparent 54%);
-    -webkit-mask-image: linear-gradient(to bottom, black, rgba(0,0,0,.5) 20%, transparent 54%);
-  }
+  /* .ts-moon::after (a fine dot-texture overlay on the sphere's surface,
+     fading out only by 54% of its own 1520px height = ~820px down) was
+     removed too -- at the .ts-sky clip line (700px, i.e. only 29% down)
+     it was still clearly visible, adding a subtly different "grain"
+     right where the sphere meets the plain page and undermining the
+     flat exact-match fill above. Moving `.ts-stars` inside `.ts-sky`
+     (see the markup) closes the matching second seam this same
+     screenshot showed further down: `.ts-stars` used to span the WHOLE
+     (much taller) section via `inset:0` on #testimonials, so its own
+     dot grain ran all the way to this section's real bottom and then
+     stopped dead against FAQ's plain background -- a second, separate
+     seam at the actual section boundary, not just at the moon's clip
+     line. Confining it to the same 700px sky band fixes both at once. */
   .ts-bottom-fade{
     position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: 230px; pointer-events: none;
     background: linear-gradient(180deg, transparent 0%, rgba(7,11,15,.16) 30%, rgba(7,11,15,.65) 100%);
@@ -4068,8 +4070,8 @@
      ("i didnt ordered you to put the hero pages background animation
      on the background of testimonial"). -->
 <section id="testimonials" class="relative py-24 sm:py-28 overflow-hidden">
-  <div class="ts-stars" aria-hidden="true"></div>
   <div class="ts-sky" aria-hidden="true">
+    <div class="ts-stars"></div>
     <div class="ts-moon-glow"></div>
     <div class="ts-moon"></div>
   </div>
