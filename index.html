@@ -2122,12 +2122,7 @@
      box with Gumlet's actual video squeezed into a sliver at the top.
      The compound selector's higher specificity wins regardless of
      source order. */
-  /* Capped + centered, not full column width -- at the column's full
-     ~1200px width a 16:9 box renders ~675px tall, far bigger than cards
-     1/2's own height cap (see `.iv-card`'s `height` below) and reported
-     as "very zoomed, big". 50rem (800px) wide keeps its height (~28rem)
-     in line with theirs instead of towering over them. */
-  .iv-video.iv-video-16x9{ aspect-ratio: 16 / 9; max-width: 50rem; margin: 0 auto; }
+  .iv-video.iv-video-16x9{ aspect-ratio: 16 / 9; }
   .iv-card{
     position: sticky;
     top: 7rem;
@@ -2159,9 +2154,8 @@
          already-stuck element up more). Cap it to the smaller of 32rem
          or the real available viewport height (100vh minus the top
          offset and a bit of breathing room) so it always fits on short
-         windows too. Ceiling dropped 32rem -> 28rem per "these 3 boxes
-         is very zoomed, big" -- a little smaller across the board. */
-      height: max(20rem, min(28rem, calc(100svh - 9rem)));
+         windows too. */
+      height: max(20rem, min(32rem, calc(100svh - 9rem)));
       overflow: hidden;
       display: flex;
       align-items: center;
