@@ -2099,13 +2099,7 @@
      re-checked their live CSS (.podcasts_content-right's
      grid-row-gap), which uses a flat 8rem at every breakpoint, no
      10rem/40rem split. Matched that instead of guessing again. */
-  /* Capped narrower than the full ~1200px content column, per explicit
-     request ("the boxes are too zoomed in... zoom the boxes out a
-     little bit") with a mockup showing the cards smaller/inset with
-     visible gutter on both sides instead of running edge-to-edge.
-     `.iv-scroll-stack`'s own `align-items:center` centers this
-     automatically since it's narrower than its parent. */
-  .iv-scroll-cards{ width: 100%; max-width: 60rem; display: flex; flex-direction: column; gap: 8rem; }
+  .iv-scroll-cards{ width: 100%; display: flex; flex-direction: column; gap: 8rem; }
   /* See the HTML comment right above the spacer's markup for why this
      exists: card 2 is the last child here, flush against the
      container's own bottom edge, so without this it has zero room to
