@@ -2078,14 +2078,11 @@
      disappearing, not a visible overlap bug. */
   /* Left-aligned (default block alignment) — matches every other
      section's heading on this page (Pricing, Retention, etc.). Negative
-     top: keeps scrolling up normally and doesn't lock until it's
-     roughly this far ABOVE the viewport top -- i.e. fully tucked
-     behind the fixed header -- rather than locking while still
-     partially visible below it. -12rem wasn't negative enough (per
-     explicit follow-up with screenshots: text was still clearly
-     legible peeking out under the header instead of faded/hidden
-     behind it) -- pushed further to -18rem. */
-  .iv-scroll-head{ position: sticky; top: -18rem; }
+     top: keeps scrolling up normally past the header's own ~7rem
+     clearance line and doesn't lock until it's roughly this far ABOVE
+     the viewport top -- i.e. fully tucked behind the opaque fixed
+     header -- rather than locking while still visible. */
+  .iv-scroll-head{ position: sticky; top: -12rem; }
   .iv-scroll-stack{ display: flex; flex-direction: column; align-items: center; gap: 3rem; }
   /* Gap controls the reveal's PACE, not just spacing: since these are
      plain sticky flex-column siblings with no extra spacer wrappers,
