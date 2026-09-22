@@ -2721,7 +2721,14 @@
   .ts-moon{
     position: absolute; z-index: 1; left: 50%; top: 259px; width: 1520px; height: 1520px;
     transform: translateX(-50%); border-radius: 50%; overflow: hidden; pointer-events: none;
-    background: radial-gradient(ellipse at 50% 4%, rgba(60,60,64,.45) 0%, rgba(38,38,42,.42) 14%, rgba(24,24,27,.74) 28%, rgba(15,15,17,.94) 49%, rgba(9,9,10,.99) 72%, #0e0f11 100%);
+    /* Flat --ink-950 (not a lighter-near-top gradient) per explicit
+       request: the sphere's own "surface" shading was still a visibly
+       different shade than the plain page background around it,
+       showing as a seam wherever the sphere's edge (or the .ts-sky
+       clip boundary) met the flat page -- a flat, exact-match fill
+       removes that mismatch entirely; only the rim highlights
+       (::before + box-shadow) still carry any color/shading. */
+    background: var(--ink-950);
     box-shadow:
       0 -1px 0 rgba(208,218,255,.95),
       0 -3px 5px rgba(139,164,255,.95),
