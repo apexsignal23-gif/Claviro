@@ -2644,6 +2644,76 @@
   .t-name{ font-weight: 600; font-size: .88rem; color: var(--cream); }
   .t-role{ font-size: .78rem; color: var(--cream-dimmer); }
 
+  /* Testimonials background (2026-09-22) — ported directly from a
+     supplied ground-truth file (Downloads/preview (12).html), not
+     eyeballed: every color/blur/px offset below is copied from that
+     file's `.stars`/`.moon-glow`/`.moon`/`.bottom-fade`/`.page`
+     layers. Only the reference's own nav/hero-copy/card markup is
+     skipped — this site keeps its real header and its own existing
+     `.t-carousel` card; just the atmosphere behind them is ported. The
+     reference's composition was tuned to its own fixed 879px-tall
+     page; positioned here the same way (percentage anchors instead of
+     the reference's literal px-from-top) so the same "top sliver of a
+     huge glowing sphere" framing holds even though this section's own
+     height varies with content instead of being fixed. */
+  #testimonials{
+    background:
+      radial-gradient(ellipse at 50% 36%, rgba(31,45,76,.1) 0%, rgba(11,17,24,.04) 40%, transparent 67%),
+      linear-gradient(180deg, #0a0f15 0%, #080d12 62%, #070b0f 100%);
+  }
+  .ts-stars{
+    position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .37;
+    background-image:
+      radial-gradient(circle, rgba(129,146,188,.4) .65px, transparent .8px),
+      radial-gradient(circle, rgba(143,158,198,.24) .55px, transparent .75px),
+      radial-gradient(circle, rgba(103,121,163,.2) .5px, transparent .65px);
+    background-size: 92px 92px, 143px 143px, 211px 211px;
+    background-position: 12px 31px, 51px 77px, 91px 12px;
+  }
+  .ts-moon-glow{
+    position: absolute; z-index: 1; left: 50%; top: 23%; width: min(1150px, 92%); height: 170px;
+    transform: translateX(-50%); pointer-events: none;
+    background: radial-gradient(ellipse at center, rgba(96,126,235,.25) 0%, rgba(65,93,190,.12) 35%, transparent 72%);
+    filter: blur(29px);
+  }
+  .ts-moon{
+    position: absolute; z-index: 1; left: 50%; top: 29%; width: 1520px; height: 1520px;
+    transform: translateX(-50%); border-radius: 50%; overflow: hidden; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 4%, rgba(46,67,111,.45) 0%, rgba(26,39,67,.42) 14%, rgba(18,28,47,.74) 28%, rgba(10,17,26,.94) 49%, rgba(6,10,15,.99) 72%, #05080c 100%);
+    box-shadow:
+      0 -1px 0 rgba(208,218,255,.95),
+      0 -3px 5px rgba(139,164,255,.95),
+      0 -8px 18px rgba(100,131,255,.63),
+      0 -22px 45px rgba(71,99,207,.36),
+      0 -50px 105px rgba(57,83,167,.18);
+  }
+  .ts-moon::before{
+    content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(ellipse at 50% -2%, rgba(150,174,255,.26) 0%, rgba(83,114,213,.13) 17%, transparent 38%);
+  }
+  .ts-moon::after{
+    content: ""; position: absolute; inset: 0; opacity: .32;
+    background-image:
+      radial-gradient(circle, rgba(151,165,201,.14) .55px, transparent .8px),
+      radial-gradient(circle, rgba(87,111,162,.12) .5px, transparent .75px),
+      radial-gradient(circle, rgba(116,136,180,.09) .45px, transparent .7px);
+    background-size: 13px 13px, 22px 22px, 34px 34px;
+    background-position: 0 0, 8px 9px, 11px 14px;
+    mask-image: linear-gradient(to bottom, black, rgba(0,0,0,.5) 20%, transparent 54%);
+    -webkit-mask-image: linear-gradient(to bottom, black, rgba(0,0,0,.5) 20%, transparent 54%);
+  }
+  .ts-bottom-fade{
+    position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: 230px; pointer-events: none;
+    background: linear-gradient(180deg, transparent 0%, rgba(7,11,15,.16) 30%, rgba(7,11,15,.65) 100%);
+  }
+  @media (max-width: 900px){
+    .ts-moon{ width: 1250px; height: 1250px; }
+  }
+  @media (max-width: 600px){
+    .ts-moon{ width: 1020px; height: 1020px; }
+    .ts-moon-glow{ width: min(700px, 92%); }
+  }
+
   /* mobile nav */
   /* Full-viewport takeover panel, not a content-sized dropdown: the header
      itself is fixed and out of flow, so a dropdown only as tall as its own
@@ -3939,9 +4009,19 @@
      a real client (avatar photos were removed per a later request, so
      no photo attribution note applies anymore). Swap in real client
      names/quotes before this goes live; don't ship any of it as
-     real. -->
-<section id="testimonials" class="relative py-24 sm:py-28">
-  <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
+     real.
+     Background 2026-09-22: "moon"/star-field atmosphere ported from a
+     supplied reference file (see the .ts-* CSS comment above) — a
+     Velaris WebGL reuse was tried here first and explicitly rejected
+     ("i didnt ordered you to put the hero pages background animation
+     on the background of testimonial"). -->
+<section id="testimonials" class="relative py-24 sm:py-28 overflow-hidden">
+  <div class="ts-stars" aria-hidden="true"></div>
+  <div class="ts-moon-glow" aria-hidden="true"></div>
+  <div class="ts-moon" aria-hidden="true"></div>
+  <div class="ts-bottom-fade" aria-hidden="true"></div>
+
+  <div class="relative z-[2] max-w-[1280px] mx-auto px-6 lg:px-10">
     <p class="reveal en-eyebrow">Testimonial</p>
     <h2 class="reveal text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
       Don&rsquo;t take <span class="text-shine inline-block">our word for it.</span>
