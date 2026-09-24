@@ -3275,15 +3275,26 @@
 
         <!-- CARD 3: FOUR videos in a 2x2 grid, per explicit request
              with a mockup showing the same overall box split into 4
-             instead of the previous 2 (see git history for that
-             round's own notes on why `.iv-video-16x9` + dropping
-             `.iv-card-natural` were the right calls -- unchanged here,
-             just extended to 4 slots via `.iv-video-quad`, a 2x2 grid
-             (1-col stacked below 640px)). Only one real video id was
-             supplied -- slots 3b/3c/3d duplicate it as placeholders;
+             instead of the previous 2. `.iv-video-16x9` is still right
+             for this landscape source (see git history for the earlier
+             white-box bug from forcing a 9:16 shape on it). But going
+             from 2 side-by-side videos to a 2x2 grid roughly DOUBLES
+             the natural height (2 rows of 16:9 boxes instead of 1) --
+             at this card's real ~1168px inner width that comes out to
+             ~666px tall, well past the shared fixed-height cap
+             (32rem/512px), so the standard `.iv-card` treatment (right
+             for 2-side-by-side, which fit under the cap) was actually
+             CROPPING the bottom row here, reported as wanting the box
+             "increase[d]... so 4 videos can fit easily". Back to
+             `.iv-card-natural` (auto height) fixes that -- and unlike
+             the earlier 2-video round, this natural height is now
+             comfortably TALLER than card 2's own (~524px), so it still
+             fully covers card 2 during the sticky transition instead of
+             reintroducing the peek-through bug. Only one real video id
+             was supplied -- slots 3b/3c/3d duplicate it as placeholders;
              swap each `data-video-slot`'s src for the real videos when
              ready. -->
-        <div class="iv-card">
+        <div class="iv-card iv-card-natural">
           <div class="iv-video-quad">
             <div class="iv-video iv-video-16x9" data-video-slot="3a">
               <iframe
