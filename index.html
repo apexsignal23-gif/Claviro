@@ -2101,11 +2101,18 @@
      10rem/40rem split. Matched that instead of guessing again. */
   .iv-scroll-cards{ width: 100%; display: flex; flex-direction: column; gap: 8rem; }
   /* See the HTML comment right above the spacer's markup for why this
-     exists: card 2 is the last child here, flush against the
+     exists: card 3 is the last child here, flush against the
      container's own bottom edge, so without this it has zero room to
-     stick -- this height is its dwell time, same idea as the gap
-     above controlling card 1's dwell time. */
-  .iv-scroll-spacer{ height: 24rem; }
+     stick -- this height IS its dwell distance (the scroll distance it
+     stays visually locked), same idea as the 8rem gap above governing
+     every other card's dwell room. Was 24rem (an arbitrary guess, never
+     derived from anything, unlike the gap above) -- 3x the gap value
+     made the dwell period feel broken once card 3 grew into a large
+     2x2 video grid, reported as "the website doesn't go up or down...
+     there is a space after the 3rd box causing this". Matched to the
+     same 8rem as the gap so card 3's dwell feels the same as every
+     other card's, instead of a 3x-longer outlier. */
+  .iv-scroll-spacer{ height: 8rem; }
   /* Card 3's 16:9 video, moved back into the sticky stack per explicit
      request ("do lock the 3rd box") -- was briefly a plain
      position:static card below the stack instead (see git history if
