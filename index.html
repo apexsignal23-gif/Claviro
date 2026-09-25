@@ -2516,10 +2516,16 @@
      transparent fill would look like a broken double-exposure ghosting
      over whatever scrolls underneath instead of a clean dark bar. */
   #nav-chrome{
+    /* FIX 2026-09-25: base fill bumped .94 -> 1 (fully solid). At .94,
+       content that scrolls fully behind the fixed header (e.g.
+       .iv-scroll-head locking at top:-12rem, see that rule's comment)
+       still ghosted through faintly instead of being truly hidden --
+       reported as visible text overlapping the header. Fully opaque
+       fixes that; the gradient/sheen layers above still read as glass. */
     background:
       radial-gradient(120% 160% at 12% -40%, rgba(255,255,255,.16), transparent 55%),
       linear-gradient(180deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.02) 45%, rgba(8,8,8,.4) 100%),
-      rgba(16,16,16,.94);
+      rgba(16,16,16,1);
     border: 1px solid rgba(255,255,255,.14);
     box-shadow:
       0 20px 45px -20px rgba(0,0,0,.65),
