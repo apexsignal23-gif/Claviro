@@ -2808,7 +2808,7 @@
      stays flat/solid, same as the reference. */
   .faq-item:not(:last-child)::before{
     content: ""; position: absolute; left: 9px; top: 2.0625rem; bottom: -2.0625rem; width: 1px;
-    background: rgba(143,168,255,.4);
+    background: rgba(255,255,255,.4);
   }
   /* Extra tails, not a fade baked into the connecting segments
      themselves: the line between dots stays flat/solid the whole way --
@@ -2822,12 +2822,12 @@
   .faq-item:first-child::after{
     content: ""; position: absolute; left: 9px; width: 1px;
     top: calc(2.0625rem - 4rem); height: 4rem;
-    background: linear-gradient(to bottom, transparent 0%, rgba(143,168,255,.4) 100%);
+    background: linear-gradient(to bottom, transparent 0%, rgba(255,255,255,.4) 100%);
   }
   .faq-item:last-child::before{
     content: ""; position: absolute; left: 9px; width: 1px;
     top: 2.0625rem; height: 4rem;
-    background: linear-gradient(to bottom, rgba(143,168,255,.4) 0%, transparent 100%);
+    background: linear-gradient(to bottom, rgba(255,255,255,.4) 0%, transparent 100%);
   }
   /* Smaller (14px, was 18px) with an actual white highlight point (not
      just a lighter blue), per explicit "the dot is smaller and there is
@@ -2839,9 +2839,12 @@
      radiating well past the dot itself. */
   /* No box-shadow at all, per explicit "completely remove every sort of
      glow around the dot" -- just the flat/gradient-filled circle. */
+  /* Recolored blue -> white (dots, connecting line, both fading tails)
+     per explicit request, matching the white line/glow look elsewhere
+     on the page. */
   .faq-dot{
     position: absolute; left: 2px; top: 1.625rem; width: 14px; height: 14px; border-radius: 50%;
-    background: radial-gradient(circle at 32% 28%, #ffffff 0%, #cdd8ff 24%, #7d99fa 60%, #45589e 100%);
+    background: radial-gradient(circle at 32% 28%, #ffffff 0%, #f2f3f7 30%, #c7cad4 65%, #8f939e 100%);
   }
   .faq-q{
     width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
