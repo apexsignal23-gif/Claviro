@@ -1862,10 +1862,19 @@
   .en-card-dot-nav{ width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.18); }
   .en-card-body{ padding: .4rem .8rem .9rem; display: flex; flex-direction: column; gap: .8rem; }
   .en-card-head{ display: flex; align-items: center; gap: .4rem; }
-  .en-card-avatar{ width: 16px; height: 16px; border-radius: 5px; background: linear-gradient(135deg, var(--accent), var(--accent-deep)); flex: none; }
-  .en-card-head span:not(.en-card-avatar){ display: block; height: 6px; border-radius: 20px; background: rgba(255,255,255,.1); }
+  /* FIX 2026-09-25: this header row is shared by all 4 enablement cards
+     and was fully static on every one of them -- same treatment as the
+     Customer Insight rows (pulsing avatar, staggered loading bars). */
+  .en-card-avatar{
+    width: 16px; height: 16px; border-radius: 5px; background: linear-gradient(135deg, var(--accent), var(--accent-deep)); flex: none;
+    animation: en-dot-pulse 2.4s ease-in-out infinite;
+  }
+  .en-card-head span:not(.en-card-avatar){
+    display: block; height: 6px; border-radius: 20px; background: rgba(255,255,255,.1);
+    transform-origin: left; animation: en-row-load 2.4s ease-in-out infinite;
+  }
   .en-card-head span:nth-child(2){ width: 34%; }
-  .en-card-head span:nth-child(3){ width: 18%; }
+  .en-card-head span:nth-child(3){ width: 18%; animation-delay: -.4s; }
   .en-card-chart{ position: relative; height: 4.6rem; }
   .en-card-chart-line svg{ width: 100%; height: 100%; }
   .en-card-chart-line path{ fill: none; stroke: var(--accent-hot); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 260; animation: en-draw-line 4.5s ease-in-out infinite; }
@@ -1916,7 +1925,8 @@
   @keyframes en-dot-pulse{ 0%,100%{ opacity: .5; transform: scale(.85); } 50%{ opacity: 1; transform: scale(1.15); } }
   @media (prefers-reduced-motion: reduce){
     .en-card-chart-line path, .en-card-ring, .en-card-chart-bars span,
-    .en-card-row-dot, .en-card-row span:not(.en-card-row-dot){ animation: none; }
+    .en-card-row-dot, .en-card-row span:not(.en-card-row-dot),
+    .en-card-avatar, .en-card-head span:not(.en-card-avatar){ animation: none; }
   }
 
   /* Pricing cards (placed after the restored Gravity section) — rebuilt
