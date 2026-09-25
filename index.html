@@ -3515,7 +3515,13 @@
 </section>
 
 <!-- ================= MIRROR ================= -->
-<section id="mirror" class="relative py-24 sm:py-28">
+<!-- FIX 2026-09-25: top padding dropped (py -> pb only) -- Industry
+     Standard's own trailing 8rem `.iv-scroll-spacer` (see its CSS
+     comment) already reserves scroll room before this section starts,
+     so Mirror's own top padding on top of that stacked into a visible
+     gap after card 3, reported again despite Industry Standard's
+     bottom padding already being removed for the same reason. -->
+<section id="mirror" class="relative pb-24 sm:pb-28">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="reveal max-w-[34rem]">
       <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
