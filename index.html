@@ -2821,12 +2821,12 @@
      otherwise, since `:not(:last-child)` above skips it). */
   .faq-item:first-child::after{
     content: ""; position: absolute; left: 9px; width: 1px;
-    top: calc(2.0625rem - 2.5rem); height: 2.5rem;
+    top: calc(2.0625rem - 4rem); height: 4rem;
     background: linear-gradient(to bottom, transparent 0%, rgba(143,168,255,.4) 100%);
   }
   .faq-item:last-child::before{
     content: ""; position: absolute; left: 9px; width: 1px;
-    top: 2.0625rem; height: 2.5rem;
+    top: 2.0625rem; height: 4rem;
     background: linear-gradient(to bottom, rgba(143,168,255,.4) 0%, transparent 100%);
   }
   /* Smaller (14px, was 18px) with an actual white highlight point (not
