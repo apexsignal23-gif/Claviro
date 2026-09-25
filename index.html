@@ -1757,9 +1757,14 @@
   }
   @media (min-width: 640px){ .rt-card{ padding: 1.5rem; } }
   .rt-card-inner{ width: 100%; }
+  /* FIX 2026-09-25: moved from its own full-width line above the panel
+     to sit as the first item in `.rt-display-row`, to the left of the
+     grid + stat number, per explicit request. text-align/margin swapped
+     from a centered heading to a left-aligned side label, with a
+     max-width so it reads as a compact column rather than stretching. */
   .rt-headline{
-    font-size: 1.4rem; font-weight: 700; text-align: center;
-    margin: 0 0 .85rem; min-height: 1.9rem; color: var(--cream);
+    font-size: 1.4rem; font-weight: 700; text-align: left;
+    margin: 0; min-height: 1.9rem; max-width: 11rem; color: var(--cream);
     transition: color .35s ease;
   }
   .rt-panel{
@@ -4158,10 +4163,9 @@
 
     <div class="rt-card reveal mt-12">
       <div class="rt-card-inner">
-        <p class="rt-headline" id="rt-headline">Still engaged, but drifting.</p>
-
         <div class="rt-panel">
           <div class="rt-display-row">
+            <p class="rt-headline" id="rt-headline">Still engaged, but drifting.</p>
             <div class="rt-grid" id="rt-grid" aria-hidden="true"></div>
             <div class="rt-stat">
               <div class="rt-stat-num" id="rt-stat-num">59</div>
