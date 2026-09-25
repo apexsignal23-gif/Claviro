@@ -2217,8 +2217,20 @@
      card 3's video grid bleed outside the card's own rounded border on
      both the top and bottom edges once it became a normal auto-height
      block instead of a viewport-capped sticky one. Card 3 doesn't need
-     `visible` for any reason anymore, so clip it back down. */
-  .iv-card-static{ position: static; top: auto; overflow: hidden; }
+     `visible` for any reason anymore, so clip it back down.
+     FIX 2026-09-25 (v2): `position: static` (v1 of this rule) broke
+     stacking, not overflow -- card 2 is still `position: sticky`, and
+     ANY positioned element paints above ALL non-positioned/static
+     content in the same stacking context, no matter DOM order. So
+     card 2's stuck videos were painting OVER card 3's own (now
+     unpositioned) card background, bleeding through card 3's internal
+     grid gaps -- card 3's own videos still showed fine on top since
+     they're independently `position:relative`, just not card 3's
+     background/border box around them. `position: relative` (no
+     offset set, so visually identical to static -- doesn't move or
+     stick) keeps it in the SAME positioned-elements paint layer as
+     card 2, so being later in DOM it paints fully over it again. */
+  .iv-card-static{ position: relative; top: auto; overflow: hidden; }
 
   /* Vertical (9:16) video grid used inside card 2 — all 4 clips together
      in one card. Structure and breakpoint widths pulled from
