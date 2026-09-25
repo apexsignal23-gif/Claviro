@@ -686,8 +686,11 @@
   .mirror-drift-card{
     position: absolute; top: 50%; left: 50%;
     width: 96%; height: 88%;
-    background: var(--ink-950);
-    border: 1px solid var(--ink-border);
+    /* Light mode per explicit request -- these are meant to read as
+       real LinkedIn post cards, which are white/light in reality, not
+       the site's own dark ink theme. */
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.08);
     border-radius: .5rem;
     padding: 1.4rem .85rem;
     display: flex; flex-direction: column; justify-content: space-between; gap: .55rem;
@@ -709,11 +712,11 @@
   .mirror-drift-top{ display: flex; align-items: center; gap: .5rem; }
   .mirror-drift-avatar{ flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); display: block; object-fit: cover; }
   .mirror-drift-lines{ flex: 1; display: grid; gap: .35rem; min-width: 0; }
-  .mirror-drift-lines span{ display: block; height: 6px; border-radius: 20px; background: rgba(255,255,255,.14); }
+  .mirror-drift-lines span{ display: block; height: 6px; border-radius: 20px; background: rgba(0,0,0,.14); }
   .mirror-drift-lines span:last-child{ width: 60%; }
   .mirror-drift-brand{ flex: none; font-size: .95rem; color: #0a66c2; }
   .mirror-drift-body{ display: grid; gap: .4rem; }
-  .mirror-drift-body span{ display: block; height: 6px; border-radius: 20px; background: rgba(255,255,255,.08); }
+  .mirror-drift-body span{ display: block; height: 6px; border-radius: 20px; background: rgba(0,0,0,.08); }
   .mirror-drift-body span:last-child{ width: 55%; }
   /* Five genuinely different post FORMATS cycle through in turn, not
      just the same shape with tweaked widths — per explicit request to
@@ -732,14 +735,14 @@
   .mirror-drift-media{
     width: 100%; height: 2.6rem;
     border-radius: .4rem;
-    background: rgba(255,255,255,.05);
-    border: 1px solid var(--ink-border);
+    background: rgba(0,0,0,.05);
+    border: 1px solid rgba(0,0,0,.08);
     display: flex; align-items: center; justify-content: center;
   }
   .mirror-drift-body-media span:last-child{ width: 40%; }
-  .mirror-drift-play{ font-size: 1.5rem; color: rgba(255,255,255,.32); }
+  .mirror-drift-play{ font-size: 1.5rem; color: rgba(0,0,0,.32); }
   .mirror-drift-body-quote{ height: 100%; align-content: center; }
-  .mirror-drift-body-quote span:last-child{ height: 9px; width: 82%; background: rgba(255,255,255,.16); }
+  .mirror-drift-body-quote span:last-child{ height: 9px; width: 82%; background: rgba(0,0,0,.16); }
   .mirror-drift-body-list{ gap: .3rem; }
   .mirror-drift-body-list span{ width: 40%; }
   .mirror-drift-body-list span:nth-child(2){ width: 32%; }
