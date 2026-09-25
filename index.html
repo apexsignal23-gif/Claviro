@@ -647,11 +647,22 @@
      center — get the sign backwards here and they drift outward instead
      of in, which is exactly the bug the 6-chip version had. Delays
      spaced evenly across the 3.6s loop so bubbles stream in one after
-     another instead of bunching up. */
+     another instead of bunching up.
+     FIX 2026-09-25: positive delays mean each chip's FIRST cycle after
+     a page load waits out its full delay sitting invisible/motionless
+     before it ever starts moving -- chip-4 (the only one of these 3
+     actually used in the markup, alongside chip-1/chip-2) has a 2.7s
+     delay, so on refresh it visibly sat still for 2.7s while chip-1
+     and chip-2 were already animating, reported as "takes time to
+     move" / "doesn't instantly start like the other 2". Negative
+     delays fix this: the animation still starts at time 0 for every
+     chip, just already that many seconds INTO its cycle, which keeps
+     the same staggered stream look between them but with zero wait
+     before any of them are moving. */
   .ml-chip-1{ top: 12%; left: 20%; }
-  .ml-chip-2{ top: 12%; right: 20%; animation-delay: .9s; }
-  .ml-chip-3{ top: 66%; left: 20%; animation-delay: 1.8s; }
-  .ml-chip-4{ top: 66%; right: 20%; animation-delay: 2.7s; }
+  .ml-chip-2{ top: 12%; right: 20%; animation-delay: -.9s; }
+  .ml-chip-3{ top: 66%; left: 20%; animation-delay: -1.8s; }
+  .ml-chip-4{ top: 66%; right: 20%; animation-delay: -2.7s; }
 
   /* "Instant, natural interactions" card — REBUILT 2026-08-28, then
      REVISED again the same day. First version drifted a single card
