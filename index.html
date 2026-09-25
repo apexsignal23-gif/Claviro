@@ -2205,6 +2205,13 @@
        short height to remain fully covered. */
     .iv-card-natural{ height: auto; overflow: visible; }
   }
+  /* Overrides `.iv-card`'s position:sticky/top for card 3 only -- see
+     the HTML comment above that card for why (removes the
+     freeze-then-catch-up feel scrolling into Mirror). Declared outside
+     the 1024px media query above so it also applies on mobile, where
+     `.iv-card` isn't sticky in the first place but this keeps the class
+     unambiguous either way. */
+  .iv-card-static{ position: static; top: auto; }
 
   /* Vertical (9:16) video grid used inside card 2 — all 4 clips together
      in one card. Structure and breakpoint widths pulled from
@@ -3448,6 +3455,21 @@
              was supplied -- slots 3b/3c/3d duplicate it as placeholders;
              swap each `data-video-slot`'s src for the real videos when
              ready.
+             FIX 2026-09-25 (v2): dropped position:sticky here entirely
+             (`.iv-card-static` overrides `.iv-card`'s sticky/top) and
+             removed the trailing `.iv-scroll-spacer` below. Repeated
+             reports described a two-phase feel entering Mirror --
+             scrolling seems to do nothing while this card is pinned
+             through its dwell, then suddenly "catches up" once the
+             dwell room runs out and Mirror's heading rushes in. That's
+             the sticky-stack technique working as designed (freeze,
+             then release), but it reads as broken specifically on the
+             LAST card, where release means jumping straight into a
+             normal section rather than another sticky card smoothly
+             taking over. Cards 1 and 2 keep the sticky cover-reveal
+             (each is immediately covered by the next sticky card, so
+             there's no freeze-then-release seam); card 3 now just
+             scrolls by in normal flow like Mirror's own content does.
              FIX 2026-09-25: `disable_player_controls` true->false wasn't
              enough on its own -- reported twice as "scroll doesn't move
              but the scrollbar does" specifically when hovering this
@@ -3464,7 +3486,7 @@
              and likely have the same latent issue, left untouched since
              only card 3 was reported; flag if card 2 needs the same
              fix. -->
-        <div class="iv-card iv-card-natural">
+        <div class="iv-card iv-card-natural iv-card-static">
           <div class="iv-video-quad">
             <div class="iv-video iv-video-16x9" data-video-slot="3a">
               <iframe
@@ -3497,18 +3519,10 @@
           </div>
         </div>
 
-        <!-- Trailing spacer, no visual content -- per explicit report
-             card 2 wasn't locking/sticking at all. A sticky element
-             needs trailing ROOM inside its own containing block to
-             stick through; whichever card is LAST in .iv-scroll-cards
-             is flush against its bottom edge, so it has zero room to
-             stick (the exact moment it would start sticking is also
-             the moment its container's bottom edge catches up, so it
-             never visibly locks -- it just scrolls straight through).
-             Every card gets this "room" for free from the gap + the
-             NEXT card's own height after it; only the truly last card
-             (now card 3) needs this spacer to get the same treatment. -->
-        <div class="iv-scroll-spacer" aria-hidden="true"></div>
+        <!-- No trailing spacer here anymore -- card 3 is no longer
+             sticky (see `.iv-card-static`), so it doesn't need dwell
+             room; it just scrolls off in normal flow like any other
+             block. -->
       </div>
     </div>
   </div>
