@@ -2769,18 +2769,56 @@
     display:flex; align-items:center; justify-content:center;
   }
 
-  /* FAQ section — new, added 2026-08-31, modeled after
-     metromediahouse.co's own FAQ block (a plain accordion list near the
-     bottom, right before the final CTA). Expand/collapse uses the CSS
-     grid `0fr → 1fr` row-size trick (`grid-template-rows`, transitioned)
-     rather than a JS-measured `max-height` — smooth at any content
-     length with no measurement code, and in the same "compositor-safe,
-     paint-only" spirit as this page's other pragmatic exceptions to the
-     transform/opacity-only rule (box-shadow glows, clip-path wipes, SVG
-     stroke-dasharray). The `+` icon just rotates 45° into an "×" via
-     `transform`, which IS strictly transform. One panel open at a time. */
-  .faq-list{ display: flex; flex-direction: column; border-top: 1px solid var(--ink-border); }
-  .faq-item{ border-bottom: 1px solid var(--ink-border); }
+  /* FAQ section — rebuilt 2026-09-25 to match a supplied reference
+     screenshot exactly (a dark bordered panel, left copy column + right
+     accordion with a connecting dot-timeline, floating prev/next
+     arrows straddling the panel's edges). Expand/collapse still uses
+     the same CSS grid `0fr → 1fr` row-size trick as the previous
+     version (see the un-changed .faq-a-wrap/.faq-icon rules below) —
+     only the surrounding chrome (panel, timeline, eyebrow, nav arrows)
+     is new. `.faq-nav-prev`/`.faq-nav-next` are decorative only (plain
+     `<span>`s, not `<button>`s, `aria-hidden`) since the reference
+     shows them but no second FAQ "slide" was supplied for them to
+     actually navigate to — real prev/next behavior needs that content
+     first. */
+  .faq-panel{
+    position: relative;
+    background-image: linear-gradient(135deg, #101010 0%, #0f0f0f 32%, #262626 58%, #050505 84%, #050505 100%);
+    border: 1px solid var(--ink-border);
+    border-radius: 1.75rem;
+    padding: 2.75rem 3rem;
+  }
+  @media (max-width: 640px){ .faq-panel{ padding: 2.25rem 1.5rem; } }
+  .faq-eyebrow{
+    font-size: .72rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--accent-hot); margin-bottom: 1.1rem;
+  }
+  .faq-nav{
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 2.25rem; height: 2.25rem; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,.4); font-size: 1.1rem; pointer-events: none;
+  }
+  .faq-nav-prev{ left: -.5rem; }
+  .faq-nav-next{ right: -.5rem; }
+  @media (max-width: 900px){ .faq-nav{ display: none; } }
+  .faq-list{ display: flex; flex-direction: column; }
+  .faq-item{ position: relative; padding-left: 2.6rem; border-bottom: 1px solid var(--ink-border); }
+  /* Timeline: each item draws its OWN connecting segment from its dot
+     straight down to its own bottom edge; stacked in normal flow, these
+     chain into one continuous line through every dot except the last
+     (which has nothing after it, so it gets no segment). Simpler and
+     more robust than one absolutely-positioned line spanning the whole
+     list, since it doesn't need to know the other items' heights. */
+  .faq-item:not(:last-child)::before{
+    content: ""; position: absolute; left: 9px; top: 1.95rem; bottom: 0; width: 1px;
+    background: linear-gradient(180deg, rgba(143,168,255,.55), rgba(143,168,255,.12));
+  }
+  .faq-dot{
+    position: absolute; left: 0; top: 1.5rem; width: 18px; height: 18px; border-radius: 50%;
+    background: radial-gradient(circle at 34% 30%, #c7d3ff 0%, #7d99fa 45%, #45589e 100%);
+    box-shadow: 0 0 0 4px rgba(95,127,240,.16), 0 0 12px rgba(95,127,240,.55);
+  }
   .faq-q{
     width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
     padding: 1.35rem 0; background: none; border: none; cursor: pointer; text-align: left;
@@ -4140,48 +4178,61 @@
   </div>
 </section>
 
-<!-- ================= FAQ — copied verbatim (copy + layout) from
-     metromediahouse.co's own FAQ block per explicit request. Left-
-     aligned, narrower column (not centered/720px like the first version
-     of this section), eyebrow label above the heading, and a CTA button
-     inside the section itself, matching that reference exactly instead
-     of adapting it. ================= -->
+<!-- ================= FAQ — rebuilt 2026-09-25 to match a supplied
+     reference screenshot exactly: a bordered dark panel, left copy
+     column ("FAQS" eyebrow + 2-line heading + subtext) and a right
+     accordion list with a connecting dot-timeline, plus floating
+     prev/next arrows straddling the panel's left/right edges (see the
+     CSS comment above `.faq-panel` for why those are decorative-only).
+     Same 3 questions/answers as before, unchanged. ================= -->
 <section id="faq" class="relative py-24 sm:py-28">
-  <div class="max-w-[1280px] mx-auto px-6 lg:px-10 grid lg:grid-cols-[1fr_1.2fr] gap-14 items-start">
-    <div class="reveal">
-      <h2 class="text-shine inline-block text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
-        FAQs
-      </h2>
-    </div>
+  <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
+    <div class="faq-panel reveal">
+      <span class="faq-nav faq-nav-prev" aria-hidden="true"><i class="ph-bold ph-caret-left"></i></span>
+      <span class="faq-nav faq-nav-next" aria-hidden="true"><i class="ph-bold ph-caret-right"></i></span>
 
-    <div class="faq-list reveal">
-      <div class="faq-item" data-open="false">
-        <button class="faq-q" id="faq-q-1" aria-expanded="false" aria-controls="faq-a-1">
-          <span>Who is this for?</span>
-          <i class="ph-bold ph-plus faq-icon" aria-hidden="true"></i>
-        </button>
-        <div class="faq-a-wrap" id="faq-a-1" role="region" aria-labelledby="faq-q-1">
-          <div class="faq-a"><p>B2B tech companies, executives, and subject matter experts with intellectual capital worth distributing. We build the production system that turns that knowledge into media.</p></div>
+      <div class="grid lg:grid-cols-[1fr_1.5fr] gap-14 items-start">
+        <div>
+          <p class="faq-eyebrow">FAQs</p>
+          <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
+            Still have<br><span class="text-shine inline-block">questions?</span>
+          </h2>
+          <p class="mt-5 text-[1rem] leading-[1.65] text-[var(--cream-dim)]">Here are the answers to what people usually want to know.</p>
         </div>
-      </div>
 
-      <div class="faq-item" data-open="false">
-        <button class="faq-q" id="faq-q-2" aria-expanded="false" aria-controls="faq-a-2">
-          <span>What&rsquo;s the minimum commitment? Can I start with a trial?</span>
-          <i class="ph-bold ph-plus faq-icon" aria-hidden="true"></i>
-        </button>
-        <div class="faq-a-wrap" id="faq-a-2" role="region" aria-labelledby="faq-q-2">
-          <div class="faq-a"><p>Three months. No trial months. Building a production system around your brand takes time and investment from both sides. One month isn&rsquo;t enough to learn your voice, refine the workflow, or deliver results worth measuring. Most clients stay well beyond three months because the system gets sharper the longer we work together.</p></div>
-        </div>
-      </div>
+        <div class="faq-list">
+          <div class="faq-item" data-open="false">
+            <span class="faq-dot" aria-hidden="true"></span>
+            <button class="faq-q" id="faq-q-1" aria-expanded="false" aria-controls="faq-a-1">
+              <span>Who is this for?</span>
+              <i class="ph-bold ph-plus faq-icon" aria-hidden="true"></i>
+            </button>
+            <div class="faq-a-wrap" id="faq-a-1" role="region" aria-labelledby="faq-q-1">
+              <div class="faq-a"><p>B2B tech companies, executives, and subject matter experts with intellectual capital worth distributing. We build the production system that turns that knowledge into media.</p></div>
+            </div>
+          </div>
 
-      <div class="faq-item" data-open="false">
-        <button class="faq-q" id="faq-q-3" aria-expanded="false" aria-controls="faq-a-3">
-          <span>Is there any guarantee?</span>
-          <i class="ph-bold ph-plus faq-icon" aria-hidden="true"></i>
-        </button>
-        <div class="faq-a-wrap" id="faq-a-3" role="region" aria-labelledby="faq-q-3">
-          <div class="faq-a"><p>If you already have organic traction, we can amplify and predict results in a few weeks. If you&rsquo;re building from scratch, it takes longer to find the formula. That said, the majority of our clients see real results within the first two months. We can&rsquo;t guarantee the algorithm. We can guarantee the work that feeds it. Our quality of output with volume is unparalleled.</p></div>
+          <div class="faq-item" data-open="false">
+            <span class="faq-dot" aria-hidden="true"></span>
+            <button class="faq-q" id="faq-q-2" aria-expanded="false" aria-controls="faq-a-2">
+              <span>What&rsquo;s the minimum commitment? Can I start with a trial?</span>
+              <i class="ph-bold ph-plus faq-icon" aria-hidden="true"></i>
+            </button>
+            <div class="faq-a-wrap" id="faq-a-2" role="region" aria-labelledby="faq-q-2">
+              <div class="faq-a"><p>Three months. No trial months. Building a production system around your brand takes time and investment from both sides. One month isn&rsquo;t enough to learn your voice, refine the workflow, or deliver results worth measuring. Most clients stay well beyond three months because the system gets sharper the longer we work together.</p></div>
+            </div>
+          </div>
+
+          <div class="faq-item" data-open="false">
+            <span class="faq-dot" aria-hidden="true"></span>
+            <button class="faq-q" id="faq-q-3" aria-expanded="false" aria-controls="faq-a-3">
+              <span>Is there any guarantee?</span>
+              <i class="ph-bold ph-plus faq-icon" aria-hidden="true"></i>
+            </button>
+            <div class="faq-a-wrap" id="faq-a-3" role="region" aria-labelledby="faq-q-3">
+              <div class="faq-a"><p>If you already have organic traction, we can amplify and predict results in a few weeks. If you&rsquo;re building from scratch, it takes longer to find the formula. That said, the majority of our clients see real results within the first two months. We can&rsquo;t guarantee the algorithm. We can guarantee the work that feeds it. Our quality of output with volume is unparalleled.</p></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
