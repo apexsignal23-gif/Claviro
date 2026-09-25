@@ -2132,7 +2132,12 @@
   .iv-video.iv-video-16x9{ aspect-ratio: 16 / 9; }
   .iv-card{
     position: sticky;
-    top: 7rem;
+    /* Bumped 7rem -> 8rem per explicit request/screenshot showing card 1
+       locking too close to the fixed header, with more clearance wanted
+       (matching the gap shown in that screenshot) -- an estimate since
+       this can't be visually verified directly; flag if it still needs
+       tuning. */
+    top: 8rem;
     background-image: linear-gradient(135deg, #0f0f0f 0%, #0f0f0f 32%, #292929 58%, #040404 84%, #040404 100%);
     border: 1px solid rgba(255,255,255,.12);
     border-radius: 20px;
@@ -2155,14 +2160,14 @@
     .iv-card{
       /* NOT a flat rem alone — a sticky element's own height still has to
          fit inside whatever's left of the actual browser viewport once it
-         locks at `top:7rem`; a taller-than-available-space sticky card
+         locks at `top:8rem`; a taller-than-available-space sticky card
          just runs off the bottom of the window with no way to scroll
          further into view (scrolling the page can't move an
          already-stuck element up more). Cap it to the smaller of 32rem
          or the real available viewport height (100vh minus the top
          offset and a bit of breathing room) so it always fits on short
          windows too. */
-      height: max(20rem, min(32rem, calc(100svh - 9rem)));
+      height: max(20rem, min(32rem, calc(100svh - 10rem)));
       overflow: hidden;
       display: flex;
       align-items: center;
