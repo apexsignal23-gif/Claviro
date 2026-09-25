@@ -2770,17 +2770,14 @@
   }
 
   /* FAQ section — rebuilt 2026-09-25 to match a supplied reference
-     screenshot exactly (a dark bordered panel, left copy column + right
-     accordion with a connecting dot-timeline, floating prev/next
-     arrows straddling the panel's edges). Expand/collapse still uses
-     the same CSS grid `0fr → 1fr` row-size trick as the previous
+     screenshot (a dark bordered panel, left copy column + right
+     accordion with a connecting dot-timeline). Expand/collapse still
+     uses the same CSS grid `0fr → 1fr` row-size trick as the previous
      version (see the un-changed .faq-a-wrap/.faq-icon rules below) —
-     only the surrounding chrome (panel, timeline, eyebrow, nav arrows)
-     is new. `.faq-nav-prev`/`.faq-nav-next` are decorative only (plain
-     `<span>`s, not `<button>`s, `aria-hidden`) since the reference
-     shows them but no second FAQ "slide" was supplied for them to
-     actually navigate to — real prev/next behavior needs that content
-     first. */
+     only the surrounding chrome (panel, timeline, eyebrow) is new. The
+     reference also had decorative prev/next arrows straddling the
+     panel's edges; those were added then removed per explicit request
+     ("remove these 2 sides arrow"). */
   .faq-panel{
     position: relative;
     background-image: linear-gradient(135deg, #101010 0%, #0f0f0f 32%, #262626 58%, #050505 84%, #050505 100%);
@@ -2793,15 +2790,6 @@
     font-size: .72rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
     color: var(--accent-hot); margin-bottom: 1.1rem;
   }
-  .faq-nav{
-    position: absolute; top: 50%; transform: translateY(-50%);
-    width: 2.25rem; height: 2.25rem; border-radius: 999px;
-    display: flex; align-items: center; justify-content: center;
-    color: rgba(255,255,255,.4); font-size: 1.1rem; pointer-events: none;
-  }
-  .faq-nav-prev{ left: -.5rem; }
-  .faq-nav-next{ right: -.5rem; }
-  @media (max-width: 900px){ .faq-nav{ display: none; } }
   .faq-list{ display: flex; flex-direction: column; }
   .faq-item{ position: relative; padding-left: 2.6rem; border-bottom: 1px solid var(--ink-border); }
   /* Timeline: each item draws its OWN connecting segment from its dot
@@ -4188,9 +4176,6 @@
 <section id="faq" class="relative py-24 sm:py-28">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="faq-panel reveal">
-      <span class="faq-nav faq-nav-prev" aria-hidden="true"><i class="ph-bold ph-caret-left"></i></span>
-      <span class="faq-nav faq-nav-next" aria-hidden="true"><i class="ph-bold ph-caret-right"></i></span>
-
       <div class="grid lg:grid-cols-[1fr_1.5fr] gap-14 items-start">
         <div>
           <p class="faq-eyebrow">FAQs</p>
