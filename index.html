@@ -2211,7 +2211,14 @@
      the 1024px media query above so it also applies on mobile, where
      `.iv-card` isn't sticky in the first place but this keeps the class
      unambiguous either way. */
-  .iv-card-static{ position: static; top: auto; }
+  /* overflow:hidden added here too -- `.iv-card-natural`'s own
+     `overflow:visible` (needed for card 2, which stays sticky and
+     needs its taller-than-cap content to not get clipped) was letting
+     card 3's video grid bleed outside the card's own rounded border on
+     both the top and bottom edges once it became a normal auto-height
+     block instead of a viewport-capped sticky one. Card 3 doesn't need
+     `visible` for any reason anymore, so clip it back down. */
+  .iv-card-static{ position: static; top: auto; overflow: hidden; }
 
   /* Vertical (9:16) video grid used inside card 2 — all 4 clips together
      in one card. Structure and breakpoint widths pulled from
