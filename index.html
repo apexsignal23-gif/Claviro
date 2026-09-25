@@ -2259,6 +2259,18 @@
      side-by-side). 1 column (stacked) below 640px so each video keeps
      a sane width on narrow phones instead of being squeezed to a
      sliver; 2x2 from 640px up. */
+  /* FIX 2026-09-25: disable_player_controls=true (see the HTML comment
+     above these iframes) still wasn't enough -- the "Enable sound"
+     autoplay-unmute overlay Gumlet renders is a separate click layer
+     from the control bar and still visible in the report, presumably
+     still eating wheel events on hover. pointer-events:none on the
+     iframe stops the browser from ever routing mouse/wheel events into
+     that cross-origin document at all -- guaranteed fix, but the
+     trade-off is now total: nothing on these 4 clips is clickable,
+     including "Enable sound", so they play muted, autoplaying, on loop,
+     with zero interactivity. Scoped to .iv-video-quad only (card 3),
+     not the shared .iv-video rule, so card 2's videos are untouched. */
+  .iv-video-quad iframe{ pointer-events: none; }
   .iv-video-quad{ display: grid; grid-template-columns: 1fr; gap: 1rem; }
   @media (min-width: 640px){
     .iv-video-quad{ grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); gap: 1.25rem; }
