@@ -1878,13 +1878,28 @@
   }
   .en-card-chart-list{ display: flex; flex-direction: column; gap: .5rem; justify-content: center; height: 100%; }
   .en-card-row{ display: flex; align-items: center; gap: .5rem; }
-  .en-card-row-dot{ width: 6px; height: 6px; border-radius: 50%; background: var(--accent-hot); flex: none; }
-  .en-card-row span:not(.en-card-row-dot){ display: block; height: 6px; border-radius: 20px; background: rgba(255,255,255,.1); flex: 1; }
+  /* FIX 2026-09-25: Customer Insight's rows and Feedback's bars were the
+     only 2 of these 4 cards with no real motion, reported as looking
+     static next to Sales Intelligence's drawing line and Marketing
+     Distribution's turning ring. Rows now pulse like a live incoming-
+     data feed (scaleX from a shorter width up to full, same technique
+     as `.mirror-qa-load` elsewhere on the page), staggered per row so
+     they read as a sequence rather than all breathing in unison. */
+  .en-card-row-dot{
+    width: 6px; height: 6px; border-radius: 50%; background: var(--accent-hot); flex: none;
+    animation: en-dot-pulse 2.4s ease-in-out infinite;
+  }
+  .en-card-row span:not(.en-card-row-dot){
+    display: block; height: 6px; border-radius: 20px; background: rgba(255,255,255,.1); flex: 1;
+    transform-origin: left; animation: en-row-load 2.4s ease-in-out infinite;
+  }
   .en-card-row:nth-child(1) span:not(.en-card-row-dot){ max-width: 78%; }
-  .en-card-row:nth-child(2) span:not(.en-card-row-dot){ max-width: 55%; }
-  .en-card-row:nth-child(3) span:not(.en-card-row-dot){ max-width: 66%; }
+  .en-card-row:nth-child(2) span:not(.en-card-row-dot){ max-width: 55%; animation-delay: -.4s; }
+  .en-card-row:nth-child(2) .en-card-row-dot{ animation-delay: -.4s; }
+  .en-card-row:nth-child(3) span:not(.en-card-row-dot){ max-width: 66%; animation-delay: -.8s; }
+  .en-card-row:nth-child(3) .en-card-row-dot{ animation-delay: -.8s; }
   .en-card-chart-bars{ display: flex; align-items: flex-end; gap: .5rem; height: 100%; padding-bottom: .1rem; }
-  .en-card-chart-bars span{ flex: 1; border-radius: 4px 4px 0 0; background: linear-gradient(180deg, var(--accent-hot), var(--accent-deep)); animation: en-bar-grow 3.4s ease-in-out infinite; }
+  .en-card-chart-bars span{ flex: 1; border-radius: 4px 4px 0 0; background: linear-gradient(180deg, var(--accent-hot), var(--accent-deep)); transform-origin: bottom; animation: en-bar-grow 3.4s ease-in-out infinite; }
   .en-card-chart-bars span:nth-child(1){ height: 30%; animation-delay: -.2s; }
   .en-card-chart-bars span:nth-child(2){ height: 52%; animation-delay: -.5s; }
   .en-card-chart-bars span:nth-child(3){ height: 40%; animation-delay: -.8s; }
@@ -1892,9 +1907,16 @@
   .en-card-chart-bars span:nth-child(5){ height: 58%; animation-delay: -1.4s; }
   @keyframes en-ring-turn{ 0%,100%{ transform: rotate(0deg); } 50%{ transform: rotate(18deg); } }
   @keyframes en-draw-line{ 0%{ stroke-dashoffset: 260; } 45%,100%{ stroke-dashoffset: 0; } }
-  @keyframes en-bar-grow{ 0%,100%{ transform: scaleY(1); } 50%{ transform: scaleY(.82); } }
+  /* FIX 2026-09-25: amplitude widened .82->.55 and `transform-origin:
+     bottom` added above -- at .82 with the default center origin, bars
+     barely shrank from BOTH ends at once, reading as a faint jitter
+     rather than a bar chart visibly growing/settling from its base. */
+  @keyframes en-bar-grow{ 0%,100%{ transform: scaleY(1); } 50%{ transform: scaleY(.55); } }
+  @keyframes en-row-load{ 0%,100%{ transform: scaleX(.6); opacity: .55; } 50%{ transform: scaleX(1); opacity: 1; } }
+  @keyframes en-dot-pulse{ 0%,100%{ opacity: .5; transform: scale(.85); } 50%{ opacity: 1; transform: scale(1.15); } }
   @media (prefers-reduced-motion: reduce){
-    .en-card-chart-line path, .en-card-ring, .en-card-chart-bars span{ animation: none; }
+    .en-card-chart-line path, .en-card-ring, .en-card-chart-bars span,
+    .en-card-row-dot, .en-card-row span:not(.en-card-row-dot){ animation: none; }
   }
 
   /* Pricing cards (placed after the restored Gravity section) — rebuilt
