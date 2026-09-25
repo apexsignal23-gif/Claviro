@@ -3435,34 +3435,50 @@
              reintroducing the peek-through bug. Only one real video id
              was supplied -- slots 3b/3c/3d duplicate it as placeholders;
              swap each `data-video-slot`'s src for the real videos when
-             ready. -->
+             ready.
+             FIX 2026-09-25: `disable_player_controls` true->false wasn't
+             enough on its own -- reported twice as "scroll doesn't move
+             but the scrollbar does" specifically when hovering this
+             card's videos. `scrolling="no"` only stops the IFRAME'S OWN
+             document from scrolling; it doesn't stop Gumlet's own
+             control-bar UI (scrubber/volume drag, etc.) from calling
+             preventDefault() on wheel events, which we can't touch since
+             it's cross-origin JS. Setting disable_player_controls=true
+             removes that native control-bar UI entirely, removing
+             whatever wheel listener came with it. Trade-off: no
+             pause/mute/seek/fullscreen affordance on these 4 clips
+             anymore (autoplay+loop still works) -- card 2's identical
+             4 clips have the same disable_player_controls=false setup
+             and likely have the same latent issue, left untouched since
+             only card 3 was reported; flag if card 2 needs the same
+             fix. -->
         <div class="iv-card iv-card-natural">
           <div class="iv-video-quad">
             <div class="iv-video iv-video-16x9" data-video-slot="3a">
               <iframe
                 loading="lazy" title="Gumlet video player" scrolling="no"
-                src="https://play.gumlet.io/embed/6ab630286cc97c47e407a6d6?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
+                src="https://play.gumlet.io/embed/6ab630286cc97c47e407a6d6?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=true"
                 referrerpolicy="origin"
                 allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
             </div>
             <div class="iv-video iv-video-16x9" data-video-slot="3b">
               <iframe
                 loading="lazy" title="Gumlet video player" scrolling="no"
-                src="https://play.gumlet.io/embed/6ab636a5456e563d43db81d5?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
+                src="https://play.gumlet.io/embed/6ab636a5456e563d43db81d5?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=true"
                 referrerpolicy="origin"
                 allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
             </div>
             <div class="iv-video iv-video-16x9" data-video-slot="3c">
               <iframe
                 loading="lazy" title="Gumlet video player" scrolling="no"
-                src="https://play.gumlet.io/embed/6ab637e96cc97c47e407e1eb?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
+                src="https://play.gumlet.io/embed/6ab637e96cc97c47e407e1eb?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=true"
                 referrerpolicy="origin"
                 allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
             </div>
             <div class="iv-video iv-video-16x9" data-video-slot="3d">
               <iframe
                 loading="lazy" title="Gumlet video player" scrolling="no"
-                src="https://play.gumlet.io/embed/6ab63a990ff87e47ee5c18fb?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=false"
+                src="https://play.gumlet.io/embed/6ab63a990ff87e47ee5c18fb?background=false&amp;autoplay=true&amp;loop=true&amp;disable_player_controls=true"
                 referrerpolicy="origin"
                 allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;"></iframe>
             </div>
