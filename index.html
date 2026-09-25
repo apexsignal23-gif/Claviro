@@ -2785,14 +2785,21 @@
   }
   .faq-list{ display: flex; flex-direction: column; }
   .faq-item{ position: relative; padding-left: 2.6rem; border-bottom: 1px solid var(--ink-border); }
-  /* Timeline: each item draws its OWN connecting segment from its dot
-     straight down to its own bottom edge; stacked in normal flow, these
-     chain into one continuous line through every dot except the last
-     (which has nothing after it, so it gets no segment). Simpler and
-     more robust than one absolutely-positioned line spanning the whole
-     list, since it doesn't need to know the other items' heights. */
+  /* Timeline: each item draws its OWN connecting segment from its own
+     dot's center down PAST its own bottom edge, overshooting by
+     exactly that same dot-center offset (2.0625rem = the 1.5rem dot
+     `top` + half its 18px height) so it lands precisely on the NEXT
+     item's dot center regardless of how tall either item is -- `bottom:
+     0` (stopping flush at the item's own edge) left a visible gap
+     between segments, since the next dot sits 2.0625rem further down
+     into the following item, not right at its top. Reported via a
+     side-by-side comparison screenshot showing broken/disconnected
+     segments vs. the reference's one continuous line. Stacked in
+     normal flow, these chained segments read as a single unbroken line
+     through every dot except after the last (which has nothing below
+     it, so it gets no segment). */
   .faq-item:not(:last-child)::before{
-    content: ""; position: absolute; left: 9px; top: 1.95rem; bottom: 0; width: 1px;
+    content: ""; position: absolute; left: 9px; top: 2.0625rem; bottom: -2.0625rem; width: 1px;
     background: linear-gradient(180deg, rgba(143,168,255,.55), rgba(143,168,255,.12));
   }
   .faq-dot{
