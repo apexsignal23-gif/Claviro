@@ -425,7 +425,14 @@
     .text-shine{ background: none; -webkit-text-fill-color: var(--cream); color: var(--cream); }
   }
 
-  section[id]{ scroll-margin-top: 108px; }
+  /* Bumped 108px -> 132px per explicit report/screenshot of the
+     Pricing nav link landing too close under the fixed header --
+     matches the same "too tight against the header" pattern already
+     fixed once for the Industry Standard cards' own sticky offset
+     (7rem -> 8rem there). Applies to every nav-linked section
+     (shared selector), for consistent clearance everywhere, not just
+     Pricing. */
+  section[id]{ scroll-margin-top: 132px; }
 
   ::selection{ background: var(--accent); color: var(--ink-950); }
 
