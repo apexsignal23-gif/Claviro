@@ -2798,23 +2798,17 @@
      normal flow, these chained segments read as a single unbroken line
      through every dot except after the last (which has nothing below
      it, so it gets no segment). */
-  /* Flat color as the DEFAULT (not a per-segment gradient -- fading each
-     segment top-to-bottom made the line brighten/dim repeatedly at
-     every dot instead of reading as one consistent line). The very
-     first segment (before item 2's dot) and the very last one (before
-     the final dot) get their OWN fade instead, per explicit "the line
-     is fading away on the upper and lower side" -- only the outer two
-     ends of the whole timeline fade to transparent; everything between
-     stays flat/solid, same as the reference. */
+  /* Symmetric per-segment fade: bright right at EACH dot, dimming
+     toward the segment's own midpoint, then brightening again into the
+     next dot -- per a close-up comparison screenshot showing the line
+     fading away immediately above AND below a single dot. Consecutive
+     segments both read as bright at the dot they share, so there's no
+     jump/discontinuity at the connection point (unlike the earlier,
+     since-reverted one-directional top-to-bottom fade, which reset
+     abruptly at every dot instead of matching up). */
   .faq-item:not(:last-child)::before{
     content: ""; position: absolute; left: 9px; top: 2.0625rem; bottom: -2.0625rem; width: 1px;
-    background: rgba(143,168,255,.4);
-  }
-  .faq-item:first-child::before{
-    background: linear-gradient(to bottom, transparent 0%, rgba(143,168,255,.4) 20%, rgba(143,168,255,.4) 100%);
-  }
-  .faq-item:nth-last-child(2)::before{
-    background: linear-gradient(to bottom, rgba(143,168,255,.4) 0%, rgba(143,168,255,.4) 80%, transparent 100%);
+    background: linear-gradient(to bottom, rgba(143,168,255,.55) 0%, rgba(143,168,255,.12) 50%, rgba(143,168,255,.55) 100%);
   }
   /* Smaller (14px, was 18px) with an actual white highlight point (not
      just a lighter blue), per explicit "the dot is smaller and there is
