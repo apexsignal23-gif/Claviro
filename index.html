@@ -5219,11 +5219,23 @@ void main() {
   var ticking = false;
   function update() {
     ticking = false;
-    var center = window.innerHeight / 2;
+    var vh = window.innerHeight;
     items.forEach(function (item) {
       var rect = item.el.getBoundingClientRect();
       var height = rect.height || 1;
-      var progress = Math.max(0, Math.min(1, (center - rect.top) / height));
+      // FIX 2026-09-25: progress used to be measured against the
+      // connector's OWN height (84px) crossing viewport center --
+      // reported as starting late and finishing almost instantly,
+      // which checks out: that's only 84px of actual scroll distance
+      // to go from 0 to 1, out of a full viewport's worth of scrolling.
+      // Measuring against a fraction of the viewport height instead
+      // (a fixed, much larger distance) both starts the fill earlier
+      // (while the connector is still low in the viewport, not needing
+      // to reach dead-center first) and stretches it out over far more
+      // scroll distance, so it visibly eases in and out slowly.
+      var triggerStart = vh * 0.85;
+      var triggerDistance = vh * 0.55;
+      var progress = Math.max(0, Math.min(1, (triggerStart - rect.top) / triggerDistance));
       var travel = height - 8; // dot diameter
       item.dot.style.transform = 'translate(-50%, ' + (progress * travel) + 'px)';
       // Same progress value, applied as the fill's scaleY — the line
