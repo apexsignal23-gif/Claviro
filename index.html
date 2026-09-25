@@ -3223,8 +3223,14 @@
      comments above `.iv-scroll-spacer` and `.iv-card-natural`); only
      the truly LAST card needs the trailing spacer, since every other
      card already gets that room for free from the next card + gap
-     after it. -->
-<section id="industry-standard" class="relative py-24 sm:py-28">
+     after it.
+     FIX 2026-09-25: bottom padding dropped (py -> pt only) -- the
+     8rem `.iv-scroll-spacer` after card 3 already reserves the scroll
+     room the sticky mechanic needs, so adding this section's own
+     bottom padding AND #mirror's top padding on top of it stacked
+     into one huge blank gap after the last card, reported as a visible
+     empty area before "Real-time output synced to company". -->
+<section id="industry-standard" class="relative pt-24 sm:pt-28">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
     <div class="iv-scroll-head reveal max-w-[36rem]">
       <p class="en-eyebrow">Process</p>
