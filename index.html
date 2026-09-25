@@ -2824,13 +2824,11 @@
   /* Bigger, softer bloom (was a tight 13px-blur halo), per a direct
      side-by-side comparison showing a much larger, more diffuse glow
      radiating well past the dot itself. */
+  /* No box-shadow at all, per explicit "completely remove every sort of
+     glow around the dot" -- just the flat/gradient-filled circle. */
   .faq-dot{
     position: absolute; left: 2px; top: 1.625rem; width: 14px; height: 14px; border-radius: 50%;
     background: radial-gradient(circle at 32% 28%, #ffffff 0%, #cdd8ff 24%, #7d99fa 60%, #45589e 100%);
-    box-shadow:
-      0 0 0 6px rgba(95,127,240,.12),
-      0 0 26px rgba(95,127,240,.6),
-      0 0 46px rgba(95,127,240,.32);
   }
   .faq-q{
     width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
