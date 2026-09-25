@@ -2798,9 +2798,14 @@
      normal flow, these chained segments read as a single unbroken line
      through every dot except after the last (which has nothing below
      it, so it gets no segment). */
+  /* Flat color, not a per-segment gradient -- fading each segment
+     top-to-bottom (bright near its own dot, dim near the next) made the
+     line brighten-dim-brighten-dim repeatedly at every dot instead of
+     reading as one consistent line like the reference, per a follow-up
+     "this still doesn't look the same" comparison. */
   .faq-item:not(:last-child)::before{
     content: ""; position: absolute; left: 9px; top: 2.0625rem; bottom: -2.0625rem; width: 1px;
-    background: linear-gradient(180deg, rgba(143,168,255,.55), rgba(143,168,255,.12));
+    background: rgba(143,168,255,.4);
   }
   .faq-dot{
     position: absolute; left: 0; top: 1.5rem; width: 18px; height: 18px; border-radius: 50%;
