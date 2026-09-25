@@ -2457,6 +2457,13 @@
     color: var(--chrome-fg-dim);
     transition: color .3s var(--ease-spring);
   }
+  /* Explicit :link/:visited pin, matching plain `.nav-link` above --
+     these are same-page anchor links, so once one's been clicked the
+     browser's own default visited-link color (usually a purple/blue)
+     can otherwise show through, per explicit report that FAQs (likely
+     already clicked while testing) looked a different color than
+     Testimonial (not yet clicked). */
+  .nav-link:link, .nav-link:visited{ color: var(--chrome-fg-dim); }
   .nav-link:hover{ color: var(--chrome-fg); }
   .nav-link::after{
     content:''; position:absolute; left:0; right:0; bottom:-4px; height:1px;
