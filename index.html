@@ -4732,6 +4732,32 @@ void main() {
 })();
 
 /* =====================================================================
+   Mirror "IC already exists" chip animation restart
+   FIX 2026-09-25: reported as sometimes rendering frozen on its very
+   first frame after a page refresh -- `.ml-chip`'s `animation: ml-drift
+   ... infinite` is a plain always-on CSS loop with nothing in JS
+   gating it, so there's no legitimate CSS reason for it to ever get
+   permanently stuck; this points to a browser paint-timing race on
+   load (a freshly-parsed infinite animation occasionally composites
+   its first frame before the animation clock actually starts ticking,
+   especially on a hard refresh). Forcing a reflow-based restart after
+   load is the standard, reliable fix regardless of the exact race:
+   clearing `animation` and reading `offsetHeight` (forces the browser
+   to actually recompute layout before the next line runs) guarantees
+   the animation restarts clean from 0%. */
+(function(){
+  const chips = document.querySelectorAll('.ml-chip');
+  if(!chips.length) return;
+  addEventListener('load', () => {
+    chips.forEach(el => {
+      el.style.animation = 'none';
+      void el.offsetHeight;
+      el.style.animation = '';
+    });
+  });
+})();
+
+/* =====================================================================
    Velaris hero background — vanilla WebGL port
    (Simplex-noise shader kept verbatim; only the React lifecycle wrapper
    has been rewritten as plain JS. Recolored to black/white/gray so the
