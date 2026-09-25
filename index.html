@@ -2702,17 +2702,26 @@
     background: radial-gradient(ellipse at center, rgba(96,126,235,.25) 0%, rgba(65,93,190,.12) 35%, transparent 72%);
     filter: blur(29px);
   }
-  /* Width scales past 1520px on wide viewports (max(1520px, 100vw)) so
-     the rim-light line always reaches the true left/right page edges,
-     per explicit request: on any viewport wider than the fixed 1520px
-     circle, its curve stopped mid-screen with plain background visible
-     beyond it on both sides instead of the line running edge to edge.
-     Height stays a flat 1520px (unchanged) so the arc's own depth/
-     curvature doesn't change -- widening without heightening just
-     turns the circle into a flatter ellipse on wide screens, which is
-     exactly "reach the edges without changing how deep the arc dips". */
+  /* Width scales past 1520px on wide viewports so the rim-light line
+     always reaches the true left/right page edges, per explicit
+     request: on any viewport wider than the fixed 1520px circle, its
+     curve stopped mid-screen with plain background visible beyond it.
+     First tried max(1520px, 100vw), but that undershoots: the ellipse
+     only reaches its own full horizontal extent (x = width/2) at its
+     equator (259px + 760px = 1019px down), which is well BELOW the
+     700px .ts-sky clip line -- at y=700 the curve is only ~91% of the
+     way to its own edge, so at exactly 100vw wide it still fell ~9% of
+     the viewport short of the true left/right edges, seen as the curve
+     visibly stopping/cornering before it got there ("the line is
+     ending downwards... it should end on the border of the page").
+     140vw gives enough margin that the curve is already safely past
+     both edges by the time it reaches the clip line, regardless of
+     viewport width. Height stays a flat 1520px (unchanged) so the
+     arc's own depth/curvature doesn't change -- widening without
+     heightening just turns the circle into a flatter ellipse on wide
+     screens. */
   .ts-moon{
-    position: absolute; z-index: 1; left: 50%; top: 259px; width: max(1520px, 100vw); height: 1520px;
+    position: absolute; z-index: 1; left: 50%; top: 259px; width: max(1520px, 140vw); height: 1520px;
     transform: translateX(-50%); border-radius: 50%; pointer-events: none;
     background: transparent;
     box-shadow:
