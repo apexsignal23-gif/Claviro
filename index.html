@@ -2798,19 +2798,33 @@
      normal flow, these chained segments read as a single unbroken line
      through every dot except after the last (which has nothing below
      it, so it gets no segment). */
-  /* Flat color, not a per-segment gradient -- fading each segment
-     top-to-bottom (bright near its own dot, dim near the next) made the
-     line brighten-dim-brighten-dim repeatedly at every dot instead of
-     reading as one consistent line like the reference, per a follow-up
-     "this still doesn't look the same" comparison. */
+  /* Flat color as the DEFAULT (not a per-segment gradient -- fading each
+     segment top-to-bottom made the line brighten/dim repeatedly at
+     every dot instead of reading as one consistent line). The very
+     first segment (before item 2's dot) and the very last one (before
+     the final dot) get their OWN fade instead, per explicit "the line
+     is fading away on the upper and lower side" -- only the outer two
+     ends of the whole timeline fade to transparent; everything between
+     stays flat/solid, same as the reference. */
   .faq-item:not(:last-child)::before{
     content: ""; position: absolute; left: 9px; top: 2.0625rem; bottom: -2.0625rem; width: 1px;
     background: rgba(143,168,255,.4);
   }
+  .faq-item:first-child::before{
+    background: linear-gradient(to bottom, transparent 0%, rgba(143,168,255,.4) 20%, rgba(143,168,255,.4) 100%);
+  }
+  .faq-item:nth-last-child(2)::before{
+    background: linear-gradient(to bottom, rgba(143,168,255,.4) 0%, rgba(143,168,255,.4) 80%, transparent 100%);
+  }
+  /* Smaller (14px, was 18px) with an actual white highlight point (not
+     just a lighter blue), per explicit "the dot is smaller and there is
+     a white glow on the dot" -- re-centered on the same point the
+     connecting line targets (top+radius still equals 2.0625rem) so the
+     line-fix math above didn't need to change. */
   .faq-dot{
-    position: absolute; left: 0; top: 1.5rem; width: 18px; height: 18px; border-radius: 50%;
-    background: radial-gradient(circle at 34% 30%, #c7d3ff 0%, #7d99fa 45%, #45589e 100%);
-    box-shadow: 0 0 0 4px rgba(95,127,240,.16), 0 0 12px rgba(95,127,240,.55);
+    position: absolute; left: 2px; top: 1.625rem; width: 14px; height: 14px; border-radius: 50%;
+    background: radial-gradient(circle at 32% 28%, #ffffff 0%, #cdd8ff 24%, #7d99fa 60%, #45589e 100%);
+    box-shadow: 0 0 5px 1px rgba(255,255,255,.6), 0 0 0 4px rgba(95,127,240,.14), 0 0 13px rgba(95,127,240,.55);
   }
   .faq-q{
     width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
