@@ -2091,8 +2091,16 @@
      top: keeps scrolling up normally past the header's own ~7rem
      clearance line and doesn't lock until it's roughly this far ABOVE
      the viewport top -- i.e. fully tucked behind the opaque fixed
-     header -- rather than locking while still visible. */
-  .iv-scroll-head{ position: sticky; top: -12rem; }
+     header -- rather than locking while still visible.
+     FIX 2026-09-25: -12rem still left a visible gap between the
+     locked text and the header (screenshot showed it parked above the
+     header, not tucked behind it) -- the block's real rendered height
+     (eyebrow + 2-line heading + 2-line subtext) runs taller than that,
+     so -12rem stopped it short of reaching the header. Bumped to
+     -16rem so it keeps scrolling until it's actually behind the header
+     before locking. Estimate, not screenshot-verified -- flag if it
+     still shows a gap or now overshoots. */
+  .iv-scroll-head{ position: sticky; top: -16rem; }
   .iv-scroll-stack{ display: flex; flex-direction: column; align-items: center; gap: 3rem; }
   /* Gap controls the reveal's PACE, not just spacing: since these are
      plain sticky flex-column siblings with no extra spacer wrappers,
