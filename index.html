@@ -425,7 +425,17 @@
     .text-shine{ background: none; -webkit-text-fill-color: var(--cream); color: var(--cream); }
   }
 
-  section[id]{ scroll-margin-top: 108px; }
+  /* Was 108px, still landing with a visible gap under the header even
+     after that was tried before. Root cause: every nav-linked section
+     already has its own 96-112px top padding (`py-24 sm:py-28`) before
+     its actual content -- scroll-margin-top offsets the section's bare
+     top EDGE from the viewport top, and that edge is where the padding
+     starts, so the two effects stacked (108px margin + ~112px padding
+     ≈ 220px before content), not the ~90px header clearance intended.
+     Dropped to 0 so the section's own padding alone provides the
+     clearance -- close to the header's own real height, matching the
+     near-zero-gap look shown in a reference screenshot. */
+  section[id]{ scroll-margin-top: 0; }
 
   ::selection{ background: var(--accent); color: var(--ink-950); }
 
