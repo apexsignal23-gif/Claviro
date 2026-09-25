@@ -777,12 +777,12 @@
   .mirror-qa-wave span:nth-child(4){ height: 32px; animation-delay: .3s; }
   .mirror-qa-screen{
     margin-top: auto;
-    background: #fff;
-    border: 1px solid rgba(0,0,0,.08);
+    background: var(--ink-950);
+    border: 1px solid var(--ink-border);
     border-radius: 12px; padding: .85rem;
     display: grid; gap: .5rem;
   }
-  .mirror-qa-screen span{ height: 6px; border-radius: 20px; background: rgba(0,0,0,.12); animation: mirror-qa-load 3.4s ease-in-out infinite; }
+  .mirror-qa-screen span{ height: 6px; border-radius: 20px; background: rgba(255,255,255,.1); animation: mirror-qa-load 3.4s ease-in-out infinite; }
   .mirror-qa-screen span:nth-child(2){ width: 60%; animation-delay: .2s; }
 
   @keyframes mirror-chat-rise{ 0%,100%{ transform: translateY(0); opacity: .82; } 50%{ transform: translateY(-4px); opacity: 1; } }
