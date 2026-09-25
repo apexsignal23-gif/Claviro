@@ -2841,10 +2841,15 @@
      glow around the dot" -- just the flat/gradient-filled circle. */
   /* Recolored blue -> white (dots, connecting line, both fading tails)
      per explicit request, matching the white line/glow look elsewhere
-     on the page. */
+     on the page. Glow itself copied from `.d90-connector-dot` (the
+     "What Changes By Day 90" section's own glowing scroll dot) per
+     explicit "give the dots glowing effect like the day 90 one" --
+     same exact box-shadow values, not just a similar-looking white
+     glow guessed independently. */
   .faq-dot{
     position: absolute; left: 2px; top: 1.625rem; width: 14px; height: 14px; border-radius: 50%;
     background: radial-gradient(circle at 32% 28%, #ffffff 0%, #f2f3f7 30%, #c7cad4 65%, #8f939e 100%);
+    box-shadow: 0 0 8px 2px rgba(255,255,255,.7), 0 0 16px 4px rgba(255,255,255,.35);
   }
   .faq-q{
     width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
