@@ -1761,18 +1761,21 @@
      to sit as the first item in `.rt-display-row`, to the left of the
      grid + stat number, per explicit request. text-align/margin swapped
      from a centered heading to a left-aligned side label.
-     FIX 2026-09-25 (v2): the max-width from v1 was wrapping the longer
-     headline variants ("Fully engaged in your journey.") onto 2 lines,
-     which also pushed the grid off-center to the right since the whole
-     row was one centered flex group. Dropped max-width for
-     `white-space:nowrap` (always one line, sized to its own content)
-     and moved grid+stat into their own `.rt-grid-stat` wrapper with
-     `flex:1` so THEY center within the remaining space next to the
-     now fixed-width headline, instead of the headline's width shifting
-     where that shared center point lands. */
+     FIX 2026-09-25 (v3): v1's max-width wrapped longer headline
+     variants onto 2 lines; v2 (white-space:nowrap + a flex `.rt-grid-
+     stat{flex:1}` wrapper centering in the LEFTOVER space after the
+     headline) fixed that but created a worse bug -- the 4 headline
+     strings are all different lengths ("No longer part of the story."
+     vs "Fully engaged in your journey." etc.), so every time the
+     slider changed the headline text, the leftover space changed
+     width too, and the grid visibly jumped left/right on every slide.
+     Font-size also dropped a notch (1.4rem -> 1.15rem) per explicit
+     request ("make the left side writing a little smaller"), partly
+     for taste and partly so the longest variant comfortably fits
+     within the fixed column below. */
   .rt-headline{
-    font-size: 1.4rem; font-weight: 700; text-align: left; white-space: nowrap;
-    flex: none; margin: 0; min-height: 1.9rem; color: var(--cream);
+    font-size: 1.15rem; font-weight: 700; text-align: left; white-space: nowrap;
+    justify-self: start; margin: 0; min-height: 1.9rem; color: var(--cream);
     transition: color .35s ease;
   }
   .rt-panel{
@@ -1786,18 +1789,31 @@
      scaling the dots and stat number up (rather than just centering a
      small cluster in a big box) is what makes the panel read as
      proportionate to its own size. */
-  .rt-display-row{ display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  /* Fixed 3-column grid (not flex) so the CENTER column (the dot grid)
+     always lands at the true geometric center of the row: the two
+     flanking `minmax(0,1fr)` tracks are forced to stay pixel-equal to
+     EACH OTHER regardless of what's inside them (the `0` minimum
+     strips out the usual content-based auto-minimum that would
+     otherwise let one grow wider than the other), so the headline
+     changing text/width on every slider move can no longer shift the
+     grid's position even slightly. */
+  .rt-display-row{
+    display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+    align-items: center; gap: 1.5rem; margin-bottom: 1rem;
+  }
   @media (min-width: 640px){ .rt-display-row{ gap: 3rem; margin-bottom: 1.1rem; } }
-  .rt-grid-stat{ display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex: 1 1 auto; min-width: 0; flex-wrap: wrap; }
-  @media (min-width: 640px){ .rt-grid-stat{ gap: 3rem; } }
-  .rt-grid{ display: grid; grid-template-columns: repeat(10, 1fr); gap: 7px; width: min(340px, 100%); flex-shrink: 0; }
+  @media (max-width: 639px){
+    .rt-display-row{ grid-template-columns: 1fr; justify-items: center; text-align: center; }
+    .rt-headline{ justify-self: center; text-align: center; white-space: normal; }
+  }
+  .rt-grid{ display: grid; grid-template-columns: repeat(10, 1fr); gap: 7px; width: min(340px, 100%); justify-self: center; }
   .rt-dot{
     width: 100%; aspect-ratio: 1/1; border-radius: 5px;
     background: rgba(255,255,255,.14); opacity: .4; transform: scale(.6);
     transition: background-color .4s ease, opacity .4s ease, transform .4s ease;
   }
   .rt-dot.is-active{ opacity: 1; transform: scale(1); }
-  .rt-stat{ text-align: center; }
+  .rt-stat{ text-align: center; justify-self: center; }
   .rt-stat-num{ font-size: 4.4rem; font-weight: 800; line-height: 1; letter-spacing: -.02em; color: var(--cream); transition: color .35s ease; }
   .rt-stat-of{ font-size: 1.05rem; color: var(--cream-dim); font-weight: 600; margin-top: .25rem; }
   .rt-stat-lbl{ font-size: .88rem; color: var(--cream-dim); margin-top: .6rem; max-width: 17ch; line-height: 1.45; margin-left: auto; margin-right: auto; }
@@ -4176,13 +4192,11 @@
         <div class="rt-panel">
           <div class="rt-display-row">
             <p class="rt-headline" id="rt-headline">Still engaged, but drifting.</p>
-            <div class="rt-grid-stat">
-              <div class="rt-grid" id="rt-grid" aria-hidden="true"></div>
-              <div class="rt-stat">
-                <div class="rt-stat-num" id="rt-stat-num">59</div>
-                <div class="rt-stat-of">out of 100</div>
-                <div class="rt-stat-lbl">customers still engaged in your journey</div>
-              </div>
+            <div class="rt-grid" id="rt-grid" aria-hidden="true"></div>
+            <div class="rt-stat">
+              <div class="rt-stat-num" id="rt-stat-num">59</div>
+              <div class="rt-stat-of">out of 100</div>
+              <div class="rt-stat-lbl">customers still engaged in your journey</div>
             </div>
           </div>
 
