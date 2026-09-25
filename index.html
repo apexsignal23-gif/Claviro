@@ -2770,22 +2770,15 @@
   }
 
   /* FAQ section — rebuilt 2026-09-25 to match a supplied reference
-     screenshot (a dark bordered panel, left copy column + right
-     accordion with a connecting dot-timeline). Expand/collapse still
-     uses the same CSS grid `0fr → 1fr` row-size trick as the previous
-     version (see the un-changed .faq-a-wrap/.faq-icon rules below) —
-     only the surrounding chrome (panel, timeline, eyebrow) is new. The
-     reference also had decorative prev/next arrows straddling the
-     panel's edges; those were added then removed per explicit request
-     ("remove these 2 sides arrow"). */
-  .faq-panel{
-    position: relative;
-    background-image: linear-gradient(135deg, #101010 0%, #0f0f0f 32%, #262626 58%, #050505 84%, #050505 100%);
-    border: 1px solid var(--ink-border);
-    border-radius: 1.75rem;
-    padding: 2.75rem 3rem;
-  }
-  @media (max-width: 640px){ .faq-panel{ padding: 2.25rem 1.5rem; } }
+     screenshot: left copy column + right accordion with a connecting
+     dot-timeline. Expand/collapse still uses the same CSS grid
+     `0fr → 1fr` row-size trick as the previous version (see the
+     un-changed .faq-a-wrap/.faq-icon rules below) — only the
+     surrounding chrome (timeline, eyebrow) is new. The reference's own
+     bordered panel and its decorative prev/next arrows were tried too,
+     then both removed per explicit request ("i didnt told you to add
+     the box" / "remove these 2 sides arrow") -- just the layout and
+     timeline stayed. */
   .faq-eyebrow{
     font-size: .72rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
     color: var(--accent-hot); margin-bottom: 1.1rem;
@@ -4175,8 +4168,7 @@
      Same 3 questions/answers as before, unchanged. ================= -->
 <section id="faq" class="relative py-24 sm:py-28">
   <div class="max-w-[1280px] mx-auto px-6 lg:px-10">
-    <div class="faq-panel reveal">
-      <div class="grid lg:grid-cols-[1fr_1.5fr] gap-14 items-start">
+    <div class="grid lg:grid-cols-[1fr_1.5fr] gap-14 items-start reveal">
         <div>
           <p class="faq-eyebrow">FAQs</p>
           <h2 class="text-balance hero-h1 text-[2.1rem] sm:text-[2.8rem] leading-[1.12] tracking-[-0.025em]">
@@ -4221,7 +4213,6 @@
         </div>
       </div>
     </div>
-  </div>
 </section>
 
 <!-- ================= FINAL CTA =================
