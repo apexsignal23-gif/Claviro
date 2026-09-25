@@ -2801,9 +2801,12 @@
      then both removed per explicit request ("i didnt told you to add
      the box" / "remove these 2 sides arrow") -- just the layout and
      timeline stayed. */
+  /* Color matched to .en-eyebrow (used for "TESTIMONIAL" etc.) per
+     explicit request -- was var(--accent-hot) (blue), a mismatch
+     against every other section's dim-gray eyebrow. */
   .faq-eyebrow{
     font-size: .72rem; font-weight: 700; letter-spacing: .22em;
-    color: var(--accent-hot); margin-bottom: 1.1rem;
+    color: var(--cream-dimmer); margin-bottom: 1.1rem;
   }
   .faq-list{ display: flex; flex-direction: column; }
   .faq-item{ position: relative; padding-left: 2.6rem; border-bottom: 1px solid var(--ink-border); }
